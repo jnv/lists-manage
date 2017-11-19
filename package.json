@@ -6,7 +6,10 @@
   "dependencies": {},
   "devDependencies": {
     "@types/jest": "^21.1.6",
-    "ts-jest": "^21.2.3"
+    "eslint": "^4.11.0",
+    "ts-jest": "^21.2.3",
+    "typescript": "^2.6.1",
+    "typescript-eslint-parser": "^9.0.0"
   },
   "jest": {
     "transform": {
