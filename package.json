@@ -6,10 +6,12 @@
   "dependencies": {},
   "devDependencies": {
     "@types/jest": "^21.1.6",
-    "eslint": "^4.11.0",
+    "jest": "^21.2.1",
+    "prettier": "1.8.2",
     "ts-jest": "^21.2.3",
-    "typescript": "^2.6.1",
-    "typescript-eslint-parser": "^9.0.0"
+    "tslint": "^5.8.0",
+    "tslint-config-prettier": "^1.6.0",
+    "typescript": "^2.6.1"
   },
   "jest": {
     "transform": {
