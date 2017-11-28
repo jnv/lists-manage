@@ -2,6 +2,12 @@
   "extends": ["tslint:latest", "tslint-config-prettier"],
   "rules": {
     "semicolon": [true, "never"],
-    "quotemark": [true, "single"]
+    "quotemark": [true, "single"],
+    "object-literal-sort-keys": [
+      true,
+      "ignore-case",
+      "match-declaration-order"
+    ],
+    "prefer-const": [true, { "destructuring": "all" }]
   }
 }
