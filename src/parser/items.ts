@@ -4,7 +4,7 @@ interface ItemOptionalProps {
   author?: string
 }
 
-export interface Item extends ItemOptionalProps {
+export interface IListItem extends ItemOptionalProps {
   url: string
   name: string
   extras?: string[]
@@ -12,12 +12,12 @@ export interface Item extends ItemOptionalProps {
 
 const PATTERN_ITEM_LINE = /^\* \[(.*)\]\((\S*)\)(.*)$/
 const PATTERN_ITEM_REST = /(\*?([^*]+)\*)?\s*(by @?(\S+))?(\s*[-–—]\s*(.*))?$/i
-const PATTERN_SUBITEM = /^\s+[\-\*](.*)/
+const PATTERN_SUBITEM = /^\s+[\-\*]\s*(.*)$/
 
 function parseLineRest(rest: string): ItemOptionalProps {
   const matches = PATTERN_ITEM_REST.exec(rest.trim())
   if (matches) {
-    const [, fullNote, note, fullBy, author, fullDesc, desc] = matches
+    const [, ignNote, note, ignBy, author, ignDesc, desc] = matches
     return {
       desc,
       note,
@@ -28,10 +28,9 @@ function parseLineRest(rest: string): ItemOptionalProps {
   }
 }
 
-function parseLine(line: string): Item {
-  const linkMatch = PATTERN_ITEM_LINE.exec(line)
+function parseLine(linkMatch: RegExpMatchArray): IListItem {
+  const [, name, url, rest] = linkMatch
   if (linkMatch) {
-    const [, name, url, rest] = linkMatch
     return {
       url,
       name,
@@ -42,6 +41,21 @@ function parseLine(line: string): Item {
   }
 }
 
-export function parseItems(lines: string[]): Item[] {
-  return lines.map(parseLine)
+export function parseItems(lines: string[]): IListItem[] {
+  return lines.reduce((items: IListItem[], line) => {
+    const lineMatch = PATTERN_ITEM_LINE.exec(line)
+    if (lineMatch) {
+      return items.concat(parseLine(lineMatch))
+    }
+
+    const subitemMatch = PATTERN_SUBITEM.exec(line)
+    if (subitemMatch) {
+      const lastItem = items[items.length - 1]
+      const { extras = [] } = lastItem
+      extras.push(subitemMatch[1])
+      lastItem.extras = extras
+    }
+
+    return items
+  }, [])
 }
