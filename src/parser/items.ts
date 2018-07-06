@@ -1,16 +1,10 @@
 import { ListItem } from '../types'
 
-type ItemOptionalProps = Partial<{
-  desc: string
-  note: string
-  author: string
-}>
-
 const PATTERN_ITEM_LINE = /^\* \[(.*)\]\((\S*)\)(.*)$/
 const PATTERN_ITEM_REST = /(\*?([^*]+)\*)?\s*(by @?(\S+))?(\s*[-–—]\s*(.*))?$/i
 const PATTERN_SUBITEM = /^\s+[\-\*]\s*(.*)$/
 
-function parseLineRest(rest: string): ItemOptionalProps {
+function parseLineRest(rest: string) {
   const matches = PATTERN_ITEM_REST.exec(rest.trim())
   if (matches) {
     const [, ignNote, note, ignBy, author, ignDesc, desc] = matches
