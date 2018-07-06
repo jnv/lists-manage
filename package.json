@@ -3,6 +3,10 @@
   "version": "0.0.1",
   "main": "index.js",
   "license": "MIT",
+  "engines": {
+    "//": "needed for named capture groups",
+    "node": ">=10"
+  },
   "dependencies": {},
   "devDependencies": {
     "@types/jest": "^23.1.4",
@@ -21,6 +25,12 @@
       "^.+\\.tsx?$": "ts-jest"
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
-    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json"]
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json"
+    ]
   }
 }
