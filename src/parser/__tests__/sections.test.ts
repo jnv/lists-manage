@@ -1,4 +1,4 @@
-import { ISection, parseSections } from '../sections'
+import { parseSections } from '../sections'
 
 test('empty sections', () => {
   const input = [
@@ -16,7 +16,6 @@ test('empty sections', () => {
 
   expect(parseSections(input)).toEqual(expected)
 })
-
 
 test('section items', () => {
   const input = [

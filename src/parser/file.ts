@@ -1,7 +1,1 @@
-import { ISection } from './section'
-
-interface IListFile {
-  prefix?: string,
-  suffix?: string,
-  sections: ISection[],
-}
+import { Section } from '../types'

@@ -8,6 +8,7 @@
       "ignore-case",
       "match-declaration-order"
     ],
-    "prefer-const": [true, { "destructuring": "all" }]
+    "prefer-const": [true, { "destructuring": "all" }],
+    "interface-over-type-literal": false
   }
 }

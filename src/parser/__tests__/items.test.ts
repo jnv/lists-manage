@@ -1,4 +1,4 @@
-import { IListItem, parseItems } from '../items'
+import { parseItems } from '../items'
 
 const testCases = [
   {

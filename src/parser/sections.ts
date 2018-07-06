@@ -1,12 +1,7 @@
-import { IListItem, parseItems } from './items'
+import { Section } from '../types'
+import { parseItems } from './items'
 
-export interface ISection {
-  name: string
-  level: number
-  items: IListItem[]
-}
-
-interface IProtoSection {
+type ProtoSection = {
   name: string
   level: number
   lines: string[]
@@ -19,7 +14,7 @@ function lastItem<T>(array: T[]): T {
   return array[array.length - 1]
 }
 
-function parseHeader(headerMatch: RegExpMatchArray): IProtoSection {
+function parseHeader(headerMatch: RegExpMatchArray): ProtoSection {
   const [, hashes, name] = headerMatch
   return {
     name,
@@ -28,7 +23,7 @@ function parseHeader(headerMatch: RegExpMatchArray): IProtoSection {
   }
 }
 
-function parseSection(protoSection: IProtoSection): ISection {
+function parseSection(protoSection: ProtoSection): Section {
   return {
     name: protoSection.name,
     level: protoSection.level,
@@ -36,11 +31,11 @@ function parseSection(protoSection: IProtoSection): ISection {
   }
 }
 
-export function parseSections(lines: string[]): ISection[] {
-  let currentSection: IProtoSection | undefined
-  const sections: ISection[] = []
+export function parseSections(lines: string[]): Section[] {
+  let currentSection: ProtoSection | undefined
+  const sections: Section[] = []
 
-  function finishSection(section: IProtoSection | undefined) {
+  function finishSection(section: ProtoSection | undefined) {
     if (section) {
       sections.push(parseSection(section))
     }

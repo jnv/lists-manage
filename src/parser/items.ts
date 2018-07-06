@@ -1,14 +1,10 @@
-interface ItemOptionalProps {
-  desc?: string
-  note?: string
-  author?: string
-}
+import { ListItem } from '../types'
 
-export interface IListItem extends ItemOptionalProps {
-  url: string
-  name: string
-  extras?: string[]
-}
+type ItemOptionalProps = Partial<{
+  desc: string
+  note: string
+  author: string
+}>
 
 const PATTERN_ITEM_LINE = /^\* \[(.*)\]\((\S*)\)(.*)$/
 const PATTERN_ITEM_REST = /(\*?([^*]+)\*)?\s*(by @?(\S+))?(\s*[-–—]\s*(.*))?$/i
@@ -28,7 +24,7 @@ function parseLineRest(rest: string): ItemOptionalProps {
   }
 }
 
-function parseLine(linkMatch: RegExpMatchArray): IListItem {
+function parseLine(linkMatch: RegExpMatchArray): ListItem {
   const [, name, url, rest] = linkMatch
   if (linkMatch) {
     return {
@@ -41,8 +37,8 @@ function parseLine(linkMatch: RegExpMatchArray): IListItem {
   }
 }
 
-export function parseItems(lines: string[]): IListItem[] {
-  return lines.reduce((items: IListItem[], line) => {
+export function parseItems(lines: string[]): ListItem[] {
+  return lines.reduce((items: ListItem[], line) => {
     const lineMatch = PATTERN_ITEM_LINE.exec(line)
     if (lineMatch) {
       return items.concat(parseLine(lineMatch))
