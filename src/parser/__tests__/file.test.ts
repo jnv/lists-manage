@@ -35,3 +35,26 @@ Suffix here.
   }
   expect(result).toEqual(expected)
 })
+
+test('ignores consecutive start / end markers', () => {
+  const input = `Prefix.
+blah blah <!-- lists-start -->
+blah
+<!-- lists-start -->
+<!-- lists-start -->
+
+## Some section
+
+<!-- lists-end -->
+Suffix
+<!-- lists-end -->
+blah.
+`
+  const result = parseFile(input)
+  const expected = {
+    prefix: 'Prefix.\nblah blah <!-- lists-start -->',
+    suffix: '<!-- lists-end -->\nSuffix\n<!-- lists-end -->\nblah.\n',
+    sections: [{ level: 1, name: 'Some section', items: [] }],
+  }
+  expect(result).toEqual(expected)
+})

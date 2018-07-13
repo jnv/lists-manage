@@ -12,11 +12,11 @@ export function parseFile(fileContents: string): ListFile {
   let output = prefix
   for (const line of lines) {
     if (LIST_START.test(line)) {
-      prefix.push(line)
+      output.push(line)
       output = listPart
     } else if (LIST_END.test(line)) {
       output = suffix
-      suffix.push(line)
+      output.push(line)
     } else {
       output.push(line)
     }
