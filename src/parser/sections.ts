@@ -1,9 +1,7 @@
 import { Section } from '../types'
 import { parseItems } from './items'
 
-type ProtoSection = {
-  name: string
-  level: number
+type ProtoSection = Pick<Section, 'name' | 'level'> & {
   lines: string[]
 }
 
