@@ -37,7 +37,7 @@ Prefix here.
 ## Some section
 
 * [learnxinyminutes-docs](https://github.com/adambard/learnxinyminutes-docs) – Code documentation written as code!
-  - https://learnxinyminutes.com/
+  * https://learnxinyminutes.com/
 
 
 ### Some subsection

@@ -26,9 +26,9 @@ describe('.serializeItems', () => {
     const actual = serializeItems(input)
     const expected = `
 * [learnxinyminutes-docs](https://github.com/adambard/learnxinyminutes-docs) – Code documentation written as code!
-  - https://learnxinyminutes.com/
+  * https://learnxinyminutes.com/
 * [no-free-basics](https://github.com/net-neutrality/no-free-basics) – Those who have spoken up against Facebook's “Free Basics”
-  - https://net-neutrality.github.io/no-free-basics/
+  * https://net-neutrality.github.io/no-free-basics/
 * [recipes](https://github.com/csclug/recipes) by @csclug – Delicious open source
     `.trim()
     expect(actual).toBe(expected)
