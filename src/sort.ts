@@ -1,6 +1,8 @@
 import { URL } from 'url'
 import { ListItem } from './types'
 
+type ReadonlyListItems = ReadonlyArray<Readonly<ListItem>>
+
 function strcmp(str1: string, str2: string): 0 | 1 | -1 {
   if (str1 === str2) {
     return 0
@@ -20,7 +22,7 @@ function extractAuthor({ url }: ListItem): string {
   const [, username] = u.pathname.split('/', 2)
   return username
 }
-function markDuplicates(items: ReadonlyArray<ListItem>): ListItem[] {
+function markDuplicates(items: ReadonlyListItems): ListItem[] {
   const firstFound = new Map()
   const results = []
   for (const item of items) {
@@ -42,6 +44,6 @@ function markDuplicates(items: ReadonlyArray<ListItem>): ListItem[] {
   return results
 }
 
-export function sortItems(items: ReadonlyArray<ListItem>): ListItem[] {
+export function sortItems(items: ReadonlyListItems): ListItem[] {
   return markDuplicates(items).sort(comparator)
 }
