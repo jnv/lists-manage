@@ -9,7 +9,8 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@types/jest": "^23.1.4",
+    "@types/jest": "^23.1",
+    "@types/node": "^10.5",
     "jest": "^23.3.0",
     "prettier": "1.13.7",
     "ts-jest": "^23.0.0",
