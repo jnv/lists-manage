@@ -7,6 +7,10 @@
     "//": "needed for named capture groups",
     "node": ">=10"
   },
+  "bin": {
+    "lists-manage": "./bin/run"
+  },
+  "bugs": "https://github.com/jnv/lists-manage/issues",
   "dependencies": {},
   "devDependencies": {
     "@types/jest": "^23.1",
