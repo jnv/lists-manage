@@ -11,13 +11,18 @@
     "lists-manage": "./bin/run"
   },
   "bugs": "https://github.com/jnv/lists-manage/issues",
-  "dependencies": {},
+  "dependencies": {
+    "@oclif/command": "^1.4.36",
+    "@oclif/config": "^1.6.33",
+    "@oclif/plugin-help": "^2.0.5"
+  },
   "devDependencies": {
     "@types/jest": "^23.3",
     "@types/node": "^10.7",
     "jest": "^23.5.0",
     "prettier": "1.14.2",
     "ts-jest": "^23.1.3",
+    "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.14.0",
     "typescript": "^3.0.1"
@@ -25,17 +30,11 @@
   "scripts": {
     "test": "jest"
   },
-  "jest": {
-    "transform": {
-      "^.+\\.tsx?$": "ts-jest"
-    },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json"
-    ]
+  "files": [
+    "/bin",
+    "/lib"
+  ],
+  "oclif": {
+    "bin": "lists-manage"
   }
 }
