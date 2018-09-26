@@ -32,7 +32,8 @@
     "typescript-eslint-parser": "^19.0.1"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint --ext .js,.ts src/"
   },
   "files": [
     "/bin",
