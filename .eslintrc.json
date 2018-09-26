@@ -10,7 +10,8 @@
   "plugins": ["typescript"],
   "extends": ["eslint:recommended", "plugin:prettier/recommended"],
   "rules": {
-    "prefer-const": "error"
+    "prefer-const": "error",
+    "no-unused-vars": ["error", { "varsIgnorePattern": "^ign" }]
   },
   "overrides": [
     {
@@ -27,7 +28,7 @@
         ],
         "typescript/explicit-member-accessibility": "off",
         "typescript/interface-name-prefix": "error",
-        "typescript/member-delimiter-style": "error",
+        "typescript/member-delimiter-style": ["error", { "delimiter": "none" }],
         "typescript/member-ordering": [
           "error",
           {
@@ -63,6 +64,7 @@
         "typescript/no-triple-slash-reference": "error",
         "typescript/no-use-before-define": "error",
         "typescript/no-var-requires": "error",
+        "typescript/no-unused-vars": "error",
         "typescript/prefer-namespace-keyword": "error",
         "typescript/type-annotation-spacing": "error"
       }

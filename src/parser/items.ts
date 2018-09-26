@@ -1,10 +1,12 @@
 import { ListItem } from '../types'
 
+type LineRest = Pick<ListItem, 'desc' | 'note' | 'author'>
+
 const PATTERN_ITEM_LINE = /^\* \[(.*)\]\((\S*)\)(.*)$/
 const PATTERN_ITEM_REST = /(\*?([^*]+)\*)?\s*(by @?(\S+))?(\s*[-–—]\s*(.*))?$/i
-const PATTERN_SUBITEM = /^\s+[\-\*]\s*(.*)$/
+const PATTERN_SUBITEM = /^\s+[-*]\s*(.*)$/
 
-function parseLineRest(rest: string) {
+function parseLineRest(rest: string): LineRest {
   const matches = PATTERN_ITEM_REST.exec(rest.trim())
   if (matches) {
     const [, ignNote, note, ignBy, author, ignDesc, desc] = matches

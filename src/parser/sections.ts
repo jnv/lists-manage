@@ -8,10 +8,6 @@ type ProtoSection = Pick<Section, 'name' | 'level'> & {
 // This assumes that parsing starts with the first h2
 const PATTERN_SEC_HEADER = /^#(#+)\s*(.*)$/
 
-function lastItem<T>(array: T[]): T {
-  return array[array.length - 1]
-}
-
 function parseHeader(headerMatch: RegExpMatchArray): ProtoSection {
   const [, hashes, name] = headerMatch
   return {
@@ -33,7 +29,7 @@ export function parseSections(lines: string[]): Section[] {
   let currentSection: ProtoSection | undefined
   const sections: Section[] = []
 
-  function finishSection(section: ProtoSection | undefined) {
+  function finishSection(section: ProtoSection | undefined): void {
     if (section) {
       sections.push(parseSection(section))
     }
