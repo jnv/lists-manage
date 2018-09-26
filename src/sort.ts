@@ -1,5 +1,5 @@
 import { URL } from 'url'
-import { ListItem } from './types'
+import { ListItem, ListFile } from './types'
 
 type ReadonlyListItems = ReadonlyArray<Readonly<ListItem>>
 
@@ -46,4 +46,17 @@ function markDuplicates(items: ReadonlyListItems): ListItem[] {
 
 export function sortItems(items: ReadonlyListItems): ListItem[] {
   return markDuplicates(items).sort(comparator)
+}
+
+export function sortFile(file: ListFile): ListFile {
+  const sections = file.sections.map(section => {
+    return {
+      ...section,
+      items: sortItems(section.items),
+    }
+  })
+  return {
+    ...file,
+    sections,
+  }
 }

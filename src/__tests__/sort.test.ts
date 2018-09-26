@@ -1,4 +1,5 @@
-import { sortItems } from '../sort'
+import { sortItems, sortFile } from '../sort'
+import { ListFile } from '../types'
 
 describe('.sortItems', () => {
   test('sorts items by name', () => {
@@ -39,5 +40,41 @@ describe('.sortItems', () => {
       ]
       expect(sortItems(input)).toEqual(expected)
     })
+  })
+})
+
+describe('.sortFile', () => {
+  it('sorts all sections in file', () => {
+    const list = [
+      { name: 'recipes', url: 'https://github.com/csclug/recipes' },
+      { name: 'weekly', url: 'https://github.com/zenany/weekly' },
+      { name: 'aksh', url: 'https://github.com/svaksha/aksh' },
+    ]
+
+    const sortedList = [
+      { name: 'aksh', url: 'https://github.com/svaksha/aksh' },
+      { name: 'recipes', url: 'https://github.com/csclug/recipes' },
+      { name: 'weekly', url: 'https://github.com/zenany/weekly' },
+    ]
+
+    const input: ListFile = {
+      prefix: 'prefix',
+      suffix: 'suffix',
+      sections: [
+        { level: 1, name: 'Section one', items: list },
+        { level: 2, name: 'Section two', items: list },
+      ],
+    }
+
+    const expected: ListFile = {
+      prefix: 'prefix',
+      suffix: 'suffix',
+      sections: [
+        { level: 1, name: 'Section one', items: sortedList },
+        { level: 2, name: 'Section two', items: sortedList },
+      ],
+    }
+
+    expect(sortFile(input)).toEqual(expected)
   })
 })
