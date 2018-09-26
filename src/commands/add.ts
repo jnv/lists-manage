@@ -1,16 +1,23 @@
 import { Command, flags } from '@oclif/command'
-
+import { loadFile } from '../loadFile'
+import { sortFile } from '../sort'
+import { serializeFile } from '../serializer'
 export class AddList extends Command {
   public static description = 'Add list to the Markdown file'
 
+  static strict = false
+
   public static flags = {
-    // add --version flag to show CLI version
     version: flags.version({ char: 'v' }),
     help: flags.help({ char: 'h' }),
     file: flags.string({
       char: 'f',
       description: 'Markdown file to work with',
       default: 'README.md',
+    }),
+    json: flags.boolean({
+      char: 'j',
+      description: 'Print output as JSON',
     }),
   }
 
@@ -25,5 +32,16 @@ export class AddList extends Command {
   public async run() {
     const { args, flags } = this.parse(AddList)
     this.log(args, flags)
+    if (!flags.file) {
+      this.error('Missing file', { exit: 1 })
+      return
+    }
+    let file = await loadFile(flags.file)
+    file = sortFile(file)
+    if (flags.json) {
+      this.log(JSON.stringify(file, undefined, 2))
+    } else {
+      this.log(serializeFile(file))
+    }
   }
 }
