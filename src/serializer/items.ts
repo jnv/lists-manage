@@ -2,6 +2,9 @@ import { ListItem } from '../types'
 
 function serializeItem(item: ListItem): string {
   let output = `- [${item.name}](${item.url})`
+  if (item.note) {
+    output += ` _${item.note}_`
+  }
   if (item.author) {
     output += ` by @${item.author}`
   }

@@ -24,10 +24,16 @@ describe('.sortItems', () => {
         name: 'Annual-Reading-List',
         url: 'https://github.com/davidskeck/Annual-Reading-List',
       },
-      { name: 'aksh', url: 'https://github.com/svaksha/aksh' },
+      {
+        name: 'aksh',
+        url: 'https://github.com/svaksha/aksh',
+      },
     ]
     const expected = [
-      { name: 'aksh', url: 'https://github.com/svaksha/aksh' },
+      {
+        name: 'aksh',
+        url: 'https://github.com/svaksha/aksh',
+      },
       {
         name: 'Annual-Reading-List',
         url: 'https://github.com/davidskeck/Annual-Reading-List',
@@ -40,16 +46,10 @@ describe('.sortItems', () => {
   test('sorting ignores dashes', () => {
     const input = [
       { name: 'awesome-b', url: 'https://github.com/github/awesome-b' },
-      {
-        name: 'awesomea',
-        url: 'https://github.com/github/awesomea',
-      },
+      { name: 'awesomea', url: 'https://github.com/github/awesomea' },
     ]
     const expected = [
-      {
-        name: 'awesomea',
-        url: 'https://github.com/github/awesomea',
-      },
+      { name: 'awesomea', url: 'https://github.com/github/awesomea' },
       { name: 'awesome-b', url: 'https://github.com/github/awesome-b' },
     ]
 

@@ -18,6 +18,7 @@ const testCases = [
     name: 'item with author and note',
     input: [
       '* [recipes](https://github.com/silizuo/recipes) *In Chinese and English* by @silizuo',
+      '- [Front-end-Web-Development-Interview-Question](https://github.com/paddingme/Front-end-Web-Development-Interview-Question) _In Chinese_',
     ],
     expected: [
       {
@@ -25,6 +26,12 @@ const testCases = [
         url: 'https://github.com/silizuo/recipes',
         note: 'In Chinese and English',
         author: 'silizuo',
+      },
+      {
+        name: 'Front-end-Web-Development-Interview-Question',
+        url:
+          'https://github.com/paddingme/Front-end-Web-Development-Interview-Question',
+        note: 'In Chinese',
       },
     ],
   },
@@ -44,6 +51,19 @@ const testCases = [
           'http://itgeekworkhard.com/python-github-projects/',
           'another line',
         ],
+      },
+    ],
+  },
+  {
+    name: 'link in description',
+    input: [
+      "- [isaacs/reading-list](https://github.com/isaacs/reading-list) – [isaac](https://github.com/isaacs)'s reading list.",
+    ],
+    expected: [
+      {
+        name: 'isaacs/reading-list',
+        url: 'https://github.com/isaacs/reading-list',
+        desc: "[isaac](https://github.com/isaacs)'s reading list.",
       },
     ],
   },
