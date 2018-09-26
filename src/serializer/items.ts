@@ -1,7 +1,7 @@
 import { ListItem } from '../types'
 
 function serializeItem(item: ListItem): string {
-  let output = `* [${item.name}](${item.url})`
+  let output = `- [${item.name}](${item.url})`
   if (item.author) {
     output += ` by @${item.author}`
   }
