@@ -18,6 +18,25 @@ describe('.sortItems', () => {
     expect(sortItems(input)).toEqual(expected)
   })
 
+  test('sorting is case insensitive', () => {
+    const input = [
+      {
+        name: 'Annual-Reading-List',
+        url: 'https://github.com/davidskeck/Annual-Reading-List',
+      },
+      { name: 'aksh', url: 'https://github.com/svaksha/aksh' },
+    ]
+    const expected = [
+      { name: 'aksh', url: 'https://github.com/svaksha/aksh' },
+      {
+        name: 'Annual-Reading-List',
+        url: 'https://github.com/davidskeck/Annual-Reading-List',
+      },
+    ]
+
+    expect(sortItems(input)).toEqual(expected)
+  })
+
   describe('for duplicate names', () => {
     test('adds author and sorts by it', () => {
       const input = Object.freeze([
