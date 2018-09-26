@@ -30,8 +30,7 @@ export class AddList extends Command {
   ]
 
   public async run() {
-    const { args, flags } = this.parse(AddList)
-    this.log(args, flags)
+    const { flags } = this.parse(AddList)
     if (!flags.file) {
       this.error('Missing file', { exit: 1 })
       return
