@@ -31,12 +31,12 @@ describe('.serializeItems', () => {
   test('generates Markdown from items', () => {
     const actual = serializeItems(input)
     const expected = `
-- [learnxinyminutes-docs](https://github.com/adambard/learnxinyminutes-docs) – Code documentation written as code!
-  * https://learnxinyminutes.com/
-- [no-free-basics](https://github.com/net-neutrality/no-free-basics) – Those who have spoken up against Facebook's “Free Basics”
-  * https://net-neutrality.github.io/no-free-basics/
-- [recipes](https://github.com/csclug/recipes) by @csclug – Delicious open source
-- [recipes](https://github.com/silizuo/recipes) _In Chinese and English_ by @silizuo
+* [learnxinyminutes-docs](https://github.com/adambard/learnxinyminutes-docs) – Code documentation written as code!
+  - https://learnxinyminutes.com/
+* [no-free-basics](https://github.com/net-neutrality/no-free-basics) – Those who have spoken up against Facebook's “Free Basics”
+  - https://net-neutrality.github.io/no-free-basics/
+* [recipes](https://github.com/csclug/recipes) by @csclug – Delicious open source
+* [recipes](https://github.com/silizuo/recipes) _In Chinese and English_ by @silizuo
     `.trim()
     expect(actual).toBe(expected)
   })

@@ -1,7 +1,7 @@
 import { ListItem } from '../types'
 
 function serializeItem(item: ListItem): string {
-  let output = `- [${item.name}](${item.url})`
+  let output = `* [${item.name}](${item.url})`
   if (item.note) {
     output += ` _${item.note}_`
   }
@@ -12,7 +12,7 @@ function serializeItem(item: ListItem): string {
     output += ` – ${item.desc}`
   }
   if (item.extras) {
-    output += '\n' + item.extras.map(extra => `  * ${extra}`).join('\n')
+    output += '\n' + item.extras.map(extra => `  - ${extra}`).join('\n')
   }
   return output
 }
