@@ -1,4 +1,11 @@
 {
   "editor.formatOnSave": true,
-  "eslint.enable": false
+  "eslint.enable": true,
+  "tslint.enable": false,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ]
 }
