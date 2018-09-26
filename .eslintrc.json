@@ -34,21 +34,6 @@
         "typescript/explicit-member-accessibility": "off",
         "typescript/interface-name-prefix": "error",
         "typescript/member-delimiter-style": ["error", { "delimiter": "none" }],
-        "typescript/member-ordering": [
-          "error",
-          {
-            "default": [
-              "static-field",
-              "private-field",
-              "protected-field",
-              "public-field",
-              "constructor",
-              "public-method",
-              "protected-method",
-              "private-method"
-            ]
-          }
-        ],
         "typescript/no-angle-bracket-type-assertion": "error",
         "typescript/no-array-constructor": "error",
         "typescript/no-inferrable-types": [
