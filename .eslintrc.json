@@ -8,10 +8,15 @@
     "es6": true
   },
   "plugins": ["typescript"],
-  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:node/recommended",
+    "plugin:prettier/recommended"
+  ],
   "rules": {
     "prefer-const": "error",
-    "no-unused-vars": ["error", { "varsIgnorePattern": "^ign" }]
+    "no-unused-vars": ["error", { "varsIgnorePattern": "^ign" }],
+    "node/no-unsupported-features/es-syntax": ["off"]
   },
   "overrides": [
     {
