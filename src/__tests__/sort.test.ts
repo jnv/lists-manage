@@ -37,6 +37,25 @@ describe('.sortItems', () => {
     expect(sortItems(input)).toEqual(expected)
   })
 
+  test('sorting ignores dashes', () => {
+    const input = [
+      { name: 'awesome-b', url: 'https://github.com/github/awesome-b' },
+      {
+        name: 'awesomea',
+        url: 'https://github.com/github/awesomea',
+      },
+    ]
+    const expected = [
+      {
+        name: 'awesomea',
+        url: 'https://github.com/github/awesomea',
+      },
+      { name: 'awesome-b', url: 'https://github.com/github/awesome-b' },
+    ]
+
+    expect(sortItems(input)).toEqual(expected)
+  })
+
   describe('for duplicate names', () => {
     test('adds author and sorts by it', () => {
       const input = Object.freeze([

@@ -3,8 +3,13 @@ import { ListItem, ListFile } from './types'
 
 type ReadonlyListItems = ReadonlyArray<Readonly<ListItem>>
 
+function stripChars(str: string): string {
+  return str.replace(/[^a-z0-9]/i, '')
+}
 function strcmp(str1: string, str2: string): number {
-  return str1.localeCompare(str2, 'en', { sensitivity: 'base' })
+  return stripChars(str1).localeCompare(stripChars(str2), 'en', {
+    sensitivity: 'base',
+  })
 }
 function comparator(a: ListItem, b: ListItem): number {
   const nameCmp = strcmp(a.name, b.name)
