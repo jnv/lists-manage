@@ -29,12 +29,12 @@ function parseLine(linkMatch: RegExpMatchArray): ListItem {
       ...parseLineRest(rest),
     }
   } else {
-    throw new Error('Invalid argument')
+    throw new TypeError('Invalid argument')
   }
 }
 
 export function parseItems(lines: string[]): ListItem[] {
-  return lines.reduce((items: ListItem[], line) => {
+  return lines.reduce((items: ListItem[], line): ListItem[] => {
     const lineMatch = PATTERN_ITEM_LINE.exec(line)
     if (lineMatch) {
       return items.concat(parseLine(lineMatch))

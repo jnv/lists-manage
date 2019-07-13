@@ -1,7 +1,7 @@
 import { URL } from 'url'
-import { ListItem, ListFile } from './types'
+import { ListItem, ListFile, Section } from './types'
 
-type ReadonlyListItems = readonly Readonly<ListItem>[]
+type ReadonlyListItems = readonly ListItem[]
 
 function stripChars(str: string): string {
   return str.replace(/[^a-z0-9]/i, '')
@@ -25,7 +25,7 @@ function extractAuthor({ url }: ListItem): string {
   return username
 }
 function markDuplicates(items: ReadonlyListItems): ListItem[] {
-  const firstFound = new Map()
+  const firstFound: Map<string, ListItem> = new Map()
   const results = []
   for (const item of items) {
     const { name } = item
@@ -51,12 +51,14 @@ export function sortItems(items: ReadonlyListItems): ListItem[] {
 }
 
 export function sortFile(file: ListFile): ListFile {
-  const sections = file.sections.map(section => {
-    return {
-      ...section,
-      items: sortItems(section.items),
+  const sections = file.sections.map(
+    (section): Section => {
+      return {
+        ...section,
+        items: sortItems(section.items),
+      }
     }
-  })
+  )
   return {
     ...file,
     sections,
