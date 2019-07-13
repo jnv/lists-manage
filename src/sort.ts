@@ -1,7 +1,7 @@
 import { URL } from 'url'
 import { ListItem, ListFile } from './types'
 
-type ReadonlyListItems = ReadonlyArray<Readonly<ListItem>>
+type ReadonlyListItems = readonly Readonly<ListItem>[]
 
 function stripChars(str: string): string {
   return str.replace(/[^a-z0-9]/i, '')

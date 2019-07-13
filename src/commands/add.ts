@@ -31,7 +31,7 @@ export class AddList extends Command {
     },
   ]
 
-  public async run() {
+  public async run(): Promise<void> {
     const { flags } = this.parse(AddList)
     if (!flags.file) {
       this.error('Missing file', { exit: 1 })

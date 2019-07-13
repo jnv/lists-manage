@@ -10,6 +10,7 @@
     "sourceMap": true,
     "outDir": "lib",
     "baseUrl": ".",
+    "esModuleInterop": true,
     "paths": {
       "*": ["node_modules/*", "src/types/*"]
     }
