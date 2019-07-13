@@ -7,3 +7,7 @@ export type RepoUrlInfo = {
   user: string
 }
 
+export type RepoDetail = RepoUrlInfo & {
+  description: string
+  homepage: string
+}
