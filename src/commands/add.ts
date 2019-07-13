@@ -7,6 +7,8 @@ export class AddList extends Command {
 
   static strict = false
 
+  static examples = ['$ lists-manage add']
+
   public static flags = {
     version: flags.version({ char: 'v' }),
     help: flags.help({ char: 'h' }),

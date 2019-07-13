@@ -1,47 +1,60 @@
 {
-  "name": "@jnv/lists-manage",
-  "version": "0.0.1",
-  "main": "index.js",
-  "license": "MIT",
-  "engines": {
-    "//": "needed for named capture groups",
-    "node": ">=10"
-  },
-  "bin": {
-    "lists-manage": "./bin/run"
-  },
-  "bugs": "https://github.com/jnv/lists-manage/issues",
-  "dependencies": {
-    "@oclif/command": "^1.5.1",
-    "@oclif/config": "^1.7.6",
-    "@oclif/plugin-help": "^2.1.2",
-    "hosted-git-info": "^2.7.1",
-    "node-fetch": "^2.2.0"
-  },
-  "devDependencies": {
-    "@types/jest": "^23.3",
-    "@types/node": "^10.11",
-    "eslint": "^5.6.0",
-    "eslint-config-prettier": "^3.1.0",
-    "eslint-plugin-node": "^7.0.1",
-    "eslint-plugin-prettier": "^2.6.2",
-    "eslint-plugin-typescript": "^0.12.0",
-    "jest": "^23.6.0",
-    "prettier": "1.14.3",
-    "ts-jest": "^23.10.1",
-    "ts-node": "^7.0.1",
-    "typescript": "^3.0.3",
-    "typescript-eslint-parser": "^19.0.1"
-  },
-  "scripts": {
-    "test": "jest",
-    "lint": "eslint --ext .js,.ts src/"
-  },
-  "files": [
-    "/bin",
-    "/lib"
-  ],
-  "oclif": {
-    "bin": "lists-manage"
-  }
+	"name": "@jnv/lists-manage",
+	"version": "0.0.1",
+	"main": "index.js",
+	"license": "MIT",
+	"engines": {
+		"//": "needed for named capture groups",
+		"node": ">=10"
+	},
+	"bin": {
+		"lists-manage": "./bin/run"
+	},
+	"bugs": "https://github.com/jnv/lists-manage/issues",
+	"dependencies": {
+		"@oclif/command": "^1.5.16",
+		"@oclif/config": "^1.13.2",
+		"@oclif/plugin-help": "^2.2.0",
+		"tslib": "^1.10.0",
+		"hosted-git-info": "^2.7.1",
+		"node-fetch": "^2.6.0"
+	},
+	"devDependencies": {
+		"@oclif/dev-cli": "^1.22.0",
+		"@types/jest": "^24.0",
+		"@types/node": "^12.6",
+		"eslint": "^6.0.1",
+		"eslint-config-prettier": "^6.0.0",
+		"eslint-plugin-node": "^9.1.0",
+		"eslint-plugin-prettier": "^3.1.0",
+		"eslint-plugin-typescript": "^0.14.0",
+		"globby": "^10.0.1",
+		"jest": "^24.8.0",
+		"prettier": "1.18.2",
+		"ts-jest": "^24.0.2",
+		"ts-node": "^8.3.0",
+		"typescript": "^3.5.3",
+		"typescript-eslint-parser": "^22.0.0"
+	},
+	"scripts": {
+		"test": "jest",
+		"lint": "eslint --ext .js,.ts src/",
+		"version": "oclif-dev readme && git add README.md",
+		"postpack": "rm -f oclif.manifest.json",
+		"prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme"
+	},
+	"files": [
+		"/bin",
+		"/lib",
+		"/npm-shrinkwrap.json",
+		"/oclif.manifest.json"
+	],
+	"oclif": {
+		"commands": "./lib/commands",
+		"bin": "lists-manage",
+		"plugins": [
+			"@oclif/plugin-help"
+		]
+	},
+	"types": "lib/index.d.ts"
 }
