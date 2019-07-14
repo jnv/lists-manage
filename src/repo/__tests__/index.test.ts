@@ -1,5 +1,13 @@
-import { fetchRepoDetails } from '..'
-import { RepoDetail } from '../types'
+import { fetchRepoDetails, checkRepo } from '..'
+import nock from 'nock'
+
+beforeAll(() => {
+  nock.disableNetConnect()
+})
+
+afterAll(() => {
+  nock.enableNetConnect()
+})
 
 describe('.fetchRepoDetails', () => {
   it('provides empty description & homepage with non-GitHub URL', async () => {
@@ -11,6 +19,17 @@ describe('.fetchRepoDetails', () => {
       author: 'rosarior',
       homepage: '',
       desc: '',
+    })
+  })
+})
+
+describe('.checkRepo', () => {
+  it("doesn't try to check anchor URLs", () => {
+    const input = '#lists-of-lists'
+    expect(checkRepo(input)).resolves.toEqual({
+      url: input,
+      exists: true,
+      redirect: false,
     })
   })
 })

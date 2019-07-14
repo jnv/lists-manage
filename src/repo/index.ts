@@ -25,6 +25,9 @@ export async function checkRepo(repoUrl: string): Promise<RepoCheck> {
     url: repoUrl,
     redirect: false,
   }
+  if (!repoUrl.startsWith('http')) {
+    return result
+  }
 
   try {
     const response = await got.head(repoUrl)

@@ -2,7 +2,6 @@ import { fetchRemoteRepo } from '../github'
 import nock from 'nock'
 import responseBody from './github.fixture.json'
 
-// const ghGotMock = ghGot as jest.Mock<typeof ghGot>
 beforeAll(() => {
   nock.disableNetConnect()
 })
