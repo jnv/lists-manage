@@ -15,6 +15,7 @@
     "@oclif/command": "^1.5.16",
     "@oclif/config": "^1.13.2",
     "@oclif/plugin-help": "^2.2.0",
+    "enquirer": "^2.3.1",
     "gh-got": "^8.1.0",
     "got": "^9.6.0",
     "hosted-git-info": "^2.7.1",
