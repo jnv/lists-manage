@@ -10,12 +10,12 @@ type GHResponse = {
 export async function fetchRemoteRepo(
   repoInfo: Readonly<RepoUrlInfo>
 ): Promise<RepoDetail> {
-  const repoPath = `${repoInfo.user}/${repoInfo.project}`
+  const repoPath = `${repoInfo.author}/${repoInfo.name}`
   try {
     const { body } = (await ghGot(`repos/${repoPath}`)) as Response<GHResponse>
     return {
       ...repoInfo,
-      description: body.description || '',
+      desc: body.description || '',
       homepage: body.homepage || '',
     }
   } catch (error) {

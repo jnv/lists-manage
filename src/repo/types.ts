@@ -1,11 +1,11 @@
 export type RepoUrlInfo = {
   url: string
   type: string
-  project: string
-  user: string
+  name: string
+  author: string
 }
 
 export type RepoDetail = RepoUrlInfo & {
-  description: string
+  desc: string
   homepage: string
 }

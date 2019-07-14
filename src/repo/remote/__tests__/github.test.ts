@@ -24,14 +24,14 @@ describe('.fetchRepoDetails', () => {
       .reply(200, responseBody, responseHeaders)
     const repoInfo = {
       type: 'github',
-      project: 'lists',
-      user: 'jnv',
+      name: 'lists',
+      author: 'jnv',
       url: 'https://github.com/jnv/lists',
     }
     const result = await fetchRemoteRepo(repoInfo)
     expect(result).toEqual({
       ...repoInfo,
-      description: 'The definitive list of lists (of lists) curated on GitHub',
+      desc: 'The definitive list of lists (of lists) curated on GitHub',
       homepage: 'https://jnv.github.com/lists',
     })
   })
@@ -48,8 +48,8 @@ describe('.fetchRepoDetails', () => {
       )
     const repoInfo = {
       type: 'github',
-      project: 'this-does-not-exist',
-      user: 'jnv',
+      name: 'this-does-not-exist',
+      author: 'jnv',
       url: 'https://github.com/jnv/this-does-not-exist',
     }
     expect(fetchRemoteRepo(repoInfo)).rejects.toThrow(

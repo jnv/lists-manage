@@ -5,8 +5,8 @@ describe('.getRepoInfo', () => {
     const result = getRepoInfo('https://github.com/jnv/lists')
     expect(result).toEqual({
       type: 'github',
-      project: 'lists',
-      user: 'jnv',
+      name: 'lists',
+      author: 'jnv',
       url: 'https://github.com/jnv/lists',
     })
   })
@@ -15,8 +15,8 @@ describe('.getRepoInfo', () => {
     const result = getRepoInfo('https://github.com/sinker/tacofancy/')
     expect(result).toEqual({
       type: 'github',
-      project: 'tacofancy',
-      user: 'sinker',
+      name: 'tacofancy',
+      author: 'sinker',
       url: 'https://github.com/sinker/tacofancy',
     })
   })
@@ -25,8 +25,8 @@ describe('.getRepoInfo', () => {
     const result = getRepoInfo('git@github.com:npm/hosted-git-info.git#v1.0.0')
     expect(result).toEqual({
       type: 'github',
-      project: 'hosted-git-info',
-      user: 'npm',
+      name: 'hosted-git-info',
+      author: 'npm',
       url: 'https://github.com/npm/hosted-git-info',
     })
   })
@@ -35,8 +35,8 @@ describe('.getRepoInfo', () => {
     const result = getRepoInfo('https://notabug.org/themusicgod1/food')
     expect(result).toEqual({
       type: 'unknown',
-      project: 'food',
-      user: 'themusicgod1',
+      name: 'food',
+      author: 'themusicgod1',
       url: 'https://notabug.org/themusicgod1/food',
     })
   })

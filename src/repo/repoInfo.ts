@@ -15,8 +15,8 @@ function fallbackRepoInfo(repoUrl: string): RepoUrlInfo {
   }
   return {
     type: 'unknown',
-    project,
-    user,
+    name: project,
+    author: user,
     url: repoUrl,
   }
 }
@@ -28,8 +28,8 @@ export function getRepoInfo(repoUrl: string): RepoUrlInfo {
   }
   return {
     type: info.type,
-    project: info.project,
-    user: info.user,
+    name: info.project,
+    author: info.user,
     url: info.browse(),
   }
 }

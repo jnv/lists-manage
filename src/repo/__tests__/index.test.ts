@@ -1,4 +1,5 @@
 import { fetchRepoDetails } from '..'
+import { RepoDetail } from '../types'
 
 describe('.fetchRepoDetails', () => {
   it('provides empty description & homepage with non-GitHub URL', async () => {
@@ -6,10 +7,10 @@ describe('.fetchRepoDetails', () => {
     expect(fetchRepoDetails(input)).resolves.toEqual({
       url: input,
       type: 'gitlab',
-      project: 'django-must-watch',
-      user: 'rosarior',
+      name: 'django-must-watch',
+      author: 'rosarior',
       homepage: '',
-      description: '',
+      desc: '',
     })
   })
 })

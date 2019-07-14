@@ -10,7 +10,7 @@ export async function fetchRepoDetails(repoUrl: string): Promise<RepoDetail> {
       repoDetails = await fetchRemoteRepo(repoInfo)
       break
     default:
-      repoDetails = { ...repoInfo, description: '', homepage: '' }
+      repoDetails = { ...repoInfo, desc: '', homepage: '' }
       break
   }
   return repoDetails
