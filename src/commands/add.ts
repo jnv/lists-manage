@@ -1,7 +1,10 @@
 import { Command, flags } from '@oclif/command'
-import { loadFile } from '../loadFile'
-import { sortFile } from '../sort'
+import { prompt } from 'enquirer'
+import { loadListFile } from '../listFile'
+import { sortFile } from '../listFile/sort'
 import { serializeFile } from '../serializer'
+import { fetchRepoDetails } from '../repo'
+
 export class AddList extends Command {
   public static description = 'Add list to the Markdown file'
 
@@ -10,39 +13,65 @@ export class AddList extends Command {
   static examples = ['$ lists-manage add']
 
   public static flags = {
-    version: flags.version({ char: 'v' }),
     help: flags.help({ char: 'h' }),
     file: flags.string({
       char: 'f',
       description: 'Markdown file to work with',
       default: 'README.md',
     }),
-    json: flags.boolean({
-      char: 'j',
-      description: 'Print output as JSON',
-    }),
   }
 
   static args = [
     {
       name: 'url',
+      required: true,
       description:
         'URL of the list to add (in form https://github.com/user/repo)',
     },
   ]
 
   public async run(): Promise<void> {
-    const { flags } = this.parse(AddList)
+    const { args, flags } = this.parse(AddList)
     if (!flags.file) {
       this.error('Missing file', { exit: 1 })
       return
     }
-    let file = await loadFile(flags.file)
-    file = sortFile(file)
-    if (flags.json) {
-      this.log(JSON.stringify(file, undefined, 2))
-    } else {
-      this.log(serializeFile(file))
+    const repoDetails = await fetchRepoDetails(args.url)
+    const file = await loadListFile(flags.file)
+
+    const sections = file.sections.map((section): string => section.name)
+    if (!sections.length) {
+      this.error(
+        `No sections found in file ${flags.file}. do you have a correct file?`,
+        { exit: 1 }
+      )
+      return
     }
+
+    console.log(repoDetails.homepage)
+    const response = await prompt([
+      {
+        type: 'select',
+        name: 'section',
+        message: 'Select a list section:',
+        choices: sections,
+      },
+      {
+        type: 'input',
+        name: 'desc',
+        message: 'Enter list description (optional):',
+        initial: repoDetails.desc,
+      },
+      {
+        type: 'confirm',
+        name: 'homepage',
+        message: `Include list's homepage (${repoDetails.homepage})?`,
+        skip: !repoDetails.homepage,
+      },
+    ])
+    this.log(JSON.stringify(response))
+
+    // file = sortFile(file)
+    // this.log(serializeFile(file))
   }
 }
