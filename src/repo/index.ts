@@ -3,6 +3,8 @@ import { RepoDetail, RepoCheck } from './types'
 import { fetchRemoteRepo } from './remote/github'
 import got from 'got'
 
+export { getRepoInfo }
+
 export async function fetchRepoDetails(repoUrl: string): Promise<RepoDetail> {
   const repoInfo = getRepoInfo(repoUrl)
   let repoDetails
