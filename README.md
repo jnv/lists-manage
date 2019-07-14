@@ -4,33 +4,35 @@
 [![Version](https://img.shields.io/npm/v/jnv/lists-manage.svg)](https://npmjs.org/package/@jnv/lists-manage)
 [![License](https://img.shields.io/npm/l/lists-manage.svg)](https://github.com/jnv/lists-manage/blob/master/package.json)
 
+CLI program to manage [lists] project.
+
 <!-- toc -->
-* [@jnv/lists-manage](#jnvlists-manage)
-* [Usage](#usage)
-* [Commands](#commands)
-<!-- tocstop -->
+
+- [@jnv/lists-manage](#jnvlists-manage)
+- [Usage](#usage)
+- [Commands](#commands)
+  <!-- tocstop -->
 
 # Usage
 
-<!-- usage -->
+You must have [Node.js](https://nodejs.org/) 10+ and npm installed.
+
+Then inside of cloned repository of [lists] project (where the `README.md` file is located) run:
+
 ```sh-session
-$ npm install -g @jnv/lists-manage
-$ lists-manage COMMAND
-running command...
-$ lists-manage (-v|--version|version)
-@jnv/lists-manage/0.0.1 darwin-x64 node-v12.6.0
-$ lists-manage --help [COMMAND]
-USAGE
-  $ lists-manage COMMAND
-...
+$ npx @jnv/lists-manage add -w https://github.com/link-to/awesome-list
 ```
-<!-- usagestop -->
+
+This will automatically install and run this package and prompt you about the list you are about to add.
+
+See [Commands](#commands) below for additional options and features.
 
 # Commands
 
 <!-- commands -->
-* [`lists-manage add URL`](#lists-manage-add-url)
-* [`lists-manage help [COMMAND]`](#lists-manage-help-command)
+
+- [`lists-manage add URL`](#lists-manage-add-url)
+- [`lists-manage help [COMMAND]`](#lists-manage-help-command)
 
 ## `lists-manage add URL`
 
@@ -67,4 +69,11 @@ OPTIONS
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.2.0/src/commands/help.ts)_
+
 <!-- commandsstop -->
+
+## License
+
+MIT
+
+[lists]: https://github.com/jnv/lists

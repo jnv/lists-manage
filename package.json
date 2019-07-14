@@ -1,16 +1,19 @@
 {
   "name": "@jnv/lists-manage",
   "version": "0.0.1",
-  "main": "index.js",
+  "main": "lib/index.js",
   "license": "MIT",
   "engines": {
-    "//": "needed for named capture groups",
+    "//": "needed for named capture groups and fs.promise",
     "node": ">=10"
   },
+  "repository": "github:jnv/lists-manage",
   "bin": {
     "lists-manage": "./bin/run"
   },
+  "homepage": "https://github.com/jnv/lists-manage",
   "bugs": "https://github.com/jnv/lists-manage/issues",
+  "author": "Jan Vlnas <npm@jan.vlnas.cz> (https://jan.vlnas.cz/)",
   "dependencies": {
     "@oclif/command": "^1.5.16",
     "@oclif/config": "^1.13.2",
