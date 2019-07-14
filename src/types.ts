@@ -1,3 +1,5 @@
+export { RepoDetail } from './repo/types'
+
 export type ListItem = {
   url: string
   name: string
