@@ -49,8 +49,8 @@
     "test": "jest",
     "lint": "eslint --ext .js,.ts src/",
     "version": "oclif-dev readme && git add README.md",
-    "postpack": "rm -f oclif.manifest.json",
-    "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme"
+    "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
+    "postpack": "rm -f oclif.manifest.json"
   },
   "files": [
     "/bin",
