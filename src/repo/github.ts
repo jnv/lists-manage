@@ -10,11 +10,18 @@ type GHResponse = {
 export async function fetchRepoDetails(
   repoInfo: Readonly<RepoUrlInfo>
 ): Promise<RepoDetail> {
-  const repoApiPath = `repos/${repoInfo.user}/${repoInfo.project}`
-  const { body } = (await ghGot(repoApiPath)) as Response<GHResponse>
-  return {
-    ...repoInfo,
-    description: body.description || '',
-    homepage: body.homepage || '',
+  const repoPath = `${repoInfo.user}/${repoInfo.project}`
+  try {
+    const { body } = (await ghGot(`repos/${repoPath}`)) as Response<GHResponse>
+    return {
+      ...repoInfo,
+      description: body.description || '',
+      homepage: body.homepage || '',
+    }
+  } catch (error) {
+    if (error.statusCode === 404) {
+      error.message = `GitHub repository '${repoPath}' not found`
+    }
+    throw error
   }
 }
