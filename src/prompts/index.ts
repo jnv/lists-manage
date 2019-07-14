@@ -18,7 +18,7 @@ export function addPrompt(
       name: 'section',
       message: 'Select a list section:',
       choices: sections,
-      initial: String(initialSection),
+      initial: initialSection,
       result(): string {
         // @ts-ignore
         return this.focused.value
