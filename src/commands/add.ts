@@ -7,6 +7,7 @@ import { suggestSection } from '../suggestSection'
 import { ListItem } from '../types'
 import { addPrompt } from '../prompts'
 import { urlExistsInFile } from '../listFile/duplicate'
+import { normalizeDesc } from '../normalize'
 
 export class AddList extends Command {
   public static description = 'Add list URL to the Markdown file'
@@ -74,6 +75,7 @@ export class AddList extends Command {
       return
     }
 
+    repoDetails.desc = normalizeDesc(repoDetails.desc)
     const initialSection = suggestSection(file.sections)(repoDetails)
     let response
     if (flags.prompt) {
