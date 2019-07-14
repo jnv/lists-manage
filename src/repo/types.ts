@@ -1,8 +1,6 @@
-type HostType = 'github' | 'bitbucket' | 'gitlab' | 'gist'
-
 export type RepoUrlInfo = {
   url: string
-  type: HostType
+  type: string
   project: string
   user: string
 }

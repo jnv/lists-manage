@@ -1,4 +1,5 @@
 import ghGot from 'gh-got'
+import { Response } from 'got'
 import { RepoUrlInfo, RepoDetail } from './types'
 
 type GHResponse = {
@@ -8,12 +9,12 @@ type GHResponse = {
 
 export async function fetchRepoDetails(
   repoInfo: Readonly<RepoUrlInfo>
-): RepoDetail {
+): Promise<RepoDetail> {
   const repoApiPath = `repos/${repoInfo.user}/${repoInfo.project}`
-  const response = await ghGot(repoApiPath)
-  const body = response.body as GHResponse
+  const { body } = (await ghGot(repoApiPath)) as Response<GHResponse>
   return {
     ...repoInfo,
     description: body.description || '',
+    homepage: body.homepage || '',
   }
 }
