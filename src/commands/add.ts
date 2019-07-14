@@ -1,11 +1,11 @@
 import { Command, flags } from '@oclif/command'
 import { prompt } from 'enquirer'
 import { loadListFile, addItemToSection, writeListFile } from '../listFile'
-import { sortFile } from '../listFile/sort'
 import { serializeFile } from '../serializer'
 import { fetchRepoDetails } from '../repo'
 import { suggestSection } from '../suggestSection'
 import { ListItem } from '../types'
+import { addPrompt } from '../prompts'
 
 export class AddList extends Command {
   public static description = 'Add list URL to the Markdown file'
@@ -28,6 +28,13 @@ export class AddList extends Command {
       description: 'Edit [file] in place',
       default: false,
     }),
+    prompt: flags.boolean({
+      char: 'p',
+      description:
+        'Enable or disable interactive prompt; enabled by default, disabled when output is being redirected',
+      allowNo: true,
+      default: process.stdout.isTTY,
+    }),
   }
 
   static args = [
@@ -45,6 +52,7 @@ export class AddList extends Command {
       this.error('Missing file', { exit: 1 })
       return
     }
+
     const repoDetails = await fetchRepoDetails(args.url)
     const file = await loadListFile(flags.file)
 
@@ -54,57 +62,41 @@ export class AddList extends Command {
     } => ({ name, value: String(value) }))
     if (!sections.length) {
       this.error(
-        `No sections found in file ${flags.file}. do you have a correct file?`,
+        `No sections found in file ${flags.file}. Do you have a correct file?`,
         { exit: 1 }
       )
       return
     }
 
     const initialSection = suggestSection(file.sections)(repoDetails)
-
-    const response = await prompt([
-      {
-        type: 'select',
-        name: 'section',
-        message: 'Select a list section:',
-        choices: sections,
-        initial: initialSection,
-        result(): string {
-          // @ts-ignore
-          return this.focused.value
-        },
-      },
-      {
-        type: 'input',
-        name: 'desc',
-        message: 'Enter list description (optional):',
-        initial: repoDetails.desc,
-      },
-      {
-        type: 'confirm',
-        name: 'homepage',
-        message: `Include list's homepage (${repoDetails.homepage})?`,
-        skip: !repoDetails.homepage,
-      },
-    ])
-
-    const listItem: ListItem = {
-      name: repoDetails.name,
-      url: repoDetails.url,
-      desc: response.desc.trim(),
-    }
-    if (response.homepage) {
-      listItem.extras = [repoDetails.homepage]
-    }
-    const updatedFile = addItemToSection(
-      file,
-      listItem,
-      Number(response.section) // marshalling back 'coz Enquirer doesn't like non-strings
-    )
-    if (flags.write) {
-      writeListFile(flags.file, updatedFile)
+    let response
+    if (flags.prompt) {
+      response = await addPrompt(repoDetails, sections, initialSection)
     } else {
-      this.log(serializeFile(updatedFile))
+      response = {
+        section: initialSection,
+        desc: repoDetails.desc,
+        homepage: !repoDetails.homepage,
+      }
+
+      const listItem: ListItem = {
+        name: repoDetails.name,
+        url: repoDetails.url,
+        desc: response.desc.trim(),
+      }
+      if (response.homepage) {
+        listItem.extras = [repoDetails.homepage]
+      }
+      const updatedFile = addItemToSection(
+        file,
+        listItem,
+        Number(response.section) // marshalling back 'coz Enquirer doesn't like non-strings
+      )
+      if (flags.write) {
+        writeListFile(flags.file, updatedFile)
+      } else {
+        this.log(serializeFile(updatedFile))
+      }
     }
   }
 }
