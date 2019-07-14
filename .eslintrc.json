@@ -19,6 +19,10 @@
   "rules": {
     "prefer-const": "error",
     "no-unused-vars": "off",
+    "node/no-unsupported-features/node-builtins": [
+      "error",
+      { "ignores": ["fs.promises"] }
+    ],
     "node/no-unsupported-features/es-syntax": "off"
   },
   "overrides": [

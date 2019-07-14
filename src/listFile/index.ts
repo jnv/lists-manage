@@ -1,14 +1,20 @@
-import * as fs from 'fs'
-import { promisify } from 'util'
+import { promises as fs } from 'fs'
 import { parseFile } from '../parser'
 import { ListFile, ListItem } from '../types'
 import { sortItems } from './sort'
-
-const readFile = promisify(fs.readFile)
+import { serializeFile } from '../serializer'
 
 export async function loadListFile(filename: string): Promise<ListFile> {
-  const lines = await readFile(filename, 'utf8')
+  const lines = await fs.readFile(filename, 'utf8')
   return parseFile(lines)
+}
+
+export async function writeListFile(
+  filename: string,
+  listFile: ListFile
+): Promise<void> {
+  const str = serializeFile(listFile)
+  return fs.writeFile(filename, str)
 }
 
 export function addItemToSection(

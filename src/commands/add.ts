@@ -1,6 +1,6 @@
 import { Command, flags } from '@oclif/command'
 import { prompt } from 'enquirer'
-import { loadListFile, addItemToSection } from '../listFile'
+import { loadListFile, addItemToSection, writeListFile } from '../listFile'
 import { sortFile } from '../listFile/sort'
 import { serializeFile } from '../serializer'
 import { fetchRepoDetails } from '../repo'
@@ -8,11 +8,13 @@ import { suggestSection } from '../suggestSection'
 import { ListItem } from '../types'
 
 export class AddList extends Command {
-  public static description = 'Add list to the Markdown file'
+  public static description = 'Add list URL to the Markdown file'
 
   static strict = false
 
-  static examples = ['$ lists-manage add']
+  static examples = [
+    '$ lists-manage add -w https://github.com/some-user/awesome-list',
+  ]
 
   public static flags = {
     help: flags.help({ char: 'h' }),
@@ -21,6 +23,11 @@ export class AddList extends Command {
       description: 'Markdown file to work with',
       default: 'README.md',
     }),
+    write: flags.boolean({
+      char: 'w',
+      description: 'Edit [file] in place',
+      default: false,
+    }),
   }
 
   static args = [
@@ -28,7 +35,7 @@ export class AddList extends Command {
       name: 'url',
       required: true,
       description:
-        'URL of the list to add (in form https://github.com/user/repo)',
+        'URL of the list to add (in form of https://github.com/user/repo)',
     },
   ]
 
@@ -89,12 +96,15 @@ export class AddList extends Command {
     if (response.homepage) {
       listItem.extras = [repoDetails.homepage]
     }
-    console.log(response)
     const updatedFile = addItemToSection(
       file,
       listItem,
       Number(response.section) // marshalling back 'coz Enquirer doesn't like non-strings
     )
-    this.log(serializeFile(updatedFile))
+    if (flags.write) {
+      writeListFile(flags.file, updatedFile)
+    } else {
+      this.log(serializeFile(updatedFile))
+    }
   }
 }
