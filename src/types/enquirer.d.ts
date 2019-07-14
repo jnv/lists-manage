@@ -131,7 +131,7 @@ declare namespace EnquirerStatic {
     interface Choice {
       name: string
       message?: string
-      value?: any
+      value?: string
       hint?: string
       disabled?: boolean | string
     }

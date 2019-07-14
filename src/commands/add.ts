@@ -1,10 +1,11 @@
 import { Command, flags } from '@oclif/command'
 import { prompt } from 'enquirer'
-import { loadListFile } from '../listFile'
+import { loadListFile, addItemToSection } from '../listFile'
 import { sortFile } from '../listFile/sort'
 import { serializeFile } from '../serializer'
 import { fetchRepoDetails } from '../repo'
 import { suggestSection } from '../suggestSection'
+import { ListItem } from '../types'
 
 export class AddList extends Command {
   public static description = 'Add list to the Markdown file'
@@ -42,8 +43,8 @@ export class AddList extends Command {
 
     const sections = file.sections.map(({ name }, value): {
       name: string
-      value: number
-    } => ({ name, value }))
+      value: string
+    } => ({ name, value: String(value) }))
     if (!sections.length) {
       this.error(
         `No sections found in file ${flags.file}. do you have a correct file?`,
@@ -61,6 +62,10 @@ export class AddList extends Command {
         message: 'Select a list section:',
         choices: sections,
         initial: initialSection,
+        result(): string {
+          // @ts-ignore
+          return this.focused.value
+        },
       },
       {
         type: 'input',
@@ -75,8 +80,21 @@ export class AddList extends Command {
         skip: !repoDetails.homepage,
       },
     ])
-    this.log(response)
-    // file = sortFile(file)
-    // this.log(serializeFile(file))
+
+    const listItem: ListItem = {
+      name: repoDetails.name,
+      url: repoDetails.url,
+      desc: response.desc.trim(),
+    }
+    if (response.homepage) {
+      listItem.extras = [repoDetails.homepage]
+    }
+    console.log(response)
+    const updatedFile = addItemToSection(
+      file,
+      listItem,
+      Number(response.section) // marshalling back 'coz Enquirer doesn't like non-strings
+    )
+    this.log(serializeFile(updatedFile))
   }
 }
