@@ -5,55 +5,51 @@
 [![License](https://img.shields.io/npm/l/lists-manage.svg)](https://github.com/jnv/lists-manage/blob/master/package.json)
 
 <!-- toc -->
-
-- [Usage](#usage)
-- [Commands](#commands)
-  <!-- tocstop -->
+* [@jnv/lists-manage](#jnvlists-manage)
+* [Usage](#usage)
+* [Commands](#commands)
+<!-- tocstop -->
 
 # Usage
 
 <!-- usage -->
-
 ```sh-session
 $ npm install -g @jnv/lists-manage
 $ lists-manage COMMAND
 running command...
 $ lists-manage (-v|--version|version)
-lists-manage/0.0.0 darwin-x64 node-v10.16.0
+@jnv/lists-manage/0.0.1 darwin-x64 node-v12.6.0
 $ lists-manage --help [COMMAND]
 USAGE
   $ lists-manage COMMAND
 ...
 ```
-
 <!-- usagestop -->
 
 # Commands
 
 <!-- commands -->
+* [`lists-manage add URL`](#lists-manage-add-url)
+* [`lists-manage help [COMMAND]`](#lists-manage-help-command)
 
-- [`lists-manage hello [FILE]`](#lists-manage-hello-file)
-- [`lists-manage help [COMMAND]`](#lists-manage-help-command)
+## `lists-manage add URL`
 
-## `lists-manage hello [FILE]`
-
-describe the command here
+Add list to the Markdown file
 
 ```
 USAGE
-  $ lists-manage hello [FILE]
+  $ lists-manage add URL
+
+ARGUMENTS
+  URL  URL of the list to add (in form https://github.com/user/repo)
 
 OPTIONS
-  -f, --force
+  -f, --file=file  [default: README.md] Markdown file to work with
   -h, --help       show CLI help
-  -n, --name=name  name to print
 
 EXAMPLE
-  $ lists-manage hello
-  hello world from ./src/hello.ts!
+  $ lists-manage add
 ```
-
-_See code: [src/commands/hello.ts](https://github.com/jnv/lists-manage/blob/v0.0.0/src/commands/hello.ts)_
 
 ## `lists-manage help [COMMAND]`
 
@@ -71,5 +67,4 @@ OPTIONS
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.2.0/src/commands/help.ts)_
-
 <!-- commandsstop -->
