@@ -30,4 +30,18 @@ describe('.getRepoInfo', () => {
       url: 'https://github.com/npm/hosted-git-info',
     })
   })
+
+  it('attempts to parse unknown repo type', () => {
+    const result = getRepoInfo('https://notabug.org/themusicgod1/food')
+    expect(result).toEqual({
+      type: 'unknown',
+      project: 'food',
+      user: 'themusicgod1',
+      url: 'https://notabug.org/themusicgod1/food',
+    })
+  })
+
+  it('throws with incompatible URL', () => {
+    expect(() => getRepoInfo('http://example.com')).toThrow()
+  })
 })

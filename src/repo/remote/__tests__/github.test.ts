@@ -1,4 +1,4 @@
-import { fetchRepoDetails } from '../github'
+import { fetchRemoteRepo } from '../github'
 import nock from 'nock'
 import responseBody from './github.fixture.json'
 
@@ -28,7 +28,7 @@ describe('.fetchRepoDetails', () => {
       user: 'jnv',
       url: 'https://github.com/jnv/lists',
     }
-    const result = await fetchRepoDetails(repoInfo)
+    const result = await fetchRemoteRepo(repoInfo)
     expect(result).toEqual({
       ...repoInfo,
       description: 'The definitive list of lists (of lists) curated on GitHub',
@@ -52,7 +52,7 @@ describe('.fetchRepoDetails', () => {
       user: 'jnv',
       url: 'https://github.com/jnv/this-does-not-exist',
     }
-    expect(fetchRepoDetails(repoInfo)).rejects.toThrow(
+    expect(fetchRemoteRepo(repoInfo)).rejects.toThrow(
       "GitHub repository 'jnv/this-does-not-exist' not found"
     )
   })

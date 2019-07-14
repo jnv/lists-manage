@@ -1,4 +1,5 @@
 import hostedGitInfo from 'hosted-git-info'
+import { URL } from 'url'
 import { RepoUrlInfo } from './types'
 
 const OPTIONS: hostedGitInfo.Options = {
@@ -6,10 +7,24 @@ const OPTIONS: hostedGitInfo.Options = {
   noGitPlus: true,
 }
 
+function fallbackRepoInfo(repoUrl: string): RepoUrlInfo {
+  const parsed = new URL(repoUrl)
+  const [, user, project] = parsed.pathname.split('/')
+  if (!user || !project) {
+    throw new Error(`Unsupported or invalid URL: ${repoUrl}`)
+  }
+  return {
+    type: 'unknown',
+    project,
+    user,
+    url: repoUrl,
+  }
+}
+
 export function getRepoInfo(repoUrl: string): RepoUrlInfo {
   const info = hostedGitInfo.fromUrl(repoUrl, OPTIONS)
   if (!info || !info.project || !info.user || !info.type) {
-    throw new Error(`Unknown or unsupported repo host: ${repoUrl}`)
+    return fallbackRepoInfo(repoUrl)
   }
   return {
     type: info.type,

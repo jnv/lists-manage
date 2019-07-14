@@ -1,13 +1,13 @@
 import ghGot from 'gh-got'
 import { Response } from 'got'
-import { RepoUrlInfo, RepoDetail } from './types'
+import { RepoUrlInfo, RepoDetail } from '../types'
 
 type GHResponse = {
   description: string
   homepage: string
 }
 
-export async function fetchRepoDetails(
+export async function fetchRemoteRepo(
   repoInfo: Readonly<RepoUrlInfo>
 ): Promise<RepoDetail> {
   const repoPath = `${repoInfo.user}/${repoInfo.project}`
