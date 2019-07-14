@@ -6,6 +6,7 @@ import { fetchRepoDetails } from '../repo'
 import { suggestSection } from '../suggestSection'
 import { ListItem } from '../types'
 import { addPrompt } from '../prompts'
+import { urlExistsInFile } from '../listFile/duplicate'
 
 export class AddList extends Command {
   public static description = 'Add list URL to the Markdown file'
@@ -55,6 +56,11 @@ export class AddList extends Command {
 
     const repoDetails = await fetchRepoDetails(args.url)
     const file = await loadListFile(flags.file)
+
+    if (urlExistsInFile(file, repoDetails.url)) {
+      this.error('URL is already present in file, exiting.', { exit: 1 })
+      return
+    }
 
     const sections = file.sections.map(({ name }, value): {
       name: string
