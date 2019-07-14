@@ -1,5 +1,5 @@
 import { URL } from 'url'
-import { ListItem, ListFile, Section } from './types'
+import { ListItem, ListFile, Section } from '../types'
 
 type ReadonlyListItems = readonly ListItem[]
 

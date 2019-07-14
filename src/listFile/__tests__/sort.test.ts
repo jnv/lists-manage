@@ -1,5 +1,5 @@
 import { sortItems, sortFile } from '../sort'
-import { ListFile } from '../types'
+import { ListFile } from '../../types'
 
 describe('.sortItems', () => {
   test('sorts items by name', () => {
