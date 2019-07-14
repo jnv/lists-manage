@@ -78,25 +78,26 @@ export class AddList extends Command {
         desc: repoDetails.desc,
         homepage: !repoDetails.homepage,
       }
+    }
 
-      const listItem: ListItem = {
-        name: repoDetails.name,
-        url: repoDetails.url,
-        desc: response.desc.trim(),
-      }
-      if (response.homepage) {
-        listItem.extras = [repoDetails.homepage]
-      }
-      const updatedFile = addItemToSection(
-        file,
-        listItem,
-        Number(response.section) // marshalling back 'coz Enquirer doesn't like non-strings
-      )
-      if (flags.write) {
-        writeListFile(flags.file, updatedFile)
-      } else {
-        this.log(serializeFile(updatedFile))
-      }
+    const listItem: ListItem = {
+      name: repoDetails.name,
+      url: repoDetails.url,
+      desc: response.desc.trim(),
+    }
+    if (response.homepage) {
+      listItem.extras = [repoDetails.homepage]
+    }
+    const updatedFile = addItemToSection(
+      file,
+      listItem,
+      Number(response.section) // marshalling back 'coz Enquirer doesn't like non-strings
+    )
+    if (flags.write) {
+      this.log(`Writing to file ${flags.file}`)
+      await writeListFile(flags.file, updatedFile)
+    } else {
+      this.log(serializeFile(updatedFile))
     }
   }
 }
