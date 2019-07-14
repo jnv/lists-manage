@@ -1,6 +1,7 @@
 import { Section, RepoDetail } from './types'
 const MATCH_SECTION = Object.freeze([
   [/recipe/i, /Non-technical/i],
+  [/food/i, /Non-technical/i],
   [/^awesome.?awesome/i, /Lists of lists/],
   [/^awesome/i, /awesome-\*/],
   [/.*/, /Technical/],

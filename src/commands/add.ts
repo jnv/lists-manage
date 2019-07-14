@@ -60,6 +60,7 @@ export class AddList extends Command {
         name: 'section',
         message: 'Select a list section:',
         choices: sections,
+        initial: initialSection,
       },
       {
         type: 'input',
