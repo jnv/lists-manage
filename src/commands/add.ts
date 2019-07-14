@@ -1,5 +1,4 @@
 import { Command, flags } from '@oclif/command'
-import { prompt } from 'enquirer'
 import { loadListFile, addItemToSection, writeListFile } from '../listFile'
 import { serializeFile } from '../serializer'
 import { fetchRepoDetails } from '../repo'

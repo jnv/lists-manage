@@ -9,3 +9,9 @@ export type RepoDetail = RepoUrlInfo & {
   desc: string
   homepage: string
 }
+
+export type RepoCheck = {
+  url: string
+  exists: boolean
+  redirect: boolean
+}
