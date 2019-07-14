@@ -4,6 +4,7 @@ import { loadListFile } from '../listFile'
 import { sortFile } from '../listFile/sort'
 import { serializeFile } from '../serializer'
 import { fetchRepoDetails } from '../repo'
+import { suggestSection } from '../suggestSection'
 
 export class AddList extends Command {
   public static description = 'Add list to the Markdown file'
@@ -39,7 +40,10 @@ export class AddList extends Command {
     const repoDetails = await fetchRepoDetails(args.url)
     const file = await loadListFile(flags.file)
 
-    const sections = file.sections.map((section): string => section.name)
+    const sections = file.sections.map(({ name }, value): {
+      name: string
+      value: number
+    } => ({ name, value }))
     if (!sections.length) {
       this.error(
         `No sections found in file ${flags.file}. do you have a correct file?`,
@@ -48,7 +52,8 @@ export class AddList extends Command {
       return
     }
 
-    console.log(repoDetails.homepage)
+    const initialSection = suggestSection(file.sections)(repoDetails)
+
     const response = await prompt([
       {
         type: 'select',
@@ -69,8 +74,7 @@ export class AddList extends Command {
         skip: !repoDetails.homepage,
       },
     ])
-    this.log(JSON.stringify(response))
-
+    this.log(response)
     // file = sortFile(file)
     // this.log(serializeFile(file))
   }
