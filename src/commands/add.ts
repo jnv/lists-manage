@@ -83,7 +83,7 @@ export class AddList extends Command {
       response = {
         section: initialSection,
         desc: repoDetails.desc,
-        homepage: !repoDetails.homepage,
+        homepage: !!repoDetails.homepage,
       }
     }
 
