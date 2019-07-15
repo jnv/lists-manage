@@ -6,6 +6,10 @@ describe('.urlExistsInFile', () => {
     { name: 'aksh', url: 'https://github.com/svaksha/aksh' },
     { name: 'recipes', url: 'https://github.com/csclug/recipes' },
     { name: 'weekly', url: 'https://github.com/zenany/weekly' },
+    {
+      name: 'Awesome-arduino',
+      url: 'https://github.com/LEMBED/Awesome-arduino',
+    },
   ]
 
   const file: ListFile = {
@@ -24,5 +28,11 @@ describe('.urlExistsInFile', () => {
 
   test('URL is in file', () => {
     expect(urlExistsInFile(file, 'https://github.com/zenany/weekly')).toBe(true)
+  })
+
+  it('matches duplicate without case sensitivity', () => {
+    expect(
+      urlExistsInFile(file, 'https://github.com/lembed/awesome-arduino')
+    ).toBe(true)
   })
 })
