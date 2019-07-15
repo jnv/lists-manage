@@ -43,6 +43,22 @@ describe('.sortItems', () => {
     expect(sortItems(input)).toEqual(expected)
   })
 
+  test('sorting is stable', () => {
+    const expected = [
+      {
+        name: 'awesome-sharepoint',
+        author: 'BSUG',
+        url: 'https://github.com/BSUG/awesome-sharepoint',
+      },
+      {
+        name: 'awesome-SharePoint',
+        author: 'siaf',
+        url: 'https://github.com/siaf/awesome-SharePoint',
+      },
+    ]
+    expect(sortItems(expected)).toEqual(expected)
+  })
+
   test('sorting ignores dashes', () => {
     const input = [
       { name: 'awesome-b', url: 'https://github.com/github/awesome-b' },
@@ -74,6 +90,32 @@ describe('.sortItems', () => {
           name: 'recipes',
           author: 'csclug',
           url: 'https://github.com/csclug/recipes',
+        },
+      ]
+      expect(sortItems(input)).toEqual(expected)
+    })
+
+    it('compares names case-insensitively', () => {
+      const input = [
+        {
+          name: 'awesome-SharePoint',
+          url: 'https://github.com/siaf/awesome-SharePoint',
+        },
+        {
+          name: 'awesome-sharepoint',
+          url: 'https://github.com/BSUG/awesome-sharepoint',
+        },
+      ]
+      const expected = [
+        {
+          name: 'awesome-sharepoint',
+          author: 'BSUG',
+          url: 'https://github.com/BSUG/awesome-sharepoint',
+        },
+        {
+          name: 'awesome-SharePoint',
+          author: 'siaf',
+          url: 'https://github.com/siaf/awesome-SharePoint',
         },
       ]
       expect(sortItems(input)).toEqual(expected)

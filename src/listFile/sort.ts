@@ -9,6 +9,7 @@ function stripChars(str: string): string {
 function strcmp(str1: string, str2: string): number {
   return stripChars(str1).localeCompare(stripChars(str2), 'en', {
     sensitivity: 'base',
+    usage: 'sort',
   })
 }
 function comparator(a: ListItem, b: ListItem): number {
@@ -28,12 +29,12 @@ function markDuplicates(items: ReadonlyListItems): ListItem[] {
   const firstFound: Map<string, ListItem> = new Map()
   const results = []
   for (const item of items) {
-    const { name } = item
+    const nameKey = item.name.toLowerCase()
     const itemCopy = { ...item }
     results.push(itemCopy)
-    const existing = firstFound.get(name)
+    const existing = firstFound.get(nameKey)
     if (!existing) {
-      firstFound.set(name, itemCopy)
+      firstFound.set(nameKey, itemCopy)
       continue
     }
     if (!existing.author) {
