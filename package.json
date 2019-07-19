@@ -48,7 +48,9 @@
     "typescript": "^3.5.3"
   },
   "scripts": {
+    "pretest": "npm run lint",
     "test": "jest",
+    "test:coverage": "npm run test -- --coverage",
     "lint": "eslint --ext .js,.ts src/",
     "version": "oclif-dev readme && git add README.md",
     "prebuild": "rm -rf lib",
