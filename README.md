@@ -5,8 +5,8 @@
 <!-- prettier-ignore-end -->
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/jnv/lists-manage.svg)](https://npmjs.org/package/@jnv/lists-manage)
-[![License](https://img.shields.io/npm/l/lists-manage.svg)](https://github.com/jnv/lists-manage/blob/master/package.json)
+[![Version](https://img.shields.io/npm/v/@jnv/lists-manage)](https://npmjs.org/package/@jnv/lists-manage)
+[![License](https://img.shields.io/github/license/jnv/lists-manage)](LICENSE)
 
 CLI program to manage [lists] project.
 
