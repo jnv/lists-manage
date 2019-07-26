@@ -1,2 +1,1 @@
-import { AddList } from './commands/add'
-export = AddList
+export { run } from '@oclif/command'

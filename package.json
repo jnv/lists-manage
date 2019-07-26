@@ -66,7 +66,7 @@
     "/oclif.manifest.json"
   ],
   "oclif": {
-    "commands": "./src/commands",
+    "commands": "./lib/commands",
     "bin": "lists-manage",
     "plugins": [
       "@oclif/plugin-help"
