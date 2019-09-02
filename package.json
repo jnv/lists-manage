@@ -17,7 +17,7 @@
   "author": "Jan Vlnas <npm@jan.vlnas.cz> (https://jan.vlnas.cz/)",
   "dependencies": {
     "@oclif/command": "^1.5.16",
-    "@oclif/config": "^1.13.2",
+    "@oclif/config": "^1.13.3",
     "@oclif/errors": "^1.2.2",
     "@oclif/plugin-help": "^2.2.0",
     "debug": "^4.1.1",
