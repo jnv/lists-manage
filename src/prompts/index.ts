@@ -18,7 +18,6 @@ export async function repoPrompt(): Promise<string> {
     name: 'url',
     message: 'Enter repository URL:',
   })
-  console.log(result, result.url)
   return result.url
 }
 export function addPrompt(
