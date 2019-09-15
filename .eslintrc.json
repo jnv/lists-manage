@@ -29,6 +29,7 @@
     {
       "files": ["*.ts"],
       "rules": {
+        "@typescript-eslint/ban-ts-ignore": "warn",
         "@typescript-eslint/no-unused-vars": "off",
         "@typescript-eslint/explicit-member-accessibility": "off",
         "@typescript-eslint/prefer-interface": "off",
@@ -36,7 +37,8 @@
         "@typescript-eslint/explicit-function-return-type": [
           "warn",
           { "allowExpressions": true, "allowHigherOrderFunctions": true }
-        ]
+        ],
+        "node/no-missing-import": "off"
       }
     },
     {
