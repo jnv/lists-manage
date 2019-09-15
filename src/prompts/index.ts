@@ -2,10 +2,24 @@ import { prompt } from 'enquirer'
 import { RepoDetail } from '../types'
 
 export type SectionsChoice = { name: string; value: string }
+
+type RepoPromptResults = {
+  url: string
+}
 type AddPromptResults = {
   desc: string
   section: string
   homepage: boolean
+}
+
+export async function repoPrompt(): Promise<string> {
+  const result: RepoPromptResults = await prompt({
+    type: 'input',
+    name: 'url',
+    message: 'Enter repository URL:',
+  })
+  console.log(result, result.url)
+  return result.url
 }
 export function addPrompt(
   repoDetail: RepoDetail,

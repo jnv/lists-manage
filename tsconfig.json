@@ -8,6 +8,7 @@
     "noImplicitAny": true,
     "moduleResolution": "node",
     "outDir": "lib",
+    "rootDir": "src",
     "baseUrl": ".",
     "esModuleInterop": true,
     "resolveJsonModule": true,

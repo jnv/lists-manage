@@ -4,7 +4,7 @@ import { serializeFile } from '../serializer'
 import { fetchRepoDetails } from '../repo'
 import { suggestSection } from '../suggestSection'
 import { ListItem } from '../types'
-import { addPrompt } from '../prompts'
+import { repoPrompt, addPrompt } from '../prompts'
 import { urlExistsInFile } from '../listFile/duplicate'
 import { normalizeDesc } from '../normalize'
 
@@ -14,25 +14,29 @@ export class AddList extends Command {
   static strict = false
 
   static examples = [
-    '$ lists-manage add -w https://github.com/some-user/awesome-list',
+    '$ lists-manage add',
+    '$ lists-manage add https://github.com/some-user/awesome-list',
+    '$ lists-manage add --no-write https://github.com/some-user/awesome-list',
   ]
 
   public static flags = {
     help: flags.help({ char: 'h' }),
     file: flags.string({
       char: 'f',
-      description: 'Markdown file to work with',
+      description: 'markdown file to work with',
       default: 'README.md',
     }),
     write: flags.boolean({
       char: 'w',
-      description: 'Edit [file] in place',
-      default: false,
+      description:
+        'modify file in place; enabled by default, prints file contents to stdout when disabled',
+      default: true,
+      allowNo: true,
     }),
     prompt: flags.boolean({
       char: 'p',
       description:
-        'Enable or disable interactive prompt; enabled by default, disabled when output is being redirected',
+        'disable interactive prompt; enabled by default, disabled when output is being redirected',
       allowNo: true,
       default: process.stdout.isTTY,
     }),
@@ -41,7 +45,7 @@ export class AddList extends Command {
   static args = [
     {
       name: 'url',
-      required: true,
+      required: false,
       description:
         'URL of the list to add (in form of https://github.com/user/repo)',
     },
@@ -54,7 +58,16 @@ export class AddList extends Command {
       return
     }
 
-    const repoDetails = await fetchRepoDetails(args.url)
+    let repoUrl = args.url
+    if (!repoUrl && !flags.prompt) {
+      this.error('Repository URL not specified and prompting is disabled')
+      return
+    }
+    if (!repoUrl) {
+      repoUrl = await repoPrompt()
+    }
+
+    const repoDetails = await fetchRepoDetails(repoUrl)
     const file = await loadListFile(flags.file)
 
     if (urlExistsInFile(file, repoDetails.url)) {
