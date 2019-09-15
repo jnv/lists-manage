@@ -7,6 +7,7 @@ import { ListItem } from '../types'
 import { repoPrompt, addPrompt } from '../prompts'
 import { urlExistsInFile } from '../listFile/duplicate'
 import { normalizeDesc } from '../normalize'
+import { gitDir } from '../git'
 
 export class AddList extends Command {
   public static description = 'Add list URL to the Markdown file'
@@ -39,6 +40,12 @@ export class AddList extends Command {
         'disable interactive prompt; enabled by default, disabled when output is being redirected',
       allowNo: true,
       default: process.stdout.isTTY,
+    }),
+    commit: flags.boolean({
+      char: 'c',
+      description: 'commit changes to git',
+      default: false,
+      dependsOn: ['write'],
     }),
   }
 
@@ -118,6 +125,12 @@ export class AddList extends Command {
       await writeListFile(flags.file, updatedFile)
     } else {
       this.log(serializeFile(updatedFile))
+    }
+
+    if (flags.commit) {
+      this.log(`Commiting change`)
+      const message = `Add ${repoDetails.name}`
+      await gitDir(process.cwd()).commit(flags.file, message)
     }
   }
 }

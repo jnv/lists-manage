@@ -25,6 +25,7 @@
     "gh-got": "^8.1.0",
     "got": "^9.6.0",
     "hosted-git-info": "^3.0.0",
+    "simple-git": "^1.126.0",
     "tslib": "^1"
   },
   "devDependencies": {
