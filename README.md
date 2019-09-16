@@ -7,7 +7,6 @@
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![Version](https://img.shields.io/npm/v/@jnv/lists-manage)](https://npmjs.org/package/@jnv/lists-manage)
 [![License](https://img.shields.io/github/license/jnv/lists-manage)](LICENSE)
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fjnv%2Flists-manage.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fjnv%2Flists-manage?ref=badge_shield)
 
 CLI program to manage [lists] project.
 
@@ -133,6 +132,3 @@ _See code: [src/commands/sort.ts](https://github.com/jnv/lists-manage/blob/v0.2.
 MIT
 
 [lists]: https://github.com/jnv/lists
-
-
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fjnv%2Flists-manage.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fjnv%2Flists-manage?ref=badge_large)
