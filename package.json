@@ -42,7 +42,7 @@
     "eslint-plugin-prettier": "^3.1.0",
     "globby": "^10",
     "jest": "^24.9.0",
-    "nock": "^11.3.4",
+    "nock": "^11.3.5",
     "prettier": "1.18.2",
     "ts-jest": "^24.1.0",
     "ts-node": "^8",
