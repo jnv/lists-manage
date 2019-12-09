@@ -17,5 +17,5 @@ export function serializeFile(file: ListFile): string {
   if (file.suffix) {
     output += `\n${file.suffix}`
   }
-  return output.replace(/\s+$/, '')
+  return output.replace(/\s+$/, '\n')
 }

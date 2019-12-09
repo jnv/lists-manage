@@ -46,7 +46,8 @@ Prefix here.
 
 <!-- lists-end -->
 
-Suffix here.`
+Suffix here.
+`
 
 describe('.serializeFile', () => {
   test('converts file to Markdown', () => {
