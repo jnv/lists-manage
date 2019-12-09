@@ -66,7 +66,7 @@ EXAMPLES
   $ lists-manage add --no-write https://github.com/some-user/awesome-list
 ```
 
-_See code: [src/commands/add.ts](https://github.com/jnv/lists-manage/blob/v0.2.1/src/commands/add.ts)_
+_See code: [src/commands/add.ts](https://github.com/jnv/lists-manage/blob/v0.3.0/src/commands/add.ts)_
 
 ## `lists-manage fix`
 
@@ -86,7 +86,7 @@ EXAMPLES
   $ lists-manage fix -f MY_LISTS_FILE.md
 ```
 
-_See code: [src/commands/fix.ts](https://github.com/jnv/lists-manage/blob/v0.2.1/src/commands/fix.ts)_
+_See code: [src/commands/fix.ts](https://github.com/jnv/lists-manage/blob/v0.3.0/src/commands/fix.ts)_
 
 ## `lists-manage help [COMMAND]`
 
@@ -103,7 +103,7 @@ OPTIONS
   --all  see all commands in CLI
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.2.1/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.2.2/src/commands/help.ts)_
 
 ## `lists-manage sort`
 
@@ -123,7 +123,7 @@ EXAMPLES
   $ lists-manage sort -f MY_LISTS_FILE.md
 ```
 
-_See code: [src/commands/sort.ts](https://github.com/jnv/lists-manage/blob/v0.2.1/src/commands/sort.ts)_
+_See code: [src/commands/sort.ts](https://github.com/jnv/lists-manage/blob/v0.3.0/src/commands/sort.ts)_
 <!-- commandsstop -->
 <!-- prettier-ignore-end -->
 
