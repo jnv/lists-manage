@@ -22,7 +22,7 @@
     "@oclif/plugin-help": "^2",
     "debug": "^4.1.1",
     "enquirer": "^2.3.4",
-    "gh-got": "^8.1.0",
+    "gh-got": "^9.0.0",
     "got": "^9.6",
     "hosted-git-info": "^3.0.2",
     "simple-git": "^1.131.0",
