@@ -19,7 +19,7 @@
     "@oclif/command": "^1",
     "@oclif/config": "^1",
     "@oclif/errors": "^1",
-    "@oclif/plugin-help": "^2",
+    "@oclif/plugin-help": "^3",
     "debug": "^4.1.1",
     "enquirer": "^2.3.5",
     "gh-got": "^9.0.0",
