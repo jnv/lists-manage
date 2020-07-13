@@ -24,7 +24,7 @@
     "enquirer": "^2.3.6",
     "gh-got": "^9.0.0",
     "got": "^9.6",
-    "hosted-git-info": "^3.0.4",
+    "hosted-git-info": "^3.0.5",
     "simple-git": "^2.12.0",
     "tslib": "^2"
   },
