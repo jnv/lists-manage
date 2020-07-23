@@ -33,7 +33,8 @@ export function addPrompt(
       choices: sections,
       initial: initialSection,
       result(): string {
-        // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore Probably broken typing of Enquirer
         return this.focused.value
       },
     },

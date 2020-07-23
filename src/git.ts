@@ -1,7 +1,10 @@
 import simplegit, { CommitSummary } from 'simple-git/promise'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function gitDir(workingDir: string) {
+type GitDir = {
+  commit(file: string, message: string): Promise<CommitSummary>
+}
+
+export function gitDir(workingDir: string): GitDir {
   const git = simplegit(workingDir)
 
   return {
