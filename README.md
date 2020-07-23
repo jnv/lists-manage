@@ -26,10 +26,16 @@ You must have [Node.js](https://nodejs.org/) 10+ and npm installed.
 Then inside the cloned repository of [lists] project (where the `README.md` file is located) run:
 
 ```sh-session
-$ npx @jnv/lists-manage add -w https://github.com/link-to/awesome-list
+$ npx @jnv/lists-manage add
 ```
 
 This will run this package and prompt you about the list you are about to add.
+
+Optionally run with `-c` flag to autocommit the addition with proper commit message:
+
+```sh-session
+$ npx @jnv/lists-manage add -c
+```
 
 See [Commands](#commands) below for additional options and features.
 
