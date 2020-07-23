@@ -1,19 +1,26 @@
-import got from 'got'
+import {
+  Got,
+  Response,
+  OptionsOfJSONResponseBody,
+  CancelableRequest,
+} from 'got'
+import { Url } from 'url'
 
-declare const ghGot: ghGot.GhGotInstance
+declare const ghGot: ghGot.GhGotFn
+
+type GotUrl = string | Url
 
 declare namespace ghGot {
   type GhGotFn = {
-    (url: got.GotUrl): got.GotPromise<object>
-    (url: got.GotUrl, options: GhGotOptions): got.GotPromise<object>
-  } & got.GotFn
+    (url: GotUrl): CancelableRequest<Response<object>>
+    (url: GotUrl, options: GhGotOptions): CancelableRequest<Response<object>>
+  } & Got
 
-  type GhGotOptions = got.GotJSONOptions & {
+  type GhGotOptions = OptionsOfJSONResponseBody & {
     token?: string
-    baseUrl?: string
+    prefixUrl?: string
+    body?: object
   }
-
-  type GhGotInstance<T = GhGotFn> = got.GotInstance<T>
 }
 
 export = ghGot
