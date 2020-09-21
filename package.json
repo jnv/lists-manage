@@ -23,7 +23,7 @@
     "debug": "^4.2.0",
     "enquirer": "^2.3.6",
     "gh-got": "^9.0.0",
-    "got": "^11.6",
+    "got": "^11.7",
     "hosted-git-info": "^3.0.5",
     "simple-git": "^2.20.1",
     "tslib": "^2"
