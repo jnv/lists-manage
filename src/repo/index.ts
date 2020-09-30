@@ -36,11 +36,17 @@ export async function checkRepo(repoUrl: string): Promise<RepoCheck> {
       result.url = response.url
     }
     return result
-  } catch (e) {
-    if (e.statusCode === 404 || e.statusCode === 451) {
-      result.exists = false
-      return result
+  } catch (e: unknown) {
+    if (e instanceof got.HTTPError) {
+      const {
+        response: { statusCode },
+      } = e
+      if (statusCode === 404 || statusCode === 451) {
+        result.exists = false
+        return result
+      }
     }
+
     throw e
   }
 }
