@@ -37,7 +37,7 @@ export async function checkRepo(repoUrl: string): Promise<RepoCheck> {
     }
     return result
   } catch (e) {
-    if (e.statusCode === 404) {
+    if (e.statusCode === 404 || e.statusCode === 451) {
       result.exists = false
       return result
     }

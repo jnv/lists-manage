@@ -73,8 +73,8 @@ export class FixList extends Command {
             items.splice(itemIdx, 1, newItem)
           }
         } catch (e) {
-          this.error(`Failed to check ${item.url}`)
-          this.error(e)
+          this.warn(`Failed to check ${item.url}`)
+          this.warn(e)
         }
         i++
         if (flags.write && i % 10 === 0) {
