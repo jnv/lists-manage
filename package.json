@@ -1,6 +1,6 @@
 {
   "name": "@jnv/lists-manage",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "main": "lib/index.js",
   "license": "MIT",
   "engines": {

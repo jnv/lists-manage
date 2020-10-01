@@ -72,7 +72,7 @@ EXAMPLES
   $ lists-manage add --no-write https://github.com/some-user/awesome-list
 ```
 
-_See code: [src/commands/add.ts](https://github.com/jnv/lists-manage/blob/v0.4.2/src/commands/add.ts)_
+_See code: [src/commands/add.ts](https://github.com/jnv/lists-manage/blob/v0.5.0/src/commands/add.ts)_
 
 ## `lists-manage fix`
 
@@ -92,7 +92,7 @@ EXAMPLES
   $ lists-manage fix -f MY_LISTS_FILE.md
 ```
 
-_See code: [src/commands/fix.ts](https://github.com/jnv/lists-manage/blob/v0.4.2/src/commands/fix.ts)_
+_See code: [src/commands/fix.ts](https://github.com/jnv/lists-manage/blob/v0.5.0/src/commands/fix.ts)_
 
 ## `lists-manage help [COMMAND]`
 
@@ -129,7 +129,7 @@ EXAMPLES
   $ lists-manage sort -f MY_LISTS_FILE.md
 ```
 
-_See code: [src/commands/sort.ts](https://github.com/jnv/lists-manage/blob/v0.4.2/src/commands/sort.ts)_
+_See code: [src/commands/sort.ts](https://github.com/jnv/lists-manage/blob/v0.5.0/src/commands/sort.ts)_
 <!-- commandsstop -->
 <!-- prettier-ignore-end -->
 
