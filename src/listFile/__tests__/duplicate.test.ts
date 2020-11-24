@@ -22,7 +22,7 @@ describe('.urlExistsInFile', () => {
   }
   test('URL is not in file', () => {
     expect(urlExistsInFile(file, 'https://github.com/some/different-url')).toBe(
-      false
+      true
     )
   })
 
