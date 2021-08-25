@@ -51,7 +51,7 @@ describe('.fetchRepoDetails', () => {
       author: 'jnv',
       url: 'https://github.com/jnv/this-does-not-exist',
     }
-    expect(fetchRemoteRepo(repoInfo)).rejects.toThrow(
+    await expect(fetchRemoteRepo(repoInfo)).rejects.toThrow(
       "GitHub repository 'jnv/this-does-not-exist' not found"
     )
   })

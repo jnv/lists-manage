@@ -19,7 +19,7 @@ export async function fetchRemoteRepo(
       homepage: body.homepage || '',
     }
   } catch (error) {
-    if (error.statusCode === 404) {
+    if (error.response.statusCode === 404) {
       error.message = `GitHub repository '${repoPath}' not found`
     }
     throw error
