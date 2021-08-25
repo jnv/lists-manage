@@ -50,6 +50,8 @@ See [Commands](#commands) below for additional options and features.
 
 ## `lists-manage add [URL]`
 
+Add list URL to the Markdown file
+
 ```
 USAGE
   $ lists-manage add [URL]
@@ -70,9 +72,11 @@ EXAMPLES
   $ lists-manage add --no-write https://github.com/some-user/awesome-list
 ```
 
-_See code: [src/commands/add.ts](https://github.com/jnv/lists-manage/blob/v0.5.1/src/commands/add.ts)_
+_See code: [src/commands/add.ts](https://github.com/jnv/lists-manage/blob/v0.5.2/src/commands/add.ts)_
 
 ## `lists-manage fix`
+
+Fix removed and redirected links
 
 ```
 USAGE
@@ -88,9 +92,11 @@ EXAMPLES
   $ lists-manage fix -f MY_LISTS_FILE.md
 ```
 
-_See code: [src/commands/fix.ts](https://github.com/jnv/lists-manage/blob/v0.5.1/src/commands/fix.ts)_
+_See code: [src/commands/fix.ts](https://github.com/jnv/lists-manage/blob/v0.5.2/src/commands/fix.ts)_
 
 ## `lists-manage help [COMMAND]`
+
+display help for lists-manage
 
 ```
 USAGE
@@ -103,9 +109,11 @@ OPTIONS
   --all  see all commands in CLI
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.0/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.2/src/commands/help.ts)_
 
 ## `lists-manage sort`
+
+Just sort the items in file
 
 ```
 USAGE
@@ -121,7 +129,7 @@ EXAMPLES
   $ lists-manage sort -f MY_LISTS_FILE.md
 ```
 
-_See code: [src/commands/sort.ts](https://github.com/jnv/lists-manage/blob/v0.5.1/src/commands/sort.ts)_
+_See code: [src/commands/sort.ts](https://github.com/jnv/lists-manage/blob/v0.5.2/src/commands/sort.ts)_
 <!-- commandsstop -->
 <!-- prettier-ignore-end -->
 
