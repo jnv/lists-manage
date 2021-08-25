@@ -82,10 +82,15 @@ export class AddList extends Command {
       return
     }
 
-    const sections = file.sections.map(({ name }, value): {
-      name: string
-      value: string
-    } => ({ name, value: String(value) }))
+    const sections = file.sections.map(
+      (
+        { name },
+        value
+      ): {
+        name: string
+        value: string
+      } => ({ name, value: String(value) })
+    )
     if (!sections.length) {
       this.error(
         `No sections found in file ${flags.file}. Do you have a correct file?`,
