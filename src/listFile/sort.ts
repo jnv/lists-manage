@@ -52,14 +52,12 @@ export function sortItems(items: ReadonlyListItems): ListItem[] {
 }
 
 export function sortFile(file: ListFile): ListFile {
-  const sections = file.sections.map(
-    (section): Section => {
-      return {
-        ...section,
-        items: sortItems(section.items),
-      }
+  const sections = file.sections.map((section): Section => {
+    return {
+      ...section,
+      items: sortItems(section.items),
     }
-  )
+  })
   return {
     ...file,
     sections,

@@ -29,8 +29,7 @@ const testCases = [
       },
       {
         name: 'Front-end-Web-Development-Interview-Question',
-        url:
-          'https://github.com/paddingme/Front-end-Web-Development-Interview-Question',
+        url: 'https://github.com/paddingme/Front-end-Web-Development-Interview-Question',
         note: 'In Chinese',
       },
     ],
