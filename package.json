@@ -31,7 +31,7 @@
   "devDependencies": {
     "@oclif/dev-cli": "^1.26.0",
     "@types/debug": "^4.1.7",
-    "@types/jest": "^27.0.1",
+    "@types/jest": "^27.0.2",
     "@types/node": "^16.7.10",
     "@typescript-eslint/eslint-plugin": "^4.30.0",
     "@typescript-eslint/parser": "^4.32.0",
