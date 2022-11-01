@@ -16,7 +16,7 @@
   "bugs": "https://github.com/jnv/lists-manage/issues",
   "author": "Jan Vlnas <npm@jan.vlnas.cz> (https://jan.vlnas.cz/)",
   "dependencies": {
-    "@oclif/command": "^1.8.6",
+    "@oclif/command": "^1.8.19",
     "@oclif/config": "^1",
     "@oclif/errors": "^1",
     "@oclif/plugin-help": "^5",
