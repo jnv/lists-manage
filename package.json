@@ -21,7 +21,7 @@
     "@oclif/errors": "^1",
     "@oclif/plugin-help": "^5",
     "debug": "^4.3.4",
-    "enquirer": "^2.3.6",
+    "enquirer": "^2.4.1",
     "gh-got": "^9.0.0",
     "got": "^11.8",
     "hosted-git-info": "^6.1.1",
