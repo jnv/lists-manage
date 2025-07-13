@@ -1,7 +1,6 @@
 import { getRepoInfo } from './repoInfo.ts'
 import type { RepoDetail, RepoCheck } from './types.ts'
 import { fetchRemoteRepo } from './remote/github.ts'
-import got from 'got'
 
 export { getRepoInfo }
 
@@ -29,24 +28,13 @@ export async function checkRepo(repoUrl: string): Promise<RepoCheck> {
     return result
   }
 
-  try {
-    const response = await got.head(repoUrl)
-    if (response.url !== repoUrl) {
-      result.redirect = true
-      result.url = response.url
-    }
-    return result
-  } catch (e: unknown) {
-    if (e instanceof got.HTTPError) {
-      const {
-        response: { statusCode },
-      } = e
-      if (statusCode === 404 || statusCode === 451) {
-        result.exists = false
-        return result
-      }
-    }
-
-    throw e
+  const response = await fetch(repoUrl, { method: 'HEAD', redirect: 'follow' })
+  if (response.url !== repoUrl) {
+    result.redirect = true
+    result.url = response.url
   }
+  if (response.status === 404 || response.status === 451) {
+    result.exists = false
+  }
+  return result
 }
