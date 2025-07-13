@@ -6,6 +6,9 @@
     "rewriteRelativeImportExtensions": true,
     "erasableSyntaxOnly": true,
     "verbatimModuleSyntax": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "outDir": "lib",
+    "rootDir": "src",
+    "baseUrl": ".",
   }
 }
