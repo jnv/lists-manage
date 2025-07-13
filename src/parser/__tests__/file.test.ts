@@ -60,5 +60,5 @@ blah.
     suffix: '<!-- lists-end -->\nSuffix\n<!-- lists-end -->\nblah.\n',
     sections: [{ level: 1, name: 'Some section', items: [] }],
   }
-  assert.deepEqual(result, expected)
+  assert.deepStrictEqual(result, expected)
 })
