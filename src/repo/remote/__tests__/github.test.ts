@@ -18,7 +18,7 @@ const responseHeaders = {
   'X-RateLimit-Reset': '1372700873',
 };
 
-describe('.fetchRepoDetails', () => {
+describe('.fetchRemoteRepo', () => {
   it('calls GitHub API to fetch repo details', async () => {
     const scope = nock('https://api.github.com')
       .get('/repos/jnv/lists')
