@@ -1,4 +1,4 @@
-import { simpleGit, CommitResult } from 'simple-git'
+import { simpleGit, type CommitResult } from 'simple-git'
 
 type GitDir = {
   commit(file: string, message: string): Promise<CommitResult>
