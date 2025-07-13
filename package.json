@@ -5,9 +5,7 @@
   "license": "MIT",
   "type": "module",
   "engines": {
-    "//": "needed for named capture groups and fs.promise",
-    "node": ">=10",
-    "npm": ">=6"
+    "node": ">=24"
   },
   "repository": "github:jnv/lists-manage",
   "bin": {
