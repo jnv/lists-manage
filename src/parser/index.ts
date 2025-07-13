@@ -1,1 +1,1 @@
-export { parseFile } from './file'
+export { parseFile } from './file.ts'

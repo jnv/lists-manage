@@ -1,11 +1,11 @@
 import { Command, flags } from '@oclif/command'
 import debug from 'debug'
-import { loadListFile, addItemToSection, writeListFile } from '../listFile'
-import { serializeFile } from '../serializer'
-import { sortFile } from '../listFile/sort'
-import { checkRepo } from '../repo'
-import { updateItem } from '../listItem'
-import { ListFile } from '../types'
+import { loadListFile, writeListFile } from '../listFile/index.ts'
+import { serializeFile } from '../serializer/index.ts'
+import { sortFile } from '../listFile/sort.ts'
+import { checkRepo } from '../repo/index.ts'
+import { updateItem } from '../listItem.ts'
+import type { ListFile } from '../types.ts'
 
 const d = debug('cli')
 

@@ -1,9 +1,7 @@
 import { Command, flags } from '@oclif/command'
-import { loadListFile, addItemToSection, writeListFile } from '../listFile'
-import { serializeFile } from '../serializer'
-import { sortFile } from '../listFile/sort'
-import { checkRepo } from '../repo'
-import { updateItem } from '../listItem'
+import { loadListFile, writeListFile } from '../listFile/index.ts'
+import { serializeFile } from '../serializer/index.ts'
+import { sortFile } from '../listFile/sort.ts'
 
 export class SortFile extends Command {
   public static description = 'Just sort the items in file'
