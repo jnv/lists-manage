@@ -9,6 +9,7 @@ async function githubApiRequest<T = any>(endpoint: string): Promise<T> {
   const githubToken = process.env.GITHUB_TOKEN
   const headers: Record<string, string> = {
     'Accept': 'application/vnd.github.v3+json',
+    'User-Agent': '@jnv/lists-manage',
   }
   if (githubToken) {
     headers['Authorization'] = `Bearer ${githubToken}`
