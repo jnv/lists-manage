@@ -1,4 +1,6 @@
-import { parseSections } from '../sections'
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { parseSections } from '../sections.ts';
 
 test('empty sections', () => {
   const input = [
@@ -6,16 +8,14 @@ test('empty sections', () => {
     '## Level 1',
     '### Level 2',
     '#### Level 3',
-  ]
-
+  ];
   const expected = [
     { name: 'Level 1', level: 1, items: [] },
     { name: 'Level 2', level: 2, items: [] },
     { name: 'Level 3', level: 3, items: [] },
-  ]
-
-  expect(parseSections(input)).toEqual(expected)
-})
+  ];
+  assert.partialDeepStrictEqual(parseSections(input), expected);
+});
 
 test('section items', () => {
   const input = [
@@ -24,17 +24,25 @@ test('section items', () => {
     '',
     '### Level 2',
     '* [some other link](http://example.org)',
-  ]
-
+  ];
   const expected = [
-    expect.objectContaining({ name: 'Level 1', level: 1 }),
-    expect.objectContaining({ name: 'Level 2', level: 2 }),
-  ]
-
-  const output = parseSections(input)
-
-  expect(output).toEqual(expected)
-  for (const section of output) {
-    expect(section.items).toHaveLength(1)
-  }
-})
+    {
+      name: 'Level 1', level: 1, items: [
+        {
+          name: 'some link',
+          url: 'http://example.com',
+          desc: 'Whatever I put here',
+        },
+      ]
+    },
+    {
+      name: 'Level 2', level: 2, items: [
+        {
+          name: 'some other link',
+          url: 'http://example.org',
+        },
+      ]
+    },
+  ];
+  assert.partialDeepStrictEqual(parseSections(input), expected);
+});

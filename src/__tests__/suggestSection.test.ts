@@ -1,5 +1,7 @@
-import { suggestSection } from '../suggestSection'
-import { Section } from '../types'
+import { describe, it } from 'node:test';
+import assert from 'node:assert';
+import { suggestSection } from '../suggestSection.ts';
+import type { Section } from '../types.ts';
 
 const sections: Section[] = [
   // 0
@@ -30,20 +32,20 @@ describe('.suggestSection', () => {
     const repo = {
       name: 'awesome-comparisons',
     }
-    expect(sectionForRepo(repo)).toBe(2)
+    assert.strictEqual(sectionForRepo(repo), 2)
   })
 
   it('suggests index for recipes', () => {
     const repo = {
       name: 'my-taco-recipes',
     }
-    expect(sectionForRepo(repo)).toBe(0)
+    assert.strictEqual(sectionForRepo(repo), 0)
   })
 
   it('falls back to technical', () => {
     const repo = {
       name: 'asdasdasd',
     }
-    expect(sectionForRepo(repo)).toBe(1)
+    assert.strictEqual(sectionForRepo(repo), 1)
   })
 })

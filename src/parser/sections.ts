@@ -1,5 +1,5 @@
-import { Section } from '../types'
-import { parseItems } from './items'
+import type { Section } from '../types.ts'
+import { parseItems } from './items.ts'
 
 type ProtoSection = Pick<Section, 'name' | 'level'> & {
   lines: string[]

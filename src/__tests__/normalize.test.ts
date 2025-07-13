@@ -1,7 +1,9 @@
-import { normalizeDesc } from '../normalize'
+import { describe, it } from 'node:test';
+import assert from 'node:assert';
+import { normalizeDesc } from '../normalize.ts';
 
 describe('.normalizeDesc', () => {
-  test.each([
+  const cases = [
     [
       'A curated list of awesome activeadmin resources, extensions, posts and utilities.',
       'Activeadmin resources, extensions, posts and utilities.',
@@ -31,7 +33,10 @@ describe('.normalizeDesc', () => {
       'A curated list of amazingly awesome open source rails related resources inspired by Awesome PHP.',
       'Open source rails related resources',
     ],
-  ])('%s -> %s', (input, expected) => {
-    expect(normalizeDesc(input)).toBe(expected)
-  })
-})
+  ];
+  cases.forEach(([input, expected]) => {
+    it(`${input} -> ${expected}`, () => {
+      assert.strictEqual(normalizeDesc(input), expected);
+    });
+  });
+});

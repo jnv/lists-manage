@@ -1,5 +1,5 @@
-import { ListFile, Section } from '../types'
-import { serializeItems } from './items'
+import type { ListFile, Section } from '../types.ts'
+import { serializeItems } from './items.ts'
 
 function serializeSection(section: Section): string {
   const headingLevel = section.level + 1 // Always H2+

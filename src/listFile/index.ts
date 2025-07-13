@@ -1,8 +1,8 @@
 import { promises as fs } from 'fs'
-import { parseFile } from '../parser'
-import { ListFile, ListItem } from '../types'
-import { sortItems } from './sort'
-import { serializeFile } from '../serializer'
+import { parseFile } from '../parser/file.ts'
+import type { ListFile, ListItem } from '../types.ts'
+import { sortItems } from './sort.ts'
+import { serializeFile } from '../serializer/index.ts'
 
 export async function loadListFile(filename: string): Promise<ListFile> {
   const lines = await fs.readFile(filename, 'utf8')

@@ -1,5 +1,7 @@
-import { ListFile } from '../../types'
-import { addItemToSection } from '..'
+import { describe, it } from 'node:test';
+import assert from 'node:assert';
+import type { ListFile } from '../../types.ts';
+import { addItemToSection } from '../index.ts';
 
 describe('.addItemToSection', () => {
   it('adds item to a particular section and sorts it', () => {
@@ -36,6 +38,6 @@ describe('.addItemToSection', () => {
     }
 
     const result = addItemToSection(input, newItem, sectionIdx)
-    expect(result).toEqual(expected)
+    assert.deepEqual(result, expected)
   })
 })

@@ -1,5 +1,7 @@
-import { urlExistsInFile } from '../duplicate'
-import { ListFile } from '../../types'
+import { describe, it } from 'node:test'
+import assert from 'node:assert'
+import { urlExistsInFile } from '../duplicate.ts'
+import type { ListFile } from '../../types.ts'
 
 describe('.urlExistsInFile', () => {
   const list = [
@@ -20,19 +22,19 @@ describe('.urlExistsInFile', () => {
       { level: 2, name: 'Section two', items: list },
     ],
   }
-  test('URL is not in file', () => {
-    expect(urlExistsInFile(file, 'https://github.com/some/different-url')).toBe(
-      false
-    )
+
+  it('returns false when URL is not in file', () => {
+    assert.strictEqual(urlExistsInFile(file, 'https://github.com/some/different-url'), false)
   })
 
-  test('URL is in file', () => {
-    expect(urlExistsInFile(file, 'https://github.com/zenany/weekly')).toBe(true)
+  it('returns true when URL is in file', () => {
+    assert.strictEqual(urlExistsInFile(file, 'https://github.com/zenany/weekly'), true)
   })
 
   it('matches duplicate without case sensitivity', () => {
-    expect(
-      urlExistsInFile(file, 'https://github.com/lembed/awesome-arduino')
-    ).toBe(true)
+    assert.strictEqual(
+      urlExistsInFile(file, 'https://github.com/lembed/awesome-arduino'),
+      true
+    )
   })
 })

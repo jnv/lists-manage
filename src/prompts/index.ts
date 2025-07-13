@@ -1,5 +1,5 @@
 import { prompt } from 'enquirer'
-import { RepoDetail } from '../types'
+import type { RepoDetail } from '../types.ts'
 
 export type SectionsChoice = { name: string; value: string }
 

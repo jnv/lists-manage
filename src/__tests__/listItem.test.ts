@@ -1,4 +1,7 @@
-import { updateItem } from '../listItem'
+import { describe, it } from 'node:test';
+import assert from 'node:assert';
+import { updateItem } from '../listItem.ts';
+
 describe('.updateItem', () => {
   it('changes item name when URL is updated', () => {
     const updatedProps = {
@@ -14,6 +17,6 @@ describe('.updateItem', () => {
       name: 'low-resource-languages',
       author: '',
     }
-    expect(updateItem(input, updatedProps)).toEqual(expected)
+    assert.deepStrictEqual(updateItem(input, updatedProps), expected)
   })
 })

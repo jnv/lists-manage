@@ -1,4 +1,4 @@
-export { RepoDetail } from './repo/types'
+export type { RepoDetail } from './repo/types.ts'
 
 export type ListItem = {
   url: string

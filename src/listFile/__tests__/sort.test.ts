@@ -1,8 +1,10 @@
-import { sortItems, sortFile } from '../sort'
-import { ListFile } from '../../types'
+import { describe, it } from 'node:test';
+import assert from 'node:assert';
+import { sortItems, sortFile } from '../sort.ts';
+import type { ListFile } from '../../types.ts';
 
 describe('.sortItems', () => {
-  test('sorts items by name', () => {
+  it('sorts items by name', () => {
     const input = Object.freeze([
       { name: 'recipes', url: 'https://github.com/csclug/recipes' },
       { name: 'weekly', url: 'https://github.com/zenany/weekly' },
@@ -15,10 +17,10 @@ describe('.sortItems', () => {
       { name: 'weekly', url: 'https://github.com/zenany/weekly' },
     ]
 
-    expect(sortItems(input)).toEqual(expected)
+    assert.deepEqual(sortItems(input), expected)
   })
 
-  test('sorting is case insensitive', () => {
+  it('sorting is case insensitive', () => {
     const input = [
       {
         name: 'Annual-Reading-List',
@@ -40,10 +42,10 @@ describe('.sortItems', () => {
       },
     ]
 
-    expect(sortItems(input)).toEqual(expected)
+    assert.deepEqual(sortItems(input), expected)
   })
 
-  test('sorting is stable', () => {
+  it('sorting is stable', () => {
     const expected = [
       {
         name: 'awesome-sharepoint',
@@ -56,10 +58,10 @@ describe('.sortItems', () => {
         url: 'https://github.com/siaf/awesome-SharePoint',
       },
     ]
-    expect(sortItems(expected)).toEqual(expected)
+    assert.deepEqual(sortItems(expected), expected)
   })
 
-  test('sorting ignores dashes', () => {
+  it('sorting ignores dashes', () => {
     const input = [
       { name: 'awesome-b', url: 'https://github.com/github/awesome-b' },
       { name: 'awesomea', url: 'https://github.com/github/awesomea' },
@@ -69,11 +71,11 @@ describe('.sortItems', () => {
       { name: 'awesome-b', url: 'https://github.com/github/awesome-b' },
     ]
 
-    expect(sortItems(input)).toEqual(expected)
+    assert.deepEqual(sortItems(input), expected)
   })
 
   describe('for duplicate names', () => {
-    test('adds author and sorts by it', () => {
+    it('adds author and sorts by it', () => {
       const input = Object.freeze([
         { name: 'recipes', url: 'https://github.com/csclug/recipes' },
         { name: 'recipes', url: 'https://github.com/bzimmerman/recipes' },
@@ -92,7 +94,7 @@ describe('.sortItems', () => {
           url: 'https://github.com/csclug/recipes',
         },
       ]
-      expect(sortItems(input)).toEqual(expected)
+      assert.deepEqual(sortItems(input), expected)
     })
 
     it('compares names case-insensitively', () => {
@@ -118,7 +120,7 @@ describe('.sortItems', () => {
           url: 'https://github.com/siaf/awesome-SharePoint',
         },
       ]
-      expect(sortItems(input)).toEqual(expected)
+      assert.deepEqual(sortItems(input), expected)
     })
   })
 })
@@ -155,6 +157,6 @@ describe('.sortFile', () => {
       ],
     }
 
-    expect(sortFile(input)).toEqual(expected)
+    assert.deepEqual(sortFile(input), expected)
   })
 })
