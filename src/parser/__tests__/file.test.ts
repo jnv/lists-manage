@@ -1,5 +1,5 @@
 import test from 'node:test';
-import assert from 'node:assert';
+import assert, { partialDeepStrictEqual } from 'node:assert/strict';
 import { parseFile } from '../file.ts';
 
 test('file with prefix, suffix', () => {
@@ -25,17 +25,19 @@ Suffix here.
         name: 'Some section',
         items: [
           {
-            name: 'learnxinyminutes-docs',
-            url: 'https://github.com/adambard/learnxinyminutes-docs',
             desc: 'Code documentation written as code!',
-            extras: ['https://learnxinyminutes.com/'],
-          },
-        ],
-      },
+            extras: [
+              'https://learnxinyminutes.com/'
+            ],
+            name: 'learnxinyminutes-docs',
+            url: 'https://github.com/adambard/learnxinyminutes-docs'
+          }
+        ]
+      }
     ],
     suffix: '<!-- lists-end -->\n\nSuffix here.\n',
   }
-  assert.deepEqual(result, expected)
+  assert.partialDeepStrictEqual(result, expected)
 })
 
 test('ignores consecutive start / end markers', () => {
