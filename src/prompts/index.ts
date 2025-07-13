@@ -1,4 +1,4 @@
-import { prompt } from 'enquirer'
+import { Input, Select, Confirm } from '@cliffy/prompt'
 import type { RepoDetail } from '../types.ts'
 
 export type SectionsChoice = { name: string; value: string }
@@ -13,42 +13,29 @@ type AddPromptResults = {
 }
 
 export async function repoPrompt(): Promise<string> {
-  const result: RepoPromptResults = await prompt({
-    type: 'input',
-    name: 'url',
-    message: 'Enter repository URL:',
-  })
-  return result.url
+  const url = await Input.prompt('Enter repository URL:')
+  return url
 }
-export function addPrompt(
+
+export async function addPrompt(
   repoDetail: RepoDetail,
   sections: SectionsChoice[],
   initialSection: number
 ): Promise<AddPromptResults> {
-  return prompt([
-    {
-      type: 'select',
-      name: 'section',
-      message: 'Select a list section:',
-      choices: sections,
-      initial: initialSection,
-      result(): string {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore Probably broken typing of Enquirer
-        return this.focused.value
-      },
-    },
-    {
-      type: 'input',
-      name: 'desc',
-      message: 'Enter list description (optional):',
-      initial: repoDetail.desc,
-    },
-    {
-      type: 'confirm',
-      name: 'homepage',
-      message: `Include list's homepage (${repoDetail.homepage})?`,
-      skip: !repoDetail.homepage,
-    },
-  ])
+  const section = await Select.prompt({
+    message: 'Select a list section:',
+    options: sections.map((s) => ({ name: s.name, value: s.value })),
+    default: sections[initialSection]?.value,
+  })
+  const desc = await Input.prompt({
+    message: "Enter list description (optional):",
+    default: repoDetail.desc,
+  })
+  let homepage = false
+  if (repoDetail.homepage) {
+    homepage = await Confirm.prompt(
+      `Include list's homepage (${repoDetail.homepage})?`
+    )
+  }
+  return { desc, section, homepage }
 }

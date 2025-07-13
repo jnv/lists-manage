@@ -15,6 +15,7 @@
   "bugs": "https://github.com/jnv/lists-manage/issues",
   "author": "Jan Vlnas <npm@jan.vlnas.cz> (https://jan.vlnas.cz/)",
   "dependencies": {
+    "@cliffy/prompt": "npm:@jsr/cliffy__prompt@^1.0.0-rc.8",
     "@oclif/command": "^1.8.36",
     "@oclif/config": "^1",
     "@oclif/errors": "^1",
