@@ -30,11 +30,15 @@ describe('.fetchRepoDetails', () => {
       url: 'https://github.com/jnv/lists',
     };
     const result = await fetchRemoteRepo(repoInfo);
-    assert.deepStrictEqual(result, {
-      ...repoInfo,
-      desc: 'The definitive list of lists (of lists) curated on GitHub',
-      homepage: 'https://jnv.github.com/lists',
-    });
+    const expected = {
+      type: 'github',
+      name: 'lists',
+      author: 'jnv',
+      url: 'https://github.com/jnv/lists',
+      desc: 'The definitive list of lists (of lists) curated on GitHub and elsewhere',
+      homepage: '',
+    };
+    assert.deepStrictEqual(result, expected);
   });
 
   it('throws error if the repository does not exist', async () => {

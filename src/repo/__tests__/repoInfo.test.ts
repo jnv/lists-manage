@@ -44,9 +44,12 @@ test('.getRepoInfo', () => {
   })
 
   test('throws with incompatible URL', () => {
-    assert.throws(() => getRepoInfo('http://example.com'), {
-      name: 'Error',
-      message: 'Invalid URL',
-    })
-  })
+    assert.throws(
+      () => getRepoInfo('http://example.com'),
+      {
+        name: 'Error',
+        message: 'Unsupported or invalid URL: http://example.com',
+      }
+    );
+  });
 })
