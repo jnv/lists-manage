@@ -1,10 +1,10 @@
-import test from 'node:test';
+import { describe, it } from 'node:test';
 import assert from 'node:assert';
 import { sortItems, sortFile } from '../sort.ts';
 import type { ListFile } from '../../types.ts';
 
-test('.sortItems', () => {
-  test('sorts items by name', () => {
+describe('.sortItems', () => {
+  it('sorts items by name', () => {
     const input = Object.freeze([
       { name: 'recipes', url: 'https://github.com/csclug/recipes' },
       { name: 'weekly', url: 'https://github.com/zenany/weekly' },
@@ -20,7 +20,7 @@ test('.sortItems', () => {
     assert.deepEqual(sortItems(input), expected)
   })
 
-  test('sorting is case insensitive', () => {
+  it('sorting is case insensitive', () => {
     const input = [
       {
         name: 'Annual-Reading-List',
@@ -45,7 +45,7 @@ test('.sortItems', () => {
     assert.deepEqual(sortItems(input), expected)
   })
 
-  test('sorting is stable', () => {
+  it('sorting is stable', () => {
     const expected = [
       {
         name: 'awesome-sharepoint',
@@ -61,7 +61,7 @@ test('.sortItems', () => {
     assert.deepEqual(sortItems(expected), expected)
   })
 
-  test('sorting ignores dashes', () => {
+  it('sorting ignores dashes', () => {
     const input = [
       { name: 'awesome-b', url: 'https://github.com/github/awesome-b' },
       { name: 'awesomea', url: 'https://github.com/github/awesomea' },
@@ -74,8 +74,8 @@ test('.sortItems', () => {
     assert.deepEqual(sortItems(input), expected)
   })
 
-  test('for duplicate names', () => {
-    test('adds author and sorts by it', () => {
+  describe('for duplicate names', () => {
+    it('adds author and sorts by it', () => {
       const input = Object.freeze([
         { name: 'recipes', url: 'https://github.com/csclug/recipes' },
         { name: 'recipes', url: 'https://github.com/bzimmerman/recipes' },
@@ -97,7 +97,7 @@ test('.sortItems', () => {
       assert.deepEqual(sortItems(input), expected)
     })
 
-    test('compares names case-insensitively', () => {
+    it('compares names case-insensitively', () => {
       const input = [
         {
           name: 'awesome-SharePoint',
@@ -125,8 +125,8 @@ test('.sortItems', () => {
   })
 })
 
-test('.sortFile', () => {
-  test('sorts all sections in file', () => {
+describe('.sortFile', () => {
+  it('sorts all sections in file', () => {
     const list = [
       { name: 'recipes', url: 'https://github.com/csclug/recipes' },
       { name: 'weekly', url: 'https://github.com/zenany/weekly' },
