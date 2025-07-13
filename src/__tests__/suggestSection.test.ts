@@ -1,4 +1,4 @@
-import test from 'node:test';
+import { describe, it } from 'node:test';
 import assert from 'node:assert';
 import { suggestSection } from '../suggestSection.ts';
 import type { Section } from '../types.ts';
@@ -26,23 +26,23 @@ const sections: Section[] = [
   },
 ]
 
-test('.suggestSection', () => {
+describe('.suggestSection', () => {
   const sectionForRepo = suggestSection(sections)
-  test('suggests index for awesome-* lists', () => {
+  it('suggests index for awesome-* lists', () => {
     const repo = {
       name: 'awesome-comparisons',
     }
     assert.strictEqual(sectionForRepo(repo), 2)
   })
 
-  test('suggests index for recipes', () => {
+  it('suggests index for recipes', () => {
     const repo = {
       name: 'my-taco-recipes',
     }
     assert.strictEqual(sectionForRepo(repo), 0)
   })
 
-  test('falls back to technical', () => {
+  it('falls back to technical', () => {
     const repo = {
       name: 'asdasdasd',
     }
