@@ -1,14 +1,14 @@
-import simplegit, { CommitSummary } from 'simple-git/promise'
+import { simpleGit, CommitResult } from 'simple-git'
 
 type GitDir = {
-  commit(file: string, message: string): Promise<CommitSummary>
+  commit(file: string, message: string): Promise<CommitResult>
 }
 
 export function gitDir(workingDir: string): GitDir {
-  const git = simplegit(workingDir)
+  const git = simpleGit(workingDir)
 
   return {
-    commit(file: string, message: string): Promise<CommitSummary> {
+    commit(file: string, message: string): Promise<CommitResult> {
       return git.commit(message, [file])
     },
   }
