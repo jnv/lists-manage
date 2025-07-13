@@ -33,16 +33,13 @@
     "@oclif/dev-cli": "^1.26.10",
     "@types/debug": "^4.1.12",
     "@types/hosted-git-info": "^3.0.5",
-    "@types/jest": "^30.0.0",
     "@types/node": "^24.0.13",
-    "jest": "^30.0.4",
     "nock": "^13.5.6",
     "ts-node": "^10",
     "typescript": "^5.8.3"
   },
   "scripts": {
-    "test": "jest",
-    "test:coverage": "npm run test -- --coverage",
+    "test": "node --experimental-strip-types --test './src/**/*.test.ts'",
     "version": "oclif-dev readme && git add README.md",
     "prebuild": "rm -rf lib",
     "build": "tsc -b tsconfig.build.json",
