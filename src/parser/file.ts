@@ -1,5 +1,5 @@
-import { ListFile } from '../types'
-import { parseSections } from './sections'
+import type { ListFile } from '../types.ts'
+import { parseSections } from './sections.ts'
 
 const LIST_START = /<!-- lists-start -->/
 const LIST_END = /<!-- lists-end -->/

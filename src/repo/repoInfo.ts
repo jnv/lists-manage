@@ -1,6 +1,6 @@
 import hostedGitInfo from 'hosted-git-info'
 import { URL } from 'url'
-import { RepoUrlInfo } from './types'
+import type { RepoUrlInfo } from './types.ts'
 
 const OPTIONS: hostedGitInfo.Options = {
   noCommittish: true,

@@ -1,4 +1,4 @@
-import { RepoUrlInfo, RepoDetail } from '../types'
+import type { RepoUrlInfo, RepoDetail } from '../types.ts'
 
 type GHResponse = {
   description: string

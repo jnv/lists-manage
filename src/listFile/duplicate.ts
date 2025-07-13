@@ -1,4 +1,4 @@
-import { ListFile, ListItem } from '../types'
+import type { ListFile, ListItem } from '../types.ts'
 
 function comparator(urlToCheck: string): (item: ListItem) => boolean {
   const urlLowercase = urlToCheck.toLowerCase()

@@ -1,7 +1,9 @@
-import { urlExistsInFile } from '../duplicate'
-import { ListFile } from '../../types'
+import test from 'node:test'
+import assert from 'node:assert'
+import { urlExistsInFile } from '../duplicate.ts'
+import type { ListFile } from '../../types.ts'
 
-describe('.urlExistsInFile', () => {
+test('.urlExistsInFile', async (t) => {
   const list = [
     { name: 'aksh', url: 'https://github.com/svaksha/aksh' },
     { name: 'recipes', url: 'https://github.com/csclug/recipes' },
@@ -20,19 +22,19 @@ describe('.urlExistsInFile', () => {
       { level: 2, name: 'Section two', items: list },
     ],
   }
-  test('URL is not in file', () => {
-    expect(urlExistsInFile(file, 'https://github.com/some/different-url')).toBe(
-      false
+
+  await t.test('URL is not in file', () => {
+    assert.strictEqual(urlExistsInFile(file, 'https://github.com/some/different-url'), false)
+  })
+
+  await t.test('URL is in file', () => {
+    assert.strictEqual(urlExistsInFile(file, 'https://github.com/zenany/weekly'), true)
+  })
+
+  await t.test('matches duplicate without case sensitivity', () => {
+    assert.strictEqual(
+      urlExistsInFile(file, 'https://github.com/lembed/awesome-arduino'),
+      true
     )
-  })
-
-  test('URL is in file', () => {
-    expect(urlExistsInFile(file, 'https://github.com/zenany/weekly')).toBe(true)
-  })
-
-  it('matches duplicate without case sensitivity', () => {
-    expect(
-      urlExistsInFile(file, 'https://github.com/lembed/awesome-arduino')
-    ).toBe(true)
   })
 })

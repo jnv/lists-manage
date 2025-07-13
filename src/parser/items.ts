@@ -1,4 +1,4 @@
-import { ListItem } from '../types'
+import type { ListItem } from '../types.ts'
 
 type LineRest = Pick<ListItem, 'desc' | 'note' | 'author'>
 

@@ -1,9 +1,11 @@
-import { getRepoInfo } from '../repoInfo'
+import test from 'node:test';
+import assert from 'node:assert';
+import { getRepoInfo } from '../repoInfo.ts'
 
-describe('.getRepoInfo', () => {
-  it('provides repo info for given URL', () => {
+test('.getRepoInfo', () => {
+  test('provides repo info for given URL', () => {
     const result = getRepoInfo('https://github.com/jnv/lists')
-    expect(result).toEqual({
+    assert.deepStrictEqual(result, {
       type: 'github',
       name: 'lists',
       author: 'jnv',
@@ -11,9 +13,9 @@ describe('.getRepoInfo', () => {
     })
   })
 
-  it('normalizes URL', () => {
+  test('normalizes URL', () => {
     const result = getRepoInfo('https://github.com/sinker/tacofancy/')
-    expect(result).toEqual({
+    assert.deepStrictEqual(result, {
       type: 'github',
       name: 'tacofancy',
       author: 'sinker',
@@ -21,9 +23,9 @@ describe('.getRepoInfo', () => {
     })
   })
 
-  it('ignores committish parts of URL', () => {
+  test('ignores committish parts of URL', () => {
     const result = getRepoInfo('git@github.com:npm/hosted-git-info.git#v1.0.0')
-    expect(result).toEqual({
+    assert.deepStrictEqual(result, {
       type: 'github',
       name: 'hosted-git-info',
       author: 'npm',
@@ -31,9 +33,9 @@ describe('.getRepoInfo', () => {
     })
   })
 
-  it('attempts to parse unknown repo type', () => {
+  test('attempts to parse unknown repo type', () => {
     const result = getRepoInfo('https://notabug.org/themusicgod1/food')
-    expect(result).toEqual({
+    assert.deepStrictEqual(result, {
       type: 'unknown',
       name: 'food',
       author: 'themusicgod1',
@@ -41,7 +43,10 @@ describe('.getRepoInfo', () => {
     })
   })
 
-  it('throws with incompatible URL', () => {
-    expect(() => getRepoInfo('http://example.com')).toThrow()
+  test('throws with incompatible URL', () => {
+    assert.throws(() => getRepoInfo('http://example.com'), {
+      name: 'Error',
+      message: 'Invalid URL',
+    })
   })
 })

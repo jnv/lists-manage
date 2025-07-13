@@ -1,6 +1,6 @@
-import { getRepoInfo } from './repoInfo'
-import { RepoDetail, RepoCheck } from './types'
-import { fetchRemoteRepo } from './remote/github'
+import { getRepoInfo } from './repoInfo.ts'
+import type { RepoDetail, RepoCheck } from './types.ts'
+import { fetchRemoteRepo } from './remote/github.ts'
 import got from 'got'
 
 export { getRepoInfo }

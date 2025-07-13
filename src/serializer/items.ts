@@ -1,4 +1,4 @@
-import { ListItem } from '../types'
+import type { ListItem } from '../types.ts'
 
 function serializeItem(item: ListItem): string {
   let output = `* [${item.name}](${item.url})`

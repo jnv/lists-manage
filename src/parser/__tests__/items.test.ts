@@ -1,4 +1,6 @@
-import { parseItems } from '../items'
+import test from 'node:test';
+import assert from 'node:assert';
+import { parseItems } from '../items.ts';
 
 const testCases = [
   {
@@ -70,7 +72,7 @@ const testCases = [
 
 for (const testCase of testCases) {
   test(testCase.name, () => {
-    expect(parseItems(testCase.input)).toEqual(testCase.expected)
+    assert.deepEqual(parseItems(testCase.input), testCase.expected)
   })
 }
 
@@ -106,5 +108,5 @@ test('multiple items with extras', () => {
     },
   ]
 
-  expect(parseItems(input)).toEqual(expected)
+  assert.deepEqual(parseItems(input), expected)
 })

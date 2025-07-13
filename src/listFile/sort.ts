@@ -1,5 +1,5 @@
 import { URL } from 'url'
-import { ListItem, ListFile, Section } from '../types'
+import type { ListItem, ListFile, Section } from '../types.ts'
 
 type ReadonlyListItems = readonly ListItem[]
 

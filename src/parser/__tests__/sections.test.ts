@@ -1,4 +1,6 @@
-import { parseSections } from '../sections'
+import test from 'node:test';
+import assert from 'node:assert';
+import { parseSections } from '../sections.ts';
 
 test('empty sections', () => {
   const input = [
@@ -14,7 +16,7 @@ test('empty sections', () => {
     { name: 'Level 3', level: 3, items: [] },
   ]
 
-  expect(parseSections(input)).toEqual(expected)
+  assert.deepEqual(parseSections(input), expected);
 })
 
 test('section items', () => {
@@ -33,8 +35,8 @@ test('section items', () => {
 
   const output = parseSections(input)
 
-  expect(output).toEqual(expected)
+  assert.deepEqual(output, expected);
   for (const section of output) {
-    expect(section.items).toHaveLength(1)
+    assert.equal(section.items.length, 1);
   }
 })

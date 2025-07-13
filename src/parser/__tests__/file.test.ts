@@ -1,4 +1,6 @@
-import { parseFile } from '../file'
+import test from 'node:test';
+import assert from 'node:assert';
+import { parseFile } from '../file.ts';
 
 test('file with prefix, suffix', () => {
   const input = `
@@ -33,7 +35,7 @@ Suffix here.
     ],
     suffix: '<!-- lists-end -->\n\nSuffix here.\n',
   }
-  expect(result).toEqual(expected)
+  assert.deepEqual(result, expected)
 })
 
 test('ignores consecutive start / end markers', () => {
@@ -56,5 +58,5 @@ blah.
     suffix: '<!-- lists-end -->\nSuffix\n<!-- lists-end -->\nblah.\n',
     sections: [{ level: 1, name: 'Some section', items: [] }],
   }
-  expect(result).toEqual(expected)
+  assert.deepEqual(result, expected)
 })

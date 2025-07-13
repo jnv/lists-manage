@@ -1,4 +1,6 @@
-import { serializeFile } from '..'
+import test from 'node:test';
+import assert from 'node:assert';
+import { serializeFile } from '../index.ts';
 
 const input = {
   prefix: '\nPrefix here.\n\n<!-- lists-start -->',
@@ -49,8 +51,6 @@ Prefix here.
 Suffix here.
 `
 
-describe('.serializeFile', () => {
-  test('converts file to Markdown', () => {
-    expect(serializeFile(input)).toBe(expected)
-  })
+test('serializeFile converts file to Markdown', () => {
+  assert.strictEqual(serializeFile(input), expected)
 })
