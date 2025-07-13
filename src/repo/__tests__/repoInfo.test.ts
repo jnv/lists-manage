@@ -1,9 +1,9 @@
-import test from 'node:test';
+import { describe, it } from 'node:test';
 import assert from 'node:assert';
 import { getRepoInfo } from '../repoInfo.ts'
 
-test('.getRepoInfo', () => {
-  test('provides repo info for given URL', () => {
+describe('.getRepoInfo', () => {
+  it('provides repo info for given URL', () => {
     const result = getRepoInfo('https://github.com/jnv/lists')
     assert.deepStrictEqual(result, {
       type: 'github',
@@ -13,7 +13,7 @@ test('.getRepoInfo', () => {
     })
   })
 
-  test('normalizes URL', () => {
+  it('normalizes URL', () => {
     const result = getRepoInfo('https://github.com/sinker/tacofancy/')
     assert.deepStrictEqual(result, {
       type: 'github',
@@ -23,7 +23,7 @@ test('.getRepoInfo', () => {
     })
   })
 
-  test('ignores committish parts of URL', () => {
+  it('ignores committish parts of URL', () => {
     const result = getRepoInfo('git@github.com:npm/hosted-git-info.git#v1.0.0')
     assert.deepStrictEqual(result, {
       type: 'github',
@@ -33,7 +33,7 @@ test('.getRepoInfo', () => {
     })
   })
 
-  test('attempts to parse unknown repo type', () => {
+  it('attempts to parse unknown repo type', () => {
     const result = getRepoInfo('https://notabug.org/themusicgod1/food')
     assert.deepStrictEqual(result, {
       type: 'unknown',
@@ -43,7 +43,7 @@ test('.getRepoInfo', () => {
     })
   })
 
-  test('throws with incompatible URL', () => {
+  it('throws with incompatible URL', () => {
     assert.throws(
       () => getRepoInfo('http://example.com'),
       {

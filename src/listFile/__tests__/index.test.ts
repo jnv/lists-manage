@@ -1,10 +1,10 @@
-import test from 'node:test';
+import { describe, it } from 'node:test';
 import assert from 'node:assert';
 import type { ListFile } from '../../types.ts';
 import { addItemToSection } from '../index.ts';
 
-test('.addItemToSection', () => {
-  test('adds item to a particular section and sorts it', () => {
+describe('.addItemToSection', () => {
+  it('adds item to a particular section and sorts it', () => {
     const sectionIdx = 1
     const newItem = { name: 'aksh', url: 'https://github.com/svaksha/aksh' }
 

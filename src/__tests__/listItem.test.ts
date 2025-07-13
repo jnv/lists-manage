@@ -1,8 +1,9 @@
-import test from 'node:test';
+import { describe, it } from 'node:test';
 import assert from 'node:assert';
 import { updateItem } from '../listItem.ts';
-test('.updateItem', () => {
-  test('changes item name when URL is updated', () => {
+
+describe('.updateItem', () => {
+  it('changes item name when URL is updated', () => {
     const updatedProps = {
       url: 'https://github.com/RichardLitt/low-resource-languages',
     }

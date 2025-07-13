@@ -1,9 +1,9 @@
-import test from 'node:test'
+import { describe, it } from 'node:test'
 import assert from 'node:assert'
 import { urlExistsInFile } from '../duplicate.ts'
 import type { ListFile } from '../../types.ts'
 
-test('.urlExistsInFile', async (t) => {
+describe('.urlExistsInFile', () => {
   const list = [
     { name: 'aksh', url: 'https://github.com/svaksha/aksh' },
     { name: 'recipes', url: 'https://github.com/csclug/recipes' },
@@ -23,15 +23,15 @@ test('.urlExistsInFile', async (t) => {
     ],
   }
 
-  await t.test('URL is not in file', () => {
+  it('returns false when URL is not in file', () => {
     assert.strictEqual(urlExistsInFile(file, 'https://github.com/some/different-url'), false)
   })
 
-  await t.test('URL is in file', () => {
+  it('returns true when URL is in file', () => {
     assert.strictEqual(urlExistsInFile(file, 'https://github.com/zenany/weekly'), true)
   })
 
-  await t.test('matches duplicate without case sensitivity', () => {
+  it('matches duplicate without case sensitivity', () => {
     assert.strictEqual(
       urlExistsInFile(file, 'https://github.com/lembed/awesome-arduino'),
       true
