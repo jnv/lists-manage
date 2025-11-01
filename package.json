@@ -22,7 +22,7 @@
     "debug": "^4.4.3",
     "enquirer": "^2.4.1",
     "hosted-git-info": "^9.0.0",
-    "simple-git": "^3.11.0",
+    "simple-git": "^3.29.0",
     "tslib": "^2"
   },
   "devDependencies": {
