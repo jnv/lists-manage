@@ -1,5 +1,6 @@
 # tsc output
 lib/
+*.tsbuildinfo
 
 ### Node ###
 # Logs
