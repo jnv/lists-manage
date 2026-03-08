@@ -1,47 +1,31 @@
-import { Command, flags } from '@oclif/command'
+import { Command } from '@cliffy/command'
 import { loadListFile, writeListFile } from '../listFile/index.ts'
 import { serializeFile } from '../serializer/index.ts'
 import { sortFile } from '../listFile/sort.ts'
 
-export class SortFile extends Command {
-  public static description = 'Just sort the items in file'
+export function sortCommand() {
+  return new Command()
+    .description('Just sort the items in file')
+    .option('-f, --file <file:string>', 'Markdown file to work with', { default: 'README.md' })
+    .option('-w, --write [write:boolean]', 'Edit [file] in place', { default: false })
+    .example('sort in place', 'lists-manage sort -w')
+    .example('sort custom file', 'lists-manage sort -f MY_LISTS_FILE.md')
+    .action(async (options) => {
+      const file = options.file as unknown as string
+      const write = options.write as unknown as boolean
 
-  static strict = true
+      if (!file) {
+        console.error('Missing file')
+        process.exit(1)
+      }
 
-  static examples = [
-    '$ lists-manage sort -w',
-    '$ lists-manage sort -f MY_LISTS_FILE.md',
-  ]
-
-  public static flags = {
-    help: flags.help({ char: 'h' }),
-    file: flags.string({
-      char: 'f',
-      description: 'Markdown file to work with',
-      default: 'README.md',
-    }),
-    write: flags.boolean({
-      char: 'w',
-      description: 'Edit [file] in place',
-      default: false,
-    }),
-  }
-
-  public async run(): Promise<void> {
-    const { flags } = this.parse(SortFile)
-
-    if (!flags.file) {
-      this.error('Missing file', { exit: 1 })
-      return
-    }
-
-    const file = await loadListFile(flags.file)
-    const sortedFile = sortFile(file)
-    if (flags.write) {
-      this.log(`Writing to file ${flags.file}`)
-      await writeListFile(flags.file, sortedFile)
-    } else {
-      this.log(serializeFile(sortedFile))
-    }
-  }
+      const listFile = await loadListFile(file)
+      const sortedFile = sortFile(listFile)
+      if (write) {
+        console.log(`Writing to file ${file}`)
+        await writeListFile(file, sortedFile)
+      } else {
+        console.log(serializeFile(sortedFile))
+      }
+    })
 }

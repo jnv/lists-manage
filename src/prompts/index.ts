@@ -1,54 +1,42 @@
-import { prompt } from 'enquirer'
+import { Input } from '@cliffy/prompt/input'
+import { Select } from '@cliffy/prompt/select'
+import { Confirm } from '@cliffy/prompt/confirm'
 import type { RepoDetail } from '../types.ts'
 
-export type SectionsChoice = { name: string; value: string }
+export type SectionsChoice = { name: string; value: number }
 
-type RepoPromptResults = {
-  url: string
-}
 type AddPromptResults = {
   desc: string
-  section: string
+  section: number
   homepage: boolean
 }
 
 export async function repoPrompt(): Promise<string> {
-  const result: RepoPromptResults = await prompt({
-    type: 'input',
-    name: 'url',
-    message: 'Enter repository URL:',
-  })
-  return result.url
+  return Input.prompt({ message: 'Enter repository URL:' })
 }
-export function addPrompt(
+
+export async function addPrompt(
   repoDetail: RepoDetail,
   sections: SectionsChoice[],
   initialSection: number
 ): Promise<AddPromptResults> {
-  return prompt([
-    {
-      type: 'select',
-      name: 'section',
-      message: 'Select a list section:',
-      choices: sections,
-      initial: initialSection,
-      result(): string {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore Probably broken typing of Enquirer
-        return this.focused.value
-      },
-    },
-    {
-      type: 'input',
-      name: 'desc',
-      message: 'Enter list description (optional):',
-      initial: repoDetail.desc,
-    },
-    {
-      type: 'confirm',
-      name: 'homepage',
+  const section = await Select.prompt({
+    message: 'Select a list section:',
+    options: sections,
+    default: initialSection,
+  })
+
+  const desc = await Input.prompt({
+    message: 'Enter list description (optional):',
+    default: repoDetail.desc,
+  })
+
+  let homepage = false
+  if (repoDetail.homepage) {
+    homepage = await Confirm.prompt({
       message: `Include list's homepage (${repoDetail.homepage})?`,
-      skip: !repoDetail.homepage,
-    },
-  ])
+    })
+  }
+
+  return { section, desc, homepage }
 }
