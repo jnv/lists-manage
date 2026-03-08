@@ -34,7 +34,7 @@
   "scripts": {
     "test": "node --experimental-strip-types --test './src/**/*.test.ts'",
     "prebuild": "rm -rf lib",
-    "build": "tsc -b tsconfig.build.json",
+    "build": "tsc -p tsconfig.build.json",
     "prepack": "npm run build"
   },
   "files": [
