@@ -5,7 +5,7 @@
   "license": "MIT",
   "type": "module",
   "engines": {
-    "node": ">=24"
+    "node": ">=22"
   },
   "repository": "github:jnv/lists-manage",
   "bin": {
@@ -15,19 +15,15 @@
   "bugs": "https://github.com/jnv/lists-manage/issues",
   "author": "Jan Vlnas <npm@jan.vlnas.cz> (https://jan.vlnas.cz/)",
   "dependencies": {
-    "@oclif/command": "^1.8.36",
-    "@oclif/config": "^1",
-    "@oclif/errors": "^1",
-    "@oclif/plugin-help": "^6",
+    "@cliffy/command": "npm:@jsr/cliffy__command@^1.0.0-rc.8",
+    "@cliffy/prompt": "npm:@jsr/cliffy__prompt@^1.0.0-rc.8",
     "debug": "^4.4.3",
-    "enquirer": "^2.4.1",
     "hosted-git-info": "^9.0.2",
     "simple-git": "^3.32.3",
     "tslib": "^2"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.28.5",
-    "@oclif/dev-cli": "^1.26.10",
     "@types/debug": "^4.1.12",
     "@types/hosted-git-info": "^3.0.5",
     "@types/node": "^25.3.3",
@@ -37,24 +33,14 @@
   },
   "scripts": {
     "test": "node --experimental-strip-types --test './src/**/*.test.ts'",
-    "version": "oclif-dev readme && git add README.md",
     "prebuild": "rm -rf lib",
-    "build": "tsc -b tsconfig.build.json",
-    "prepack": "npm run build && oclif-dev manifest && oclif-dev readme",
-    "postpack": "rm -f oclif.manifest.json"
+    "build": "tsc -p tsconfig.build.json",
+    "prepack": "npm run build"
   },
   "files": [
     "/bin",
     "/lib",
-    "/npm-shrinkwrap.json",
-    "/oclif.manifest.json"
+    "/npm-shrinkwrap.json"
   ],
-  "oclif": {
-    "commands": "./lib/commands",
-    "bin": "lists-manage",
-    "plugins": [
-      "@oclif/plugin-help"
-    ]
-  },
   "types": "lib/index.d.ts"
 }
