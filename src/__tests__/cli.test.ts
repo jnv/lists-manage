@@ -1,4 +1,4 @@
-import { describe, it, before, afterEach } from 'node:test'
+import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
 import { execFile as execFileCb } from 'node:child_process'
 import { promisify } from 'node:util'
@@ -15,38 +15,46 @@ function run(args: string[]) {
   return execFile('node', [BIN, ...args], { timeout: 15_000 })
 }
 
+function assertOrder(text: string, first: string, second: string) {
+  const firstIdx = text.indexOf(first)
+  const secondIdx = text.indexOf(second)
+  assert.notEqual(firstIdx, -1, `expected "${first}" to be present`)
+  assert.notEqual(secondIdx, -1, `expected "${second}" to be present`)
+  assert.ok(firstIdx < secondIdx, `expected "${first}" (at ${firstIdx}) before "${second}" (at ${secondIdx})`)
+}
+
 describe('CLI: help', () => {
   it('shows main help', async () => {
     const { stdout } = await run(['--help'])
-    assert.ok(stdout.includes('lists-manage'), 'should show program name')
-    assert.ok(stdout.includes('add'), 'should list add command')
-    assert.ok(stdout.includes('fix'), 'should list fix command')
-    assert.ok(stdout.includes('sort'), 'should list sort command')
+    assert.match(stdout, /lists-manage/)
+    assert.match(stdout, /add/)
+    assert.match(stdout, /fix/)
+    assert.match(stdout, /sort/)
   })
 
   it('shows sort help', async () => {
     const { stdout } = await run(['sort', '--help'])
-    assert.ok(stdout.includes('--file'), 'should show --file flag')
-    assert.ok(stdout.includes('--write'), 'should show --write flag')
+    assert.match(stdout, /--file/)
+    assert.match(stdout, /--write/)
   })
 
   it('shows add help', async () => {
     const { stdout } = await run(['add', '--help'])
-    assert.ok(stdout.includes('--file'), 'should show --file flag')
-    assert.ok(stdout.includes('--write'), 'should show --write flag')
-    assert.ok(stdout.includes('--prompt'), 'should show --prompt flag')
-    assert.ok(stdout.includes('--commit'), 'should show --commit flag')
+    assert.match(stdout, /--file/)
+    assert.match(stdout, /--write/)
+    assert.match(stdout, /--prompt/)
+    assert.match(stdout, /--commit/)
   })
 
   it('shows fix help', async () => {
     const { stdout } = await run(['fix', '--help'])
-    assert.ok(stdout.includes('--file'), 'should show --file flag')
-    assert.ok(stdout.includes('--write'), 'should show --write flag')
+    assert.match(stdout, /--file/)
+    assert.match(stdout, /--write/)
   })
 
   it('shows version', async () => {
     const { stdout } = await run(['--version'])
-    assert.match(stdout.trim(), /\d+\.\d+\.\d+/, 'should show version number')
+    assert.match(stdout.trim(), /\d+\.\d+\.\d+/)
   })
 })
 
@@ -54,21 +62,10 @@ describe('CLI: sort', () => {
   it('outputs sorted markdown to stdout', async () => {
     const { stdout } = await run(['sort', '-f', FIXTURE_PATH])
 
-    // Learning section: free-programming-books should come before learnxinyminutes-docs
-    const freeIdx = stdout.indexOf('free-programming-books')
-    const learnIdx = stdout.indexOf('learnxinyminutes-docs')
-    assert.ok(freeIdx > -1 && learnIdx > -1, 'both items should be in output')
-    assert.ok(freeIdx < learnIdx, 'free-programming-books should come before learnxinyminutes-docs')
-
-    // Tools section: recipes should come before weekly
-    const recipesIdx = stdout.indexOf('recipes')
-    const weeklyIdx = stdout.indexOf('weekly')
-    assert.ok(recipesIdx > -1 && weeklyIdx > -1, 'both items should be in output')
-    assert.ok(recipesIdx < weeklyIdx, 'recipes should come before weekly')
-
-    // Prefix and suffix preserved
-    assert.ok(stdout.includes('Prefix here.'), 'prefix should be preserved')
-    assert.ok(stdout.includes('Suffix here.'), 'suffix should be preserved')
+    assertOrder(stdout, 'free-programming-books', 'learnxinyminutes-docs')
+    assertOrder(stdout, 'recipes', 'weekly')
+    assert.match(stdout, /Prefix here\./)
+    assert.match(stdout, /Suffix here\./)
   })
 
   it('writes sorted file in place with -w', async () => {
@@ -80,9 +77,7 @@ describe('CLI: sort', () => {
       await run(['sort', '-w', '-f', tmpFile])
 
       const written = await fs.readFile(tmpFile, 'utf8')
-      const freeIdx = written.indexOf('free-programming-books')
-      const learnIdx = written.indexOf('learnxinyminutes-docs')
-      assert.ok(freeIdx < learnIdx, 'items should be sorted in written file')
+      assertOrder(written, 'free-programming-books', 'learnxinyminutes-docs')
     } finally {
       await fs.rm(tmpDir, { recursive: true })
     }
@@ -96,14 +91,13 @@ describe('CLI: add (non-interactive)', () => {
       '--no-prompt',
       '--no-write',
       '-f', FIXTURE_PATH,
-      'https://gitlab.com/rosarior/django-must-watch',
+      'https://gitlab.com/inkscape/inkscape',
     ])
 
-    assert.ok(stdout.includes('django-must-watch'), 'new item should be in output')
-    assert.ok(stdout.includes('gitlab.com/rosarior/django-must-watch'), 'new item URL should be in output')
-    // Existing items preserved
-    assert.ok(stdout.includes('learnxinyminutes-docs'), 'existing items should be preserved')
-    assert.ok(stdout.includes('free-programming-books'), 'existing items should be preserved')
+    assert.match(stdout, /inkscape/)
+    assert.match(stdout, /gitlab\.com\/inkscape\/inkscape/)
+    assert.match(stdout, /learnxinyminutes-docs/)
+    assert.match(stdout, /free-programming-books/)
   })
 
   it('writes added item in place', async () => {
@@ -116,11 +110,11 @@ describe('CLI: add (non-interactive)', () => {
         'add',
         '--no-prompt',
         '-f', tmpFile,
-        'https://gitlab.com/rosarior/django-must-watch',
+        'https://gitlab.com/inkscape/inkscape',
       ])
 
       const written = await fs.readFile(tmpFile, 'utf8')
-      assert.ok(written.includes('django-must-watch'), 'new item should be in written file')
+      assert.match(written, /inkscape/)
     } finally {
       await fs.rm(tmpDir, { recursive: true })
     }
@@ -133,10 +127,10 @@ describe('CLI: add (non-interactive)', () => {
         '--no-prompt',
         '--no-write',
         '-f', FIXTURE_PATH,
-        'https://github.com/adambard/learnxinyminutes-docs',
+        'https://gitlab.com/rosarior/django-must-watch',
       ]),
       (err: { code: number; stderr: string }) => {
-        assert.ok(err.stderr.includes('already present') || err.code !== 0, 'should error on duplicate URL')
+        assert.match(err.stderr, /already present/)
         return true
       }
     )
@@ -150,8 +144,8 @@ describe('CLI: add (non-interactive)', () => {
         '--no-write',
         '-f', FIXTURE_PATH,
       ]),
-      (err: { code: number; stderr: string }) => {
-        assert.ok(err.code !== 0, 'should exit with non-zero code')
+      (err: { code: number }) => {
+        assert.notEqual(err.code, 0)
         return true
       }
     )

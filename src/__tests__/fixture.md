@@ -12,6 +12,7 @@ Prefix here.
 
 * [weekly](https://github.com/zenany/weekly)
 * [recipes](https://github.com/csclug/recipes) – A collection of recipes
+* [django-must-watch](https://gitlab.com/rosarior/django-must-watch) – Must-watch videos about Django
 
 <!-- lists-end -->
 
