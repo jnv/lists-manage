@@ -19,7 +19,7 @@
     "@cliffy/prompt": "npm:@jsr/cliffy__prompt@^1.0.0-rc.8",
     "debug": "^4.4.3",
     "hosted-git-info": "^9.0.2",
-    "simple-git": "^3.33.0",
+    "simple-git": "^3.36.0",
     "tslib": "^2"
   },
   "devDependencies": {
