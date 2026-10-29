@@ -5,7 +5,7 @@
   "license": "MIT",
   "type": "module",
   "engines": {
-    "node": ">=22"
+    "node": "^22.22.2 || ^24.15.0 || >=26.0.0"
   },
   "repository": "github:jnv/lists-manage",
   "bin": {
@@ -34,8 +34,9 @@
     "check": "biome check .",
     "check:fix": "biome check --write .",
     "typecheck": "tsc --noEmit",
+    "pretest": "npm run build",
     "test": "node --experimental-strip-types --test './src/**/*.test.ts'",
-    "prebuild": "rm -rf lib",
+    "prebuild": "node --input-type=module -e \"import { rm } from 'node:fs/promises'; await rm('lib', { recursive: true, force: true })\"",
     "build": "tsc -p tsconfig.build.json",
     "prepack": "npm run build"
   },
