@@ -1,12 +1,9 @@
 {
   "extends": "./tsconfig",
-  "exclude": [
-    "**/*.test.ts"
-  ],
+  "exclude": ["**/*.test.ts"],
   "compilerOptions": {
     "noEmit": false,
     "declaration": true,
-    "importHelpers": true,
-    "skipLibCheck": true,
+    "importHelpers": true
   }
 }

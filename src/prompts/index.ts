@@ -1,6 +1,4 @@
-import { Input } from '@cliffy/prompt/input'
-import { Select } from '@cliffy/prompt/select'
-import { Confirm } from '@cliffy/prompt/confirm'
+import { confirm, input, select } from '@inquirer/prompts'
 import type { RepoDetail } from '../types.ts'
 
 export type SectionsChoice = { name: string; value: number }
@@ -12,7 +10,7 @@ type AddPromptResults = {
 }
 
 export async function repoPrompt(): Promise<string> {
-  return Input.prompt({ message: 'Enter repository URL:' })
+  return input({ message: 'Enter repository URL:' })
 }
 
 export async function addPrompt(
@@ -20,21 +18,22 @@ export async function addPrompt(
   sections: SectionsChoice[],
   initialSection: number
 ): Promise<AddPromptResults> {
-  const section = await Select.prompt({
+  const section = await select({
     message: 'Select a list section:',
-    options: sections,
+    choices: sections,
     default: initialSection,
   })
 
-  const desc = await Input.prompt({
+  const desc = await input({
     message: 'Enter list description (optional):',
     default: repoDetail.desc,
   })
 
   let homepage = false
   if (repoDetail.homepage) {
-    homepage = await Confirm.prompt({
+    homepage = await confirm({
       message: `Include list's homepage (${repoDetail.homepage})?`,
+      default: false,
     })
   }
 
