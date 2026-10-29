@@ -15,6 +15,7 @@ CLI program to manage [lists] project.
 <!-- toc -->
 * [Usage](#usage)
 * [Commands](#commands)
+* [Publishing](#publishing)
 <!-- tocstop -->
 
 <!-- prettier-ignore-end -->
@@ -132,6 +133,54 @@ EXAMPLES
 _See code: [src/commands/sort.ts](https://github.com/jnv/lists-manage/blob/v0.5.3/src/commands/sort.ts)_
 <!-- commandsstop -->
 <!-- prettier-ignore-end -->
+
+## Publishing
+
+Stable npm releases are published by [the publish workflow](.github/workflows/publish.yml)
+when a `vX.Y.Z` tag is pushed. The tagged commit must be on `main`, and the tag,
+`package.json`, and `package-lock.json` versions must match. Prerelease tags are
+rejected. The workflow runs checks and tests, packs the package, installs and
+smoke-tests the tarball in a temporary project, then publishes that same tarball
+with provenance. It does not create a GitHub release or an SBOM.
+
+Cliffy and its transitive dependencies are bundled in the tarball because they
+come from JSR. Consumers do not need this repository's `.npmrc` or a custom
+registry configuration to install the CLI.
+
+### One-time setup
+
+1. Create a GitHub environment named `npm` under this repository's
+   **Settings → Environments**. Restrict deployment to selected tags matching
+   `v*`. Protect `main` and restrict who can create, update, or delete release
+   tags using repository rulesets.
+2. In the npm settings for `@jnv/lists-manage`, add a GitHub Actions
+   [trusted publisher](https://docs.npmjs.com/trusted-publishers/) with:
+   - Owner: `jnv`
+   - Repository: `lists-manage`
+   - Workflow filename: `publish.yml`
+   - Environment: `npm`
+   - Allowed action: enable direct publishing with `npm publish`.
+3. Complete the first publish within two days of adding the trusted publisher;
+   otherwise, recreate the expired configuration. After verifying trusted
+   publishing works, select **Require two-factor authentication and disallow
+   tokens** in npm's publishing-access settings, and revoke unused publishing
+   tokens. No npm token or GitHub personal access token is needed by this workflow.
+
+### Publish a version
+
+Update both package manifests, for example with `npm version patch --no-git-tag-version`,
+and merge the change into `main` after CI passes. To publish the version currently
+in `package.json` from an up-to-date checkout of `main`:
+
+```sh
+git tag -a "v$(node --print "require('./package.json').version")" -m 'Release'
+git push origin "v$(node --print "require('./package.json').version")"
+```
+
+Monitor **Actions → Publish to npm**. If a run fails before publishing, rerun the
+failed workflow after resolving the cause. npm versions cannot be overwritten;
+if the version is already published, prepare a new version rather than moving
+the tag or trying to replace the package.
 
 ## License
 
