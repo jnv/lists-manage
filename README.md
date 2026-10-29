@@ -136,12 +136,29 @@ _See code: [src/commands/sort.ts](https://github.com/jnv/lists-manage/blob/v0.5.
 
 ## Publishing
 
-Stable npm releases are published by [the publish workflow](.github/workflows/publish.yml)
-when a `vX.Y.Z` tag is pushed. The tagged commit must be on `main`, and the tag,
-`package.json`, and `package-lock.json` versions must match. Prerelease tags are
-rejected. The workflow runs checks and tests, packs the package, installs and
-smoke-tests the tarball in a temporary project, then publishes that same tarball
-with provenance. It does not create a GitHub release or an SBOM.
+Use **Actions → Release → Run workflow**, select `main`, and choose a
+`patch`, `minor`, or `major` version bump. For example, from `0.6.1`, these produce
+`0.6.2`, `0.7.0`, or `1.0.0` respectively.
+
+The [release workflow](.github/workflows/publish.yml) updates both package
+manifests, creates a version commit, and runs linting, typechecking, and tests.
+It records the required `build` status on that tested commit, then pushes the
+commit to `main` and creates its `vX.Y.Z` tag atomically. A temporary release
+branch makes the commit available for status checks and is removed afterward.
+If `main` advances incompatibly during preparation, the push fails rather than
+overwriting other commits.
+
+A second **Release** run starts automatically on the tag. It validates the
+versions, repeats checks and tests, packs the package, and smoke-tests a clean
+installation. It then creates a draft GitHub release with generated release
+notes and the tested `.tgz`, publishes that same tarball to npm with provenance,
+and publishes the GitHub release. GitHub generates the notes from merged pull
+requests and contributors since the previous release; you can edit them later.
+
+The publishing phase runs from the release tag so provenance identifies the
+version commit. It uses an explicit workflow dispatch because tags created by
+`GITHUB_TOKEN` do not trigger push workflows. Both phases stay in `publish.yml`,
+so the npm trusted-publisher workflow filename remains the same.
 
 Cliffy and its transitive dependencies are bundled in the tarball because they
 come from JSR. Consumers do not need this repository's `.npmrc` or a custom
@@ -166,21 +183,38 @@ registry configuration to install the CLI.
    tokens** in npm's publishing-access settings, and revoke unused publishing
    tokens. No npm token or GitHub personal access token is needed by this workflow.
 
-### Publish a version
+### Repository permissions
 
-Update both package manifests, for example with `npm version patch --no-git-tag-version`,
-and merge the change into `main` after CI passes. To publish the version currently
-in `package.json` from an up-to-date checkout of `main`:
+The preparation job uses `contents: write` for the version commit and tag,
+`statuses: write` to record the checks actually run against that commit, and
+`actions: write` to start the publishing phase. The publishing job uses
+`contents: write` for the GitHub release and `id-token: write` for npm OIDC.
+No additional secret is needed. The current `main` protection requires a
+`build` status; stricter rules such as mandatory PRs or signed commits would
+require adapting the preparation flow.
+
+### Monitor or retry a release
+
+Monitor both runs under **Actions → Release** and wait for publishing to finish
+before starting another release. If preparation fails before
+pushing to `main`, fix the cause and start again. If the version commit and tag
+already exist, retry publishing from that tag rather than requesting another
+version bump:
 
 ```sh
-git tag -a "v$(node --print "require('./package.json').version")" -m 'Release'
-git push origin "v$(node --print "require('./package.json').version")"
+gh workflow run publish.yml --ref v0.6.2 -f bump=patch
 ```
 
-Monitor **Actions → Publish to npm**. If a run fails before publishing, rerun the
-failed workflow after resolving the cause. npm versions cannot be overwritten;
-if the version is already published, prepare a new version rather than moving
-the tag or trying to replace the package.
+The bump input is ignored when running on a tag. A manually pushed `vX.Y.Z`
+tag also starts publishing. Tags must point to commits on `main`, and the tag,
+`package.json`, and `package-lock.json` versions must match. Only stable
+releases are supported.
+
+If npm publishing fails, the GitHub release remains a draft; retry publishing
+after resolving the cause. If npm publishing succeeded but publishing the
+GitHub release failed, publish the existing draft from the Releases page.
+npm versions cannot be overwritten, and published GitHub releases are not
+modified by this workflow. Do not move a release tag to replace a package.
 
 ## License
 
