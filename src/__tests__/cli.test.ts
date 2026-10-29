@@ -4,7 +4,7 @@ import { promises as fs } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import { describe, it } from 'node:test'
-import { promisify } from 'node:util'
+import { promisify, stripVTControlCharacters } from 'node:util'
 
 const execFile = promisify(execFileCb)
 
@@ -57,7 +57,13 @@ describe('CLI: help', () => {
 
   it('shows version', async () => {
     const { stdout } = await run(['--version'])
-    assert.match(stdout.trim(), /\d+\.\d+\.\d+/)
+    const { version } = JSON.parse(
+      await fs.readFile(new URL('../../package.json', import.meta.url), 'utf8')
+    )
+    assert.equal(
+      stripVTControlCharacters(stdout).trim(),
+      `lists-manage ${version}`
+    )
   })
 })
 
