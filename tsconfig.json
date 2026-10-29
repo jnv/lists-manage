@@ -2,7 +2,7 @@
   "compilerOptions": {
     "noEmit": true,
     "strict": true,
-    "types": ["node"],
+    "types": ["node", "deno"],
     "target": "es2024",
     "module": "nodenext",
     "rewriteRelativeImportExtensions": true,
