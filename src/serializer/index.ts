@@ -3,7 +3,7 @@ import { serializeItems } from './items.ts'
 
 function serializeSection(section: Section): string {
   const headingLevel = section.level + 1 // Always H2+
-  const heading = '#'.repeat(headingLevel) + ` ${section.name}`
+  const heading = `${'#'.repeat(headingLevel)} ${section.name}`
 
   return `\n${heading}\n\n${serializeItems(section.items)}\n`
 }

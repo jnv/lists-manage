@@ -1,7 +1,7 @@
-import { describe, it } from 'node:test'
 import assert from 'node:assert'
-import { urlExistsInFile } from '../duplicate.ts'
+import { describe, it } from 'node:test'
 import type { ListFile } from '../../types.ts'
+import { urlExistsInFile } from '../duplicate.ts'
 
 describe('.urlExistsInFile', () => {
   const list = [
@@ -24,11 +24,17 @@ describe('.urlExistsInFile', () => {
   }
 
   it('returns false when URL is not in file', () => {
-    assert.strictEqual(urlExistsInFile(file, 'https://github.com/some/different-url'), false)
+    assert.strictEqual(
+      urlExistsInFile(file, 'https://github.com/some/different-url'),
+      false
+    )
   })
 
   it('returns true when URL is in file', () => {
-    assert.strictEqual(urlExistsInFile(file, 'https://github.com/zenany/weekly'), true)
+    assert.strictEqual(
+      urlExistsInFile(file, 'https://github.com/zenany/weekly'),
+      true
+    )
   })
 
   it('matches duplicate without case sensitivity', () => {

@@ -10,7 +10,7 @@ const PATTERN_SUBITEM = /^\s+[-*]\s*(.*)$/
 function parseLineRest(rest: string): LineRest {
   const matches = PATTERN_ITEM_REST.exec(rest.trim())
   if (matches) {
-    const [, ignNote, note, ignBy, author, ignDesc, desc] = matches
+    const [, , note, , author, , desc] = matches
     return {
       desc,
       note,

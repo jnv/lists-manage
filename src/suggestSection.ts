@@ -1,4 +1,5 @@
-import type { Section, RepoDetail } from './types.ts'
+import type { RepoDetail, Section } from './types.ts'
+
 const MATCH_SECTION = Object.freeze([
   [/recipe/i, /Non-technical/i],
   [/food/i, /Non-technical/i],

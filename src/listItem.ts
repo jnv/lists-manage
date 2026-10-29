@@ -1,5 +1,5 @@
-import type { ListItem } from './types.ts'
 import { getRepoInfo } from './repo/index.ts'
+import type { ListItem } from './types.ts'
 export function updateItem(
   original: ListItem,
   updatedProps: Partial<ListItem>

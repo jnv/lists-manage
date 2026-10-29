@@ -23,6 +23,7 @@
     "tslib": "^2"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.6.4",
     "@types/debug": "^4.1.13",
     "@types/hosted-git-info": "^3.0.5",
     "@types/node": "^22.20.5",
@@ -30,6 +31,8 @@
     "typescript": "^5.9.3"
   },
   "scripts": {
+    "check": "biome check .",
+    "check:fix": "biome check --write .",
     "typecheck": "tsc --noEmit",
     "test": "node --experimental-strip-types --test './src/**/*.test.ts'",
     "prebuild": "rm -rf lib",

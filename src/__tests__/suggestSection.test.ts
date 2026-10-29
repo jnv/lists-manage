@@ -1,7 +1,7 @@
-import { describe, it } from 'node:test';
-import assert from 'node:assert';
-import { suggestSection } from '../suggestSection.ts';
-import type { Section } from '../types.ts';
+import assert from 'node:assert'
+import { describe, it } from 'node:test'
+import { suggestSection } from '../suggestSection.ts'
+import type { Section } from '../types.ts'
 
 const sections: Section[] = [
   // 0

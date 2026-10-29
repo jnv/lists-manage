@@ -1,5 +1,5 @@
+import { URL } from 'node:url'
 import hostedGitInfo from 'hosted-git-info'
-import { URL } from 'url'
 import type { RepoUrlInfo } from './types.ts'
 
 const OPTIONS: hostedGitInfo.Options = {
@@ -23,7 +23,7 @@ function fallbackRepoInfo(repoUrl: string): RepoUrlInfo {
 
 export function getRepoInfo(repoUrl: string): RepoUrlInfo {
   const info = hostedGitInfo.fromUrl(repoUrl, OPTIONS)
-  if (!info || !info.project || !info.user || !info.type) {
+  if (!info?.project || !info.user || !info.type) {
     return fallbackRepoInfo(repoUrl)
   }
   return {

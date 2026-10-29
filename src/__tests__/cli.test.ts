@@ -1,10 +1,10 @@
-import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
 import { execFile as execFileCb } from 'node:child_process'
-import { promisify } from 'node:util'
 import { promises as fs } from 'node:fs'
-import path from 'node:path'
 import os from 'node:os'
+import path from 'node:path'
+import { describe, it } from 'node:test'
+import { promisify } from 'node:util'
 
 const execFile = promisify(execFileCb)
 
@@ -20,7 +20,10 @@ function assertOrder(text: string, first: string, second: string) {
   const secondIdx = text.indexOf(second)
   assert.notEqual(firstIdx, -1, `expected "${first}" to be present`)
   assert.notEqual(secondIdx, -1, `expected "${second}" to be present`)
-  assert.ok(firstIdx < secondIdx, `expected "${first}" (at ${firstIdx}) before "${second}" (at ${secondIdx})`)
+  assert.ok(
+    firstIdx < secondIdx,
+    `expected "${first}" (at ${firstIdx}) before "${second}" (at ${secondIdx})`
+  )
 }
 
 describe('CLI: help', () => {
@@ -90,7 +93,8 @@ describe('CLI: add (non-interactive)', () => {
       'add',
       '--no-prompt',
       '--no-write',
-      '-f', FIXTURE_PATH,
+      '-f',
+      FIXTURE_PATH,
       'https://gitlab.com/inkscape/inkscape',
     ])
 
@@ -109,7 +113,8 @@ describe('CLI: add (non-interactive)', () => {
       await run([
         'add',
         '--no-prompt',
-        '-f', tmpFile,
+        '-f',
+        tmpFile,
         'https://gitlab.com/inkscape/inkscape',
       ])
 
@@ -122,13 +127,15 @@ describe('CLI: add (non-interactive)', () => {
 
   it('exits with error when URL already exists', async () => {
     await assert.rejects(
-      () => run([
-        'add',
-        '--no-prompt',
-        '--no-write',
-        '-f', FIXTURE_PATH,
-        'https://gitlab.com/rosarior/django-must-watch',
-      ]),
+      () =>
+        run([
+          'add',
+          '--no-prompt',
+          '--no-write',
+          '-f',
+          FIXTURE_PATH,
+          'https://gitlab.com/rosarior/django-must-watch',
+        ]),
       (err: { code: number; stderr: string }) => {
         assert.match(err.stderr, /already present/)
         return true
@@ -138,12 +145,7 @@ describe('CLI: add (non-interactive)', () => {
 
   it('exits with error when no URL and no prompt', async () => {
     await assert.rejects(
-      () => run([
-        'add',
-        '--no-prompt',
-        '--no-write',
-        '-f', FIXTURE_PATH,
-      ]),
+      () => run(['add', '--no-prompt', '--no-write', '-f', FIXTURE_PATH]),
       (err: { code: number }) => {
         assert.notEqual(err.code, 0)
         return true

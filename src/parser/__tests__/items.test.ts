@@ -1,6 +1,6 @@
-import test from 'node:test';
-import assert, { partialDeepStrictEqual } from 'node:assert/strict';
-import { parseItems } from '../items.ts';
+import assert, { partialDeepStrictEqual } from 'node:assert/strict'
+import test from 'node:test'
+import { parseItems } from '../items.ts'
 
 const testCases = [
   {
@@ -68,22 +68,22 @@ const testCases = [
       },
     ],
   },
-];
+]
 
 testCases.forEach(({ name, input, expected }) => {
   test(name, () => {
-    partialDeepStrictEqual(parseItems(input), expected);
-  });
-});
+    partialDeepStrictEqual(parseItems(input), expected)
+  })
+})
 
 test('multiple items with extras', () => {
   const input = [
     '* [learnxinyminutes-docs](https://github.com/adambard/learnxinyminutes-docs) – Code documentation written as code!',
     '  * https://learnxinyminutes.com/',
-    '- [no-free-basics](https://github.com/net-neutrality/no-free-basics) – Those who have spoken up against Facebook\'s “Free Basics”',
+    "- [no-free-basics](https://github.com/net-neutrality/no-free-basics) – Those who have spoken up against Facebook's “Free Basics”",
     '  - https://net-neutrality.github.io/no-free-basics/',
     '* [recipes](https://github.com/csclug/recipes) by @csclug – Delicious open source',
-  ];
+  ]
   const expected = [
     {
       name: 'learnxinyminutes-docs',
@@ -108,6 +108,6 @@ test('multiple items with extras', () => {
       author: 'csclug',
       note: undefined,
     },
-  ];
-  assert.deepStrictEqual(parseItems(input), expected);
-});
+  ]
+  assert.deepStrictEqual(parseItems(input), expected)
+})

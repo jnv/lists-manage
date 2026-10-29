@@ -1,6 +1,6 @@
-import test from 'node:test';
-import assert, { partialDeepStrictEqual } from 'node:assert/strict';
-import { parseFile } from '../file.ts';
+import assert from 'node:assert/strict'
+import test from 'node:test'
+import { parseFile } from '../file.ts'
 
 test('file with prefix, suffix', () => {
   const input = `
@@ -26,14 +26,12 @@ Suffix here.
         items: [
           {
             desc: 'Code documentation written as code!',
-            extras: [
-              'https://learnxinyminutes.com/'
-            ],
+            extras: ['https://learnxinyminutes.com/'],
             name: 'learnxinyminutes-docs',
-            url: 'https://github.com/adambard/learnxinyminutes-docs'
-          }
-        ]
-      }
+            url: 'https://github.com/adambard/learnxinyminutes-docs',
+          },
+        ],
+      },
     ],
     suffix: '<!-- lists-end -->\n\nSuffix here.\n',
   }

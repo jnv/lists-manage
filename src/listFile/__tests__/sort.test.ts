@@ -1,7 +1,7 @@
-import { describe, it } from 'node:test';
-import assert from 'node:assert';
-import { sortItems, sortFile } from '../sort.ts';
-import type { ListFile } from '../../types.ts';
+import assert from 'node:assert'
+import { describe, it } from 'node:test'
+import type { ListFile } from '../../types.ts'
+import { sortFile, sortItems } from '../sort.ts'
 
 describe('.sortItems', () => {
   it('sorts items by name', () => {

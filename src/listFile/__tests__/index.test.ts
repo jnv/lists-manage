@@ -1,7 +1,7 @@
-import { describe, it } from 'node:test';
-import assert from 'node:assert';
-import type { ListFile } from '../../types.ts';
-import { addItemToSection } from '../index.ts';
+import assert from 'node:assert'
+import { describe, it } from 'node:test'
+import type { ListFile } from '../../types.ts'
+import { addItemToSection } from '../index.ts'
 
 describe('.addItemToSection', () => {
   it('adds item to a particular section and sorts it', () => {

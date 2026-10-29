@@ -1,6 +1,6 @@
-import test from 'node:test';
-import assert from 'node:assert';
-import { serializeItems } from '../items.ts';
+import assert from 'node:assert'
+import test from 'node:test'
+import { serializeItems } from '../items.ts'
 
 const input = [
   {

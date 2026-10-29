@@ -1,13 +1,17 @@
-import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
 import { promises as fs } from 'node:fs'
-import path from 'node:path'
 import os from 'node:os'
-import { loadListFile, addItemToSection, writeListFile } from '../listFile/index.ts'
-import { serializeFile } from '../serializer/index.ts'
+import path from 'node:path'
+import { describe, it } from 'node:test'
+import {
+  addItemToSection,
+  loadListFile,
+  writeListFile,
+} from '../listFile/index.ts'
 import { sortFile } from '../listFile/sort.ts'
-import { fetchRepoDetails } from '../repo/index.ts'
 import { normalizeDesc } from '../normalize.ts'
+import { fetchRepoDetails } from '../repo/index.ts'
+import { serializeFile } from '../serializer/index.ts'
 import { suggestSection } from '../suggestSection.ts'
 
 const FIXTURE_PATH = new URL('./fixture.md', import.meta.url).pathname
@@ -17,7 +21,10 @@ function assertOrder(text: string, first: string, second: string) {
   const secondIdx = text.indexOf(second)
   assert.notEqual(firstIdx, -1, `expected "${first}" to be present`)
   assert.notEqual(secondIdx, -1, `expected "${second}" to be present`)
-  assert.ok(firstIdx < secondIdx, `expected "${first}" (at ${firstIdx}) before "${second}" (at ${secondIdx})`)
+  assert.ok(
+    firstIdx < secondIdx,
+    `expected "${first}" (at ${firstIdx}) before "${second}" (at ${secondIdx})`
+  )
 }
 
 describe('e2e: sort command', () => {
@@ -34,7 +41,9 @@ describe('e2e: sort command', () => {
   })
 
   it('writes sorted file in place (write mode)', async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'lists-manage-test-'))
+    const tmpDir = await fs.mkdtemp(
+      path.join(os.tmpdir(), 'lists-manage-test-')
+    )
     const tmpFile = path.join(tmpDir, 'test.md')
     await fs.copyFile(FIXTURE_PATH, tmpFile)
 
@@ -99,7 +108,9 @@ describe('e2e: add command (non-interactive)', () => {
   })
 
   it('writes added item to file in place', async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'lists-manage-test-'))
+    const tmpDir = await fs.mkdtemp(
+      path.join(os.tmpdir(), 'lists-manage-test-')
+    )
     const tmpFile = path.join(tmpDir, 'test.md')
     await fs.copyFile(FIXTURE_PATH, tmpFile)
 

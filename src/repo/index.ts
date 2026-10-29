@@ -1,21 +1,17 @@
-import { getRepoInfo } from './repoInfo.ts'
-import type { RepoDetail, RepoCheck } from './types.ts'
 import { fetchRemoteRepo } from './remote/github.ts'
+import { getRepoInfo } from './repoInfo.ts'
+import type { RepoCheck, RepoDetail } from './types.ts'
 
 export { getRepoInfo }
 
 export async function fetchRepoDetails(repoUrl: string): Promise<RepoDetail> {
   const repoInfo = getRepoInfo(repoUrl)
-  let repoDetails
   switch (repoInfo.type) {
     case 'github':
-      repoDetails = await fetchRemoteRepo(repoInfo)
-      break
+      return fetchRemoteRepo(repoInfo)
     default:
-      repoDetails = { ...repoInfo, desc: '', homepage: '' }
-      break
+      return { ...repoInfo, desc: '', homepage: '' }
   }
-  return repoDetails
 }
 
 export async function checkRepo(repoUrl: string): Promise<RepoCheck> {

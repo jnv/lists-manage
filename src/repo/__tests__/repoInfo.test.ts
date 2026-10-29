@@ -1,5 +1,5 @@
-import { describe, it } from 'node:test';
-import assert from 'node:assert';
+import assert from 'node:assert'
+import { describe, it } from 'node:test'
 import { getRepoInfo } from '../repoInfo.ts'
 
 describe('.getRepoInfo', () => {
@@ -44,12 +44,9 @@ describe('.getRepoInfo', () => {
   })
 
   it('throws with incompatible URL', () => {
-    assert.throws(
-      () => getRepoInfo('http://example.com'),
-      {
-        name: 'Error',
-        message: 'Unsupported or invalid URL: http://example.com',
-      }
-    );
-  });
+    assert.throws(() => getRepoInfo('http://example.com'), {
+      name: 'Error',
+      message: 'Unsupported or invalid URL: http://example.com',
+    })
+  })
 })

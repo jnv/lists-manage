@@ -12,8 +12,7 @@ function serializeItem(item: ListItem): string {
     output += ` – ${item.desc}`
   }
   if (item.extras) {
-    output +=
-      '\n' + item.extras.map((extra): string => `  - ${extra}`).join('\n')
+    output += `\n${item.extras.map((extra): string => `  - ${extra}`).join('\n')}`
   }
   return output
 }

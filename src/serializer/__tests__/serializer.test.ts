@@ -1,6 +1,6 @@
-import test from 'node:test';
-import assert from 'node:assert';
-import { serializeFile } from '../index.ts';
+import assert from 'node:assert'
+import test from 'node:test'
+import { serializeFile } from '../index.ts'
 
 const input = {
   prefix: '\nPrefix here.\n\n<!-- lists-start -->',

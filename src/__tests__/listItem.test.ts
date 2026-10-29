@@ -1,6 +1,6 @@
-import { describe, it } from 'node:test';
-import assert from 'node:assert';
-import { updateItem } from '../listItem.ts';
+import assert from 'node:assert'
+import { describe, it } from 'node:test'
+import { updateItem } from '../listItem.ts'
 
 describe('.updateItem', () => {
   it('changes item name when URL is updated', () => {
