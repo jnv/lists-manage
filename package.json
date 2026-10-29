@@ -19,6 +19,9 @@
     "simple-git": "^4.0.2",
     "tslib": "^2"
   },
+  "bundleDependencies": [
+    "@cliffy/command"
+  ],
   "devDependencies": {
     "@biomejs/biome": "^2.6.4",
     "@types/debug": "^4.1.13",
@@ -39,8 +42,7 @@
   },
   "files": [
     "/bin",
-    "/lib",
-    "/npm-shrinkwrap.json"
+    "/lib"
   ],
   "types": "lib/index.d.ts"
 }
