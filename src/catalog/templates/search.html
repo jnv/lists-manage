@@ -1,0 +1,28 @@
+<search>
+  <form id="filters">
+    <div class="controls">
+      <div class="search">
+        <label for="search">Search lists</label>
+        <input
+          id="search"
+          name="q"
+          type="search"
+          list="topics"
+          autocomplete="off"
+        />
+        <datalist id="topics"></datalist>
+      </div>
+      <div class="category">
+        <label for="category">Category</label>
+        <select id="category" name="category">
+          <option value="">All categories</option>
+        </select>
+      </div>
+      <button type="reset">Clear</button>
+    </div>
+    <output id="count" aria-live="polite" aria-atomic="true"></output>
+  </form>
+</search>
+<p id="empty" hidden>
+  No lists match your search. Try fewer words or another category.
+</p>

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lists</title>
+    <link rel="stylesheet" href="style.css" />
+    <script defer src="search.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1>Lists</h1>
+      <p>
+        The definitive list of lists (of lists) curated on GitHub and elsewhere.
+      </p>
+    </header>
+    <main>
+      <table>
+        <caption>
+          {{formattedCount}} lists, sorted alphabetically
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">List</th>
+            <th scope="col">Description</th>
+            <th scope="col">Topics</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#rows}} {{> row}} {{/rows}}
+        </tbody>
+      </table>
+    </main>
+    <footer>
+      <a href="catalog.json">Download the JSON catalog</a>. Generated on
+      <time datetime="{{generatedAt}}">{{generatedDate}}</time> (UTC).
+    </footer>
+  </body>
+</html>

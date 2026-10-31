@@ -1,0 +1,28 @@
+<tr{{#id}} id="{{id}}"{{/id}}>
+  <th scope="row">
+    {{#url}}<a href="{{url}}">{{name}}</a>{{/url}}{{^url}}{{name}}{{/url}}
+    {{#author}}<span class="meta">by @{{author}}</span>{{/author}}
+    <span class="meta categories">{{#categories}}<span>{{name}}</span>{{#separator}} / {{/separator}}{{/categories}}</span>
+    {{#noteHtml}}<span class="meta">{{{noteHtml}}}</span>{{/noteHtml}}
+    {{#hasWebsites}}
+    <div class="websites">
+      {{#websites}}
+      <a href="{{url}}">{{label}}</a>{{#separator}} · {{/separator}}
+      {{/websites}}
+    </div>
+    {{/hasWebsites}}
+  </th>
+  <td>
+    {{{descriptionHtml}}}
+    {{#hasDetails}}
+    <ul class="details">
+      {{#details}}
+      <li>{{{html}}}</li>
+      {{/details}}
+    </ul>
+    {{/hasDetails}}
+  </td>
+  <td>
+    {{#tags}}<span class="tag">{{.}}</span> {{/tags}}
+  </td>
+</tr>

@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { Command } from '@cliffy/command'
 import { addCommand } from './commands/add.ts'
+import { exportCommand } from './commands/export.ts'
 import { fixCommand } from './commands/fix.ts'
 import { sortCommand } from './commands/sort.ts'
 
@@ -15,3 +16,4 @@ export const cli = new Command()
   .command('add', addCommand())
   .command('fix', fixCommand())
   .command('sort', sortCommand())
+  .command('export', exportCommand())
