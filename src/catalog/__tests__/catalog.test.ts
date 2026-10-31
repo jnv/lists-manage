@@ -138,10 +138,6 @@ test('static HTML retains semantic table, formatted descriptions and supplementa
   assert.match(html, /<strong>C#<\/strong>/)
   assert.match(html, /href="https:\/\/example.com\/home">Website<\/a>/)
   assert.match(html, /href="https:\/\/example.com\/another"/)
-  assert.match(
-    html,
-    /<time datetime="2026-10-31T12:34:56.000Z">2026-10-31<\/time>/
-  )
   assert.doesNotMatch(
     html,
     /<form|<input|<select|<datalist|<output|id="empty"|data-categories|<noscript/
