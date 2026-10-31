@@ -221,3 +221,49 @@ modified by this workflow. Do not move a release tag to replace a package.
 MIT
 
 [lists]: https://github.com/jnv/lists
+
+## Static catalog export
+
+Generate a complete, offline website and versioned JSON from a Markdown list:
+
+```sh
+lists-manage export --file README.md --config .github/topics.json --output dist
+```
+
+The source must use `<!-- lists-start -->` / `<!-- lists-end -->` markers and
+section headings, as with the other commands. `--title` defaults to `Lists`.
+The output directory receives `index.html`, `style.css`, `search.js`,
+`catalog.json`, and `.nojekyll`; use a dedicated directory for deployment.
+No API calls, credentials, or LLM calls are used during export.
+
+The JSON envelope is `{ "version": 1, "entries": [...] }`. Entries preserve
+name, URL, Markdown description, author, language/note, supplementary Markdown
+items, category ancestry, section name, and derived tags. Entries are sorted
+alphabetically. Internal section links are retained in the generated table.
+HTML renders a safe subset of Markdown, preserving links and emphasis while
+removing executable HTML and unsafe URL schemes.
+
+Topic configuration is a JSON object with `version: 1` and `rules`:
+
+```json
+{
+  "version": 1,
+  "rules": [
+    { "tag": "programming language", "keywords": ["csharp", "c#", "dotnet"] }
+  ]
+}
+```
+
+Rules match literal aliases in names and descriptions, ignoring case and
+accents. Unicode letters and numbers delimit keywords, so `go` does not match
+`django`; hyphens and underscores count as separators. All matching rules
+apply. Empty rules are supported. Invalid configuration fails the command.
+The taxonomy is owned by the calling repository, not by this tool.
+
+The full semantic table works without JavaScript. With JavaScript enabled,
+search matches every query word against rendered row text, including topics,
+author, and notes, ignoring case and accents. A native datalist suggests topic
+names as complete search values. Category filtering includes descendants.
+Search and category are stored in URL query parameters (`q` and `category`),
+with browser history support. No runtime libraries or network requests are
+needed. JSON is an independent export; the page searches its existing rows.
