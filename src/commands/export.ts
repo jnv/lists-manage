@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, realpath, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { Command } from '@cliffy/command'
 import { createCatalog, parseTopicConfig } from '../catalog/model.ts'
@@ -37,9 +37,7 @@ export function exportCommand() {
         )
       const assets = catalogAssets(catalog, title)
       const inputPaths = await Promise.all(
-        [file, config].map((input) =>
-          import('node:fs/promises').then(({ realpath }) => realpath(input))
-        )
+        [file, config].map((input) => realpath(input))
       )
       const destination = path.resolve(output)
       // Never overwrite an input when the caller selects an existing directory.

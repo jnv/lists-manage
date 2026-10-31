@@ -35,7 +35,7 @@ footer { margin-top: 2rem; color: var(--muted); font-size: .875rem; }
 @media (max-width: 40rem) {
   body { padding-top: 1.25rem; }
   th, td { padding: .65rem .35rem; font-size: .875rem; }
-  th:first-child { width: 31%; } th:last-child { width: 21%; }
+  th:first-child { width: 31%; } th:last-child { width: 27%; }
   .tag { font-size: .75rem; padding: .05rem .2rem; }
   .category { flex-grow: 1; }
 }
