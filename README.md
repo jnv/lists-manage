@@ -267,3 +267,17 @@ names as complete search values. Category filtering includes descendants.
 Search and category are stored in URL query parameters (`q` and `category`),
 with browser history support. No runtime libraries or network requests are
 needed. JSON is an independent export; the page searches its existing rows.
+
+### Editing the catalog presentation
+
+The page lives in `src/catalog/templates/catalog.html.mustache`, with repeated
+rows in `row.html.mustache` and styles in `style.css` in the same directory.
+These are ordinary HTML templates using Mustache sections for loops and
+optional content. TypeScript in `src/catalog/render.ts` prepares their data.
+Keep ordinary values in double braces (`{{name}}`) for automatic escaping;
+triple braces are reserved for the sanitized Markdown HTML prepared by the
+renderer. The browser enhancement remains in `src/catalog/client.ts`.
+
+`npm run build` copies the template directory into `lib/catalog/templates`,
+which is included in the npm package. Edit the source files rather than the
+build output. No template engine or other dependency is shipped to browsers.
