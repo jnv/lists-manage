@@ -1,11 +1,18 @@
 // This function is emitted as a standalone script; keep it self-contained.
-export function enhanceCatalog() {
-  const form = document.querySelector<HTMLFormElement>('#filters')
-  const search = document.querySelector<HTMLInputElement>('#search')
-  const category = document.querySelector<HTMLSelectElement>('#category')
-  const count = document.querySelector<HTMLOutputElement>('#count')
-  const empty = document.querySelector<HTMLElement>('#empty')
-  if (!form || !search || !category || !count || !empty) return
+export function enhanceCatalog(controlsHtml: string) {
+  const main = document.querySelector('main')
+  const table = main?.querySelector('table')
+  if (!main || !table) return
+  const template = document.createElement('template')
+  template.innerHTML = controlsHtml
+  const controls = template.content
+  const form = controls.querySelector<HTMLFormElement>('#filters')
+  const search = controls.querySelector<HTMLInputElement>('#search')
+  const category = controls.querySelector<HTMLSelectElement>('#category')
+  const topics = controls.querySelector<HTMLDataListElement>('#topics')
+  const count = controls.querySelector<HTMLOutputElement>('#count')
+  const empty = controls.querySelector<HTMLElement>('#empty')
+  if (!form || !search || !category || !topics || !count || !empty) return
   function normalize(text: string) {
     return text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()
   }
@@ -14,8 +21,21 @@ export function enhanceCatalog() {
   ).map((row) => ({
     row,
     text: normalize(row.textContent ?? ''),
-    categories: JSON.parse(row.dataset.categories ?? '[]') as string[],
+    categories: Array.from(
+      row.querySelectorAll('.categories > span'),
+      (span) => span.textContent ?? ''
+    ),
   }))
+  const categories = new Set(rows.flatMap((item) => item.categories))
+  const tags = new Set(
+    Array.from(table.querySelectorAll('.tag'), (tag) => tag.textContent ?? '')
+  )
+  for (const name of categories) category.add(new Option(name, name))
+  for (const tag of [...tags].sort((a, b) => a.localeCompare(b, 'en'))) {
+    const option = document.createElement('option')
+    option.value = tag
+    topics.append(option)
+  }
   function apply() {
     if (!search || !category || !count || !empty) return
     const words = normalize(search.value).split(/\s+/).filter(Boolean)
@@ -79,5 +99,5 @@ export function enhanceCatalog() {
     restore()
   })
   restore()
-  form.hidden = false
+  main.insertBefore(controls, table)
 }

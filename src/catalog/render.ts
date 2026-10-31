@@ -14,6 +14,10 @@ const rowTemplate = readFileSync(
   new URL('./templates/row.html.mustache', import.meta.url),
   'utf8'
 )
+const searchTemplate = readFileSync(
+  new URL('./templates/search.html', import.meta.url),
+  'utf8'
+)
 const stylesheet = readFileSync(
   new URL('./templates/style.css', import.meta.url),
   'utf8'
@@ -44,13 +48,11 @@ function markdown(value: string): string {
   })
 }
 
-export function renderCatalog(catalog: Catalog, title: string): string {
-  const categories = [
-    ...new Set(catalog.entries.flatMap((entry) => entry.categories)),
-  ]
-  const tags = [
-    ...new Set(catalog.entries.flatMap((entry) => entry.tags)),
-  ].sort((a, b) => a.localeCompare(b, 'en'))
+export function renderCatalog(
+  catalog: Catalog,
+  title: string,
+  generatedAt = new Date()
+): string {
   const seenSections = new Set<string>()
   const rows = catalog.entries.map((entry) => {
     const section = sectionId(entry.section)
@@ -65,8 +67,10 @@ export function renderCatalog(catalog: Catalog, title: string): string {
       name: entry.name,
       url: safeUrl(entry.url),
       author: entry.author,
-      categoriesJson: JSON.stringify(entry.categories),
-      categoryPath: entry.categories.join(' / '),
+      categories: entry.categories.map((name, index) => ({
+        name,
+        separator: index < entry.categories.length - 1,
+      })),
       noteHtml: markdown(entry.note),
       descriptionHtml: markdown(entry.description),
       hasWebsites: websites.length > 0,
@@ -86,10 +90,9 @@ export function renderCatalog(catalog: Catalog, title: string): string {
     template,
     {
       title,
-      categories,
-      tags,
       rows,
-      count: catalog.entries.length,
+      generatedAt: generatedAt.toISOString(),
+      generatedDate: generatedAt.toISOString().slice(0, 10),
       formattedCount: catalog.entries.length.toLocaleString('en'),
     },
     { row: rowTemplate },
@@ -99,13 +102,14 @@ export function renderCatalog(catalog: Catalog, title: string): string {
 
 export function catalogAssets(
   catalog: Catalog,
-  title: string
+  title: string,
+  generatedAt = new Date()
 ): Record<string, string> {
   return {
-    'index.html': renderCatalog(catalog, title),
+    'index.html': renderCatalog(catalog, title, generatedAt),
     'catalog.json': `${JSON.stringify(catalog, null, 2)}\n`,
     'style.css': stylesheet,
-    'search.js': `(${enhanceCatalog.toString()})();\n`,
+    'search.js': `(${enhanceCatalog.toString()})(${JSON.stringify(searchTemplate)});\n`,
     '.nojekyll': '',
   }
 }

@@ -80,7 +80,11 @@ test('static HTML retains semantic table, formatted descriptions and supplementa
   catalog.entries[0].description +=
     ' <script>alert(1)</script> [bad](javascript:alert(1)) <img src=x onerror=alert(1)>'
   catalog.entries[0].url = 'javascript:alert(1)'
-  const assets = catalogAssets(catalog, '<Lists>')
+  const assets = catalogAssets(
+    catalog,
+    '<Lists>',
+    new Date('2026-10-31T12:34:56Z')
+  )
   const html = assets['index.html']
   assert.match(html, /<title>&lt;Lists&gt;<\/title>/)
   assert.match(html, /<table>/)
@@ -88,8 +92,17 @@ test('static HTML retains semantic table, formatted descriptions and supplementa
   assert.match(html, /<strong>C#<\/strong>/)
   assert.match(html, /href="https:\/\/example.com\/home">Website<\/a>/)
   assert.match(html, /href="https:\/\/example.com\/another"/)
-  assert.match(html, /<datalist id="topics">/)
+  assert.match(
+    html,
+    /<time datetime="2026-10-31T12:34:56.000Z">2026-10-31<\/time>/
+  )
+  assert.doesNotMatch(
+    html,
+    /<form|<input|<select|<datalist|<output|id="empty"|data-categories|<noscript/
+  )
+  assert.match(assets['search.js'], /createElement\('template'\)/)
   assert.doesNotMatch(html, /javascript:|onerror=|<script>alert/)
+  assert.doesNotMatch(assets['search.js'], /\{\{[#/]?(?:categories|tags|count)/)
   assert.doesNotThrow(() => new Function(assets['search.js']))
   assert.deepEqual(JSON.parse(assets['catalog.json']), catalog)
 })

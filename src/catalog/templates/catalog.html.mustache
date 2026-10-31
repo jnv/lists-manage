@@ -1,49 +1,24 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Browse curated lists of useful resources by keyword, category, and topic.">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{{title}}</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
     <script defer src="search.js"></script>
   </head>
   <body>
     <header>
       <h1>{{title}}</h1>
-      <p>A collection of curated lists. Find resources by name, description, or topic.</p>
+      <p>
+        The definitive list of lists (of lists) curated on GitHub and elsewhere.
+      </p>
     </header>
     <main>
-      <form id="filters" role="search" hidden>
-        <div class="controls">
-          <div class="search">
-            <label for="search">Search lists</label>
-            <input id="search" name="q" type="search" list="topics" aria-describedby="search-help" autocomplete="off" placeholder="Search names, descriptions, and topics…">
-            <datalist id="topics">
-              {{#tags}}
-              <option value="{{.}}"></option>
-              {{/tags}}
-            </datalist>
-          </div>
-          <div class="category">
-            <label for="category">Category</label>
-            <select id="category" name="category">
-              <option value="">All categories</option>
-              {{#categories}}
-              <option value="{{.}}">{{.}}</option>
-              {{/categories}}
-            </select>
-          </div>
-          <button type="reset">Clear</button>
-        </div>
-        <p class="hint" id="search-help">Every word narrows your search. Topic suggestions replace the current search.</p>
-        <output id="count" aria-live="polite" aria-atomic="true">{{count}} lists</output>
-      </form>
-      <noscript>
-        <p>All lists are shown below. Use your browser’s Find command to search.</p>
-      </noscript>
       <table>
-        <caption>{{formattedCount}} lists, sorted alphabetically</caption>
+        <caption>
+          {{formattedCount}} lists, sorted alphabetically
+        </caption>
         <thead>
           <tr>
             <th scope="col">List</th>
@@ -52,15 +27,13 @@
           </tr>
         </thead>
         <tbody>
-          {{#rows}}
-          {{> row}}
-          {{/rows}}
+          {{#rows}} {{> row}} {{/rows}}
         </tbody>
       </table>
-      <p id="empty" hidden>No lists match your search. Try fewer words or another category.</p>
     </main>
     <footer>
-      <a href="catalog.json">Download the JSON catalog</a> · Generated from the maintained Markdown catalog.
+      <a href="catalog.json">Download the JSON catalog</a>. Generated on
+      <time datetime="{{generatedAt}}">{{generatedDate}}</time> (UTC).
     </footer>
   </body>
 </html>

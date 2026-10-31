@@ -286,7 +286,15 @@ These are ordinary HTML templates using Mustache sections for loops and
 optional content. TypeScript in `src/catalog/render.ts` prepares their data.
 Keep ordinary values in double braces (`{{name}}`) for automatic escaping;
 triple braces are reserved for the sanitized Markdown HTML prepared by the
-renderer. The browser enhancement remains in `src/catalog/client.ts`.
+renderer. The browser enhancement remains in `src/catalog/client.ts`. Its controls live
+in `src/catalog/templates/search.html`, which is embedded in the generated
+JavaScript, not the page HTML. JavaScript builds topic and category options
+from the visible table, then inserts the controls. The unenhanced HTML has no
+search controls, result messages, or hidden filtering metadata. The script
+reference is the only JavaScript hook in the page.
+
+The footer records the UTC generation date in a semantic `time` element.
+Generation timestamps are presentation metadata; the JSON catalog is unchanged.
 
 `npm run build` copies the template directory into `lib/catalog/templates`,
 which is included in the npm package. Edit the source files rather than the

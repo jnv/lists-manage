@@ -1,8 +1,8 @@
-<tr{{#id}} id="{{id}}"{{/id}} data-categories="{{categoriesJson}}">
+<tr{{#id}} id="{{id}}"{{/id}}>
   <th scope="row">
     {{#url}}<a href="{{url}}">{{name}}</a>{{/url}}{{^url}}{{name}}{{/url}}
     {{#author}}<span class="meta">by @{{author}}</span>{{/author}}
-    <span class="meta">{{categoryPath}}</span>
+    <span class="meta categories">{{#categories}}<span>{{name}}</span>{{#separator}} / {{/separator}}{{/categories}}</span>
     {{#noteHtml}}<span class="meta">{{{noteHtml}}}</span>{{/noteHtml}}
     {{#hasWebsites}}
     <div class="websites">
