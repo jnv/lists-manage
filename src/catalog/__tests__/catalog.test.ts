@@ -59,6 +59,16 @@ test('invalid rules fail with actionable errors; an empty taxonomy is supported'
     { version: 2, rules: [] },
     { version: 1, rules: [{ tag: 'x', keywords: [] }] },
     { version: 1, rules: [{ tag: 'x', keywords: [''] }] },
+    { version: 1, rules: [{ tag: 'x' }] },
+    { version: 1, rules: [{ tag: 'x', categories: [] }] },
+    { version: 1, rules: [{ tag: 'x', categories: [' technical '] }] },
+    { version: 1, rules: [{ tag: 'x', categories: [''] }] },
+    { version: 1, rules: [{ tag: 'x', categories: 'Technical' }] },
+    { version: 1, rules: [{ tag: 'x', categories: ['Technical', 1] }] },
+    {
+      version: 1,
+      rules: [{ tag: 'x', categories: ['Technical'], keywords: [] }],
+    },
     { version: 1, rules: [{ tag: 'x', keywords: ['x'], regex: true }] },
     {
       version: 1,
@@ -74,6 +84,45 @@ test('invalid rules fail with actionable errors; an empty taxonomy is supported'
     version: 1,
     rules: [],
   })
+})
+
+test('category rules match exact normalized ancestors, including deep descendants, with OR selectors', () => {
+  const file = parseFile(`# Catalog
+<!-- lists-start -->
+## Lists of lists
+* [root](https://example.com/root)
+### More lists
+* [child](https://example.com/child)
+#### Still more lists
+* [deep](https://example.com/deep)
+## Technical
+* [outside](https://example.com/outside) – Lists of lists.
+## Non-technical
+* [drink](https://example.com/drink) – Coffee.
+<!-- lists-end -->
+`)
+  const topics = parseTopicConfig({
+    version: 1,
+    rules: [
+      { tag: 'meta', categories: ['LÍSTS OF LISTS'] },
+      { tag: 'combined', categories: ['Lists of lists'], keywords: ['coffee'] },
+      { tag: 'technical', categories: ['Technical'] },
+      { tag: 'substring', categories: ['Lists'] },
+    ],
+  })
+  const entries = createCatalog(file, topics).entries
+  for (const name of ['root', 'child', 'deep']) {
+    assert.deepEqual(entries.find((entry) => entry.name === name)?.tags, [
+      'combined',
+      'meta',
+    ])
+  }
+  assert.deepEqual(entries.find((entry) => entry.name === 'outside')?.tags, [
+    'technical',
+  ])
+  assert.deepEqual(entries.find((entry) => entry.name === 'drink')?.tags, [
+    'combined',
+  ])
 })
 
 test('static HTML retains semantic table, formatted descriptions and supplementary links without unsafe HTML', () => {

@@ -259,7 +259,8 @@ Topic configuration is a JSON object with `version: 1` and `rules`:
 {
   "version": 1,
   "rules": [
-    { "tag": "programming language", "keywords": ["csharp", "c#", "dotnet"] }
+    { "tag": "programming language", "keywords": ["csharp", "c#", "dotnet"] },
+    { "tag": "lists of lists", "categories": ["Lists of lists"] }
   ]
 }
 ```
@@ -267,7 +268,13 @@ Topic configuration is a JSON object with `version: 1` and `rules`:
 Rules match literal aliases in names and descriptions, ignoring case and
 accents. Unicode letters and numbers delimit keywords, so `go` does not match
 `django`; hyphens and underscores count as separators. All matching rules
-apply. Empty rules are supported. Invalid configuration fails the command.
+apply. Category selectors match an exact category name anywhere in the entry's
+ancestry, ignoring case and accents, so selecting a parent includes all its
+subsections. Category selectors do not match entry names or descriptions.
+Each rule needs at least one selector array (`keywords` or `categories`);
+every supplied array must contain nonempty, trimmed strings. When both are
+present, matching any keyword or category assigns the tag (OR).
+An empty `rules` array is supported. Invalid configuration fails the command.
 The taxonomy is owned by the calling repository, not by this tool.
 
 The full semantic table works without JavaScript. With JavaScript enabled,

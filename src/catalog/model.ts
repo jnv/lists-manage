@@ -1,6 +1,10 @@
 import type { ListFile } from '../types.ts'
 
-export type TopicRule = { tag: string; keywords: string[] }
+export type TopicRule = {
+  tag: string
+  keywords?: string[]
+  categories?: string[]
+}
 export type TopicConfig = { version: 1; rules: TopicRule[] }
 export type CatalogEntry = {
   name: string
@@ -39,7 +43,11 @@ export function parseTopicConfig(value: unknown): TopicConfig {
       return fail(`rule ${index + 1} must be an object`)
     }
     const rule = value as Record<string, unknown>
-    if (Object.keys(rule).some((key) => !['tag', 'keywords'].includes(key))) {
+    if (
+      Object.keys(rule).some(
+        (key) => !['tag', 'keywords', 'categories'].includes(key)
+      )
+    ) {
       return fail(`rule ${index + 1} has an unknown field`)
     }
     if (
@@ -53,19 +61,28 @@ export function parseTopicConfig(value: unknown): TopicConfig {
       return fail(`duplicate tag: ${rule.tag}`)
     }
     tags.add(normalize(rule.tag))
-    if (
-      !Array.isArray(rule.keywords) ||
-      rule.keywords.length === 0 ||
-      rule.keywords.some(
-        (keyword) =>
-          typeof keyword !== 'string' ||
-          !keyword.trim() ||
-          keyword !== keyword.trim()
-      )
-    ) {
-      return fail(`rule ${index + 1} needs nonempty, trimmed literal keywords`)
+    if (!('keywords' in rule) && !('categories' in rule)) {
+      return fail(`rule ${index + 1} needs keywords or categories`)
     }
-    return { tag: rule.tag, keywords: rule.keywords as string[] }
+    const selectors: Pick<TopicRule, 'keywords' | 'categories'> = {}
+    for (const field of ['keywords', 'categories'] as const) {
+      if (!(field in rule)) {
+        continue
+      }
+      const values = rule[field]
+      if (
+        !Array.isArray(values) ||
+        values.length === 0 ||
+        values.some(
+          (value) =>
+            typeof value !== 'string' || !value.trim() || value !== value.trim()
+        )
+      ) {
+        return fail(`rule ${index + 1} needs nonempty, trimmed ${field}`)
+      }
+      selectors[field] = values as string[]
+    }
+    return { tag: rule.tag, ...selectors }
   })
   return { version: 1, rules }
 }
@@ -121,8 +138,14 @@ export function createCatalog(file: ListFile, config: TopicConfig): Catalog {
         categories: ancestors.map(({ name }) => name),
         section: section.name,
         tags: config.rules
-          .filter((rule) =>
-            rule.keywords.some((keyword) => keywordMatches(text, keyword))
+          .filter(
+            (rule) =>
+              rule.keywords?.some((keyword) => keywordMatches(text, keyword)) ||
+              rule.categories?.some((category) =>
+                ancestors.some(
+                  ({ name }) => normalize(name) === normalize(category)
+                )
+              )
           )
           .map(({ tag }) => tag)
           .sort((a, b) => a.localeCompare(b, 'en')),
