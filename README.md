@@ -236,6 +236,16 @@ The output directory receives `index.html`, `style.css`, `search.js`,
 `catalog.json`, and `.nojekyll`; use a dedicated directory for deployment.
 No API calls, credentials, or LLM calls are used during export.
 
+For JSON alone, add `--json-only`:
+
+```sh
+lists-manage export --file README.md --config .github/topics.json --json-only --output dist
+```
+
+This creates or updates only `dist/catalog.json`, with the same data as the
+full-site export. It skips HTML rendering and does not load page templates.
+Other files already present in the output directory are left untouched.
+
 The JSON envelope is `{ "version": 1, "entries": [...] }`. Entries preserve
 name, URL, Markdown description, author, language/note, supplementary Markdown
 items, category ancestry, section name, and derived tags. Entries are sorted

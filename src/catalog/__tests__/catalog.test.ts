@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { execFileSync } from 'node:child_process'
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
+import { mkdtemp, readdir, readFile, rm, writeFile } from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
@@ -116,6 +116,16 @@ test('compiled CLI exports deployable files and rejects bad configuration before
     await readFile(path.join(dir, 'site/style.css'))
     await readFile(path.join(dir, 'site/search.js'))
     await readFile(path.join(dir, 'site/.nojekyll'))
+    execFileSync(
+      bin,
+      ['export', '--config', 'topics.json', '--json-only', '--output', 'json'],
+      { cwd: dir }
+    )
+    assert.deepEqual(await readdir(path.join(dir, 'json')), ['catalog.json'])
+    assert.deepEqual(
+      JSON.parse(await readFile(path.join(dir, 'json/catalog.json'), 'utf8')),
+      catalog
+    )
     await writeFile(path.join(dir, 'topics.json'), '{"version":2}')
     assert.throws(
       () =>

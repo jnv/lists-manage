@@ -2,7 +2,6 @@ import { mkdir, readFile, realpath, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { Command } from '@cliffy/command'
 import { createCatalog, parseTopicConfig } from '../catalog/model.ts'
-import { catalogAssets } from '../catalog/render.ts'
 import { loadListFile } from '../listFile/index.ts'
 
 export function exportCommand() {
@@ -23,6 +22,7 @@ export function exportCommand() {
       'Directory for generated site files',
       { default: 'dist' }
     )
+    .option('--json-only', 'Write only catalog.json; skip page generation')
     .option('--title <title:string>', 'Page title', { default: 'Lists' })
     .action(async (options) => {
       const { file, config, output, title } = options
@@ -35,7 +35,9 @@ export function exportCommand() {
         throw new Error(
           'No catalog entries found; check the lists-start/lists-end markers and section headings'
         )
-      const assets = catalogAssets(catalog, title)
+      const assets = options.jsonOnly
+        ? { 'catalog.json': `${JSON.stringify(catalog, null, 2)}\n` }
+        : (await import('../catalog/render.ts')).catalogAssets(catalog, title)
       const inputPaths = await Promise.all(
         [file, config].map((input) => realpath(input))
       )
