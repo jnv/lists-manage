@@ -49,7 +49,9 @@ export function parseTopicConfig(value: unknown): TopicConfig {
     ) {
       return fail(`rule ${index + 1} needs a nonempty, trimmed tag`)
     }
-    if (tags.has(normalize(rule.tag))) return fail(`duplicate tag: ${rule.tag}`)
+    if (tags.has(normalize(rule.tag))) {
+      return fail(`duplicate tag: ${rule.tag}`)
+    }
     tags.add(normalize(rule.tag))
     if (
       !Array.isArray(rule.keywords) ||
@@ -75,12 +77,15 @@ export function keywordMatches(text: string, keyword: string): boolean {
   let from = 0
   while (from <= haystack.length) {
     const start = haystack.indexOf(needle, from)
-    if (start < 0) return false
+    if (start < 0) {
+      return false
+    }
     const end = start + needle.length
     const before = Array.from(haystack.slice(0, start)).at(-1) ?? ''
     const after = Array.from(haystack.slice(end))[0] ?? ''
-    if (!/[\p{L}\p{N}]/u.test(before) && !/[\p{L}\p{N}]/u.test(after))
+    if (!/[\p{L}\p{N}]/u.test(before) && !/[\p{L}\p{N}]/u.test(after)) {
       return true
+    }
     from = start + 1
   }
   return false
@@ -100,8 +105,9 @@ export function createCatalog(file: ListFile, config: TopicConfig): Catalog {
     while (
       ancestors.length &&
       ancestors[ancestors.length - 1].level >= section.level
-    )
+    ) {
       ancestors.pop()
+    }
     ancestors.push(section)
     for (const item of section.items) {
       const text = `${item.name} ${item.desc ?? ''}`

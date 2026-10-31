@@ -20,14 +20,18 @@ export async function writeListFile(
   try {
     destination = await fs.realpath(filename)
   } catch (error) {
-    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+      throw error
+    }
     destination = path.resolve(filename)
   }
   let mode: number | undefined
   try {
     mode = (await fs.stat(destination)).mode
   } catch (error) {
-    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+      throw error
+    }
   }
 
   // Keep the temporary file on the same filesystem for atomic rename.
@@ -37,7 +41,9 @@ export async function writeListFile(
   const temporaryFile = path.join(temporaryDir, 'list.md')
   try {
     await fs.writeFile(temporaryFile, str, { flag: 'wx' })
-    if (mode !== undefined) await fs.chmod(temporaryFile, mode)
+    if (mode !== undefined) {
+      await fs.chmod(temporaryFile, mode)
+    }
     await fs.rename(temporaryFile, destination)
   } finally {
     await fs.rm(temporaryDir, { recursive: true, force: true })

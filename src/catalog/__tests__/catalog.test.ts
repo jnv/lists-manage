@@ -67,8 +67,9 @@ test('invalid rules fail with actionable errors; an empty taxonomy is supported'
         { tag: 'CAFE', keywords: ['y'] },
       ],
     },
-  ])
+  ]) {
     assert.throws(() => parseTopicConfig(value), /Invalid topic configuration/)
+  }
   assert.deepEqual(parseTopicConfig({ version: 1, rules: [] }), {
     version: 1,
     rules: [],

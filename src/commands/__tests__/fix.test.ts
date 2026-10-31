@@ -98,7 +98,9 @@ describe('fix command', () => {
   it('retains items on network errors and continues checking', async (t) => {
     const filename = await fixture(t, [['a', 'b']])
     t.mock.method(globalThis, 'fetch', async (url: string) => {
-      if (url === repo('a')) throw new Error('Network unavailable')
+      if (url === repo('a')) {
+        throw new Error('Network unavailable')
+      }
       return response(url, 404)
     })
 

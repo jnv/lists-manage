@@ -35,7 +35,9 @@ export function escapeHtml(value: string): string {
 
 function safeUrl(value: string): string | undefined {
   // Relative references are retained, but schemes and protocol-relative URLs are restricted.
-  if (/^(?:https?:\/\/|#)/i.test(value)) return value
+  if (/^(?:https?:\/\/|#)/i.test(value)) {
+    return value
+  }
   return undefined
 }
 

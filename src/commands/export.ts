@@ -30,10 +30,11 @@ export function exportCommand() {
       )
       const list = await loadListFile(file)
       const catalog = createCatalog(list, topics)
-      if (!catalog.entries.length)
+      if (!catalog.entries.length) {
         throw new Error(
           'No catalog entries found; check the lists-start/lists-end markers and section headings'
         )
+      }
       const assets = options.jsonOnly
         ? { 'catalog.json': `${JSON.stringify(catalog, null, 2)}\n` }
         : (await import('../catalog/render.ts')).catalogAssets(catalog)
@@ -43,8 +44,9 @@ export function exportCommand() {
       const destination = path.resolve(output)
       // Never overwrite an input when the caller selects an existing directory.
       for (const name of Object.keys(assets)) {
-        if (inputPaths.includes(path.join(destination, name)))
+        if (inputPaths.includes(path.join(destination, name))) {
           throw new Error(`Output would overwrite an input: ${name}`)
+        }
       }
       await mkdir(destination, { recursive: true })
       await Promise.all(
