@@ -299,3 +299,9 @@ Generation timestamps are presentation metadata; the JSON catalog is unchanged.
 `npm run build` copies the template directory into `lib/catalog/templates`,
 which is included in the npm package. Edit the source files rather than the
 build output. No template engine or other dependency is shipped to browsers.
+
+The catalog stylesheet vendors [Bolt.css](https://github.com/tbolt/boltcss/blob/main/bolt.css)
+with its MIT license notice. Keep the upstream CSS intact and put local rules
+under `Catalog layout and overrides` at the bottom of `style.css`. This file
+is excluded from automatic formatting and linting to preserve the vendored
+source. The stylesheet is copied into the generated site; no CDN is required.
