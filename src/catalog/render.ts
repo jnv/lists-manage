@@ -50,7 +50,6 @@ function markdown(value: string): string {
 
 export function renderCatalog(
   catalog: Catalog,
-  title: string,
   generatedAt = new Date()
 ): string {
   const seenSections = new Set<string>()
@@ -89,7 +88,6 @@ export function renderCatalog(
   return Mustache.render(
     template,
     {
-      title,
       rows,
       generatedAt: generatedAt.toISOString(),
       generatedDate: generatedAt.toISOString().slice(0, 10),
@@ -102,11 +100,10 @@ export function renderCatalog(
 
 export function catalogAssets(
   catalog: Catalog,
-  title: string,
   generatedAt = new Date()
 ): Record<string, string> {
   return {
-    'index.html': renderCatalog(catalog, title, generatedAt),
+    'index.html': renderCatalog(catalog, generatedAt),
     'catalog.json': `${JSON.stringify(catalog, null, 2)}\n`,
     'style.css': stylesheet,
     'search.js': `(${enhanceCatalog.toString()})(${JSON.stringify(searchTemplate)});\n`,

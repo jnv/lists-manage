@@ -23,9 +23,8 @@ export function exportCommand() {
       { default: 'dist' }
     )
     .option('--json-only', 'Write only catalog.json; skip page generation')
-    .option('--title <title:string>', 'Page title', { default: 'Lists' })
     .action(async (options) => {
-      const { file, config, output, title } = options
+      const { file, config, output } = options
       const topics = parseTopicConfig(
         JSON.parse(await readFile(config, 'utf8'))
       )
@@ -37,7 +36,7 @@ export function exportCommand() {
         )
       const assets = options.jsonOnly
         ? { 'catalog.json': `${JSON.stringify(catalog, null, 2)}\n` }
-        : (await import('../catalog/render.ts')).catalogAssets(catalog, title)
+        : (await import('../catalog/render.ts')).catalogAssets(catalog)
       const inputPaths = await Promise.all(
         [file, config].map((input) => realpath(input))
       )

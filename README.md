@@ -231,7 +231,7 @@ lists-manage export --file README.md --config .github/topics.json --output dist
 ```
 
 The source must use `<!-- lists-start -->` / `<!-- lists-end -->` markers and
-section headings, as with the other commands. `--title` defaults to `Lists`.
+section headings, as with the other commands. The page title is hardcoded as `Lists` in the HTML template.
 The output directory receives `index.html`, `style.css`, `search.js`,
 `catalog.json`, and `.nojekyll`; use a dedicated directory for deployment.
 No API calls, credentials, or LLM calls are used during export.

@@ -80,13 +80,9 @@ test('static HTML retains semantic table, formatted descriptions and supplementa
   catalog.entries[0].description +=
     ' <script>alert(1)</script> [bad](javascript:alert(1)) <img src=x onerror=alert(1)>'
   catalog.entries[0].url = 'javascript:alert(1)'
-  const assets = catalogAssets(
-    catalog,
-    '<Lists>',
-    new Date('2026-10-31T12:34:56Z')
-  )
+  const assets = catalogAssets(catalog, new Date('2026-10-31T12:34:56Z'))
   const html = assets['index.html']
-  assert.match(html, /<title>&lt;Lists&gt;<\/title>/)
+  assert.match(html, /<title>Lists<\/title>/)
   assert.match(html, /<table>/)
   assert.equal((html.match(/<th scope="row">/g) ?? []).length, 3)
   assert.match(html, /<strong>C#<\/strong>/)
