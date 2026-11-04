@@ -3,12 +3,7 @@ import test from 'node:test'
 import { parseSections } from '../sections.ts'
 
 test('empty sections', () => {
-  const input = [
-    '# Ignored section',
-    '## Level 1',
-    '### Level 2',
-    '#### Level 3',
-  ]
+  const input = ['## Level 1', '### Level 2', '#### Level 3']
   const expected = [
     { name: 'Level 1', level: 1, items: [] },
     { name: 'Level 2', level: 2, items: [] },
@@ -49,4 +44,17 @@ test('section items', () => {
     },
   ]
   assert.partialDeepStrictEqual(parseSections(input), expected)
+})
+
+test('rejects content before the first supported heading', () => {
+  for (const line of [
+    '# Unsupported heading',
+    '* [tools](https://example.com/tools)',
+    '<!-- Maintainer note -->',
+  ]) {
+    assert.throws(
+      () => parseSections([line, '## Technical']),
+      /Expected an H2 or deeper list heading/
+    )
+  }
 })

@@ -111,3 +111,37 @@ test('multiple items with extras', () => {
   ]
   assert.deepStrictEqual(parseItems(input), expected)
 })
+
+test('rejects content that would otherwise be silently dropped', () => {
+  for (const line of [
+    '<!-- Maintainer note -->',
+    'Important license terms.',
+    '+ [tools](https://example.com/tools)',
+    '* [tools](https://example.com/tools) unrecognized metadata',
+    '* [tools](https://example.com/tools) stray text by @alice',
+  ]) {
+    assert.throws(() => parseItems([line]), /Unsupported list/)
+  }
+  assert.throws(
+    () => parseItems(['  - Orphaned detail']),
+    /Expected a list item/
+  )
+})
+
+test('preserves punctuation and formatting inside valid notes and descriptions', () => {
+  const result = parseItems([
+    '* [tools](https://example.com/tools) _In foo_bar with **formatting**_ by @alice – Uses snake_case, **bold**, and _italic_.',
+    '* [more-tools](https://example.com/more-tools) *In foo_bar* – See [docs](https://example.com/docs).',
+  ])
+  assert.partialDeepStrictEqual(result, [
+    {
+      note: 'In foo_bar with **formatting**',
+      author: 'alice',
+      desc: 'Uses snake_case, **bold**, and _italic_.',
+    },
+    {
+      note: 'In foo_bar',
+      desc: 'See [docs](https://example.com/docs).',
+    },
+  ])
+})

@@ -38,25 +38,37 @@ Suffix here.
   assert.partialDeepStrictEqual(result, expected)
 })
 
-test('ignores consecutive start / end markers', () => {
-  const input = `Prefix.
-blah blah <!-- lists-start -->
-blah
-<!-- lists-start -->
-<!-- lists-start -->
-
-## Some section
-
-<!-- lists-end -->
-Suffix
-<!-- lists-end -->
-blah.
-`
-  const result = parseFile(input)
-  const expected = {
-    prefix: 'Prefix.\nblah blah <!-- lists-start -->',
-    suffix: '<!-- lists-end -->\nSuffix\n<!-- lists-end -->\nblah.\n',
-    sections: [{ level: 1, name: 'Some section', items: [] }],
+test('rejects missing, repeated, or out-of-order list markers', () => {
+  for (const input of [
+    'No markers',
+    '<!-- lists-start -->\n## Technical\nLicense text',
+    '<!-- lists-end -->',
+    '<!-- lists-end -->\n<!-- lists-start -->',
+    '<!-- lists-start -->\n<!-- lists-start -->\n<!-- lists-end -->',
+    '<!-- lists-start -->\n<!-- lists-end -->\n<!-- lists-end -->',
+    '<!-- lists-start -->\n<!-- lists-end -->\n<!-- lists-start -->',
+    '<!-- lists-start --> <!-- lists-end -->',
+  ]) {
+    assert.throws(() => parseFile(input), /Expected .*lists-/)
   }
-  assert.deepStrictEqual(result, expected)
+})
+
+test('preserves arbitrary content outside the list markers', () => {
+  const result = parseFile(`<!-- Maintainer notes -->
+License text.
+<!-- lists-start -->
+## Technical
+* [tools](https://example.com/tools)
+<!-- lists-end -->
+<!-- Footer comment -->
+More license text.
+`)
+  assert.equal(
+    result.prefix,
+    '<!-- Maintainer notes -->\nLicense text.\n<!-- lists-start -->'
+  )
+  assert.equal(
+    result.suffix,
+    '<!-- lists-end -->\n<!-- Footer comment -->\nMore license text.\n'
+  )
 })

@@ -287,7 +287,10 @@ describe('CLI: sections', () => {
     )
     t.after(() => fs.rm(directory, { recursive: true, force: true }))
     const filename = path.join(directory, 'README.md')
-    await fs.writeFile(filename, '# No list sections\n')
+    await fs.writeFile(
+      filename,
+      '# No list sections\n<!-- lists-start -->\n<!-- lists-end -->\n'
+    )
     await assert.rejects(
       () => run(['sections', '-f', filename]),
       (err: { stdout: string; stderr: string }) => {
@@ -296,5 +299,43 @@ describe('CLI: sections', () => {
         return true
       }
     )
+  })
+})
+
+describe('CLI: unsafe list input', () => {
+  it('leaves input untouched when editing would discard content', async () => {
+    const directory = await fs.mkdtemp(
+      path.join(os.tmpdir(), 'lists-manage-parse-')
+    )
+    const file = path.join(directory, 'README.md')
+    const entry = '* [tools](https://example.com/tools)'
+    const sources = [
+      `<!-- lists-start -->\n## Technical\n${entry}\n## License\nImportant license terms.\n`,
+      `<!-- lists-start -->\n## Technical\n<!-- Maintainer note -->\n${entry}\n<!-- lists-end -->\n`,
+      `<!-- lists-start -->\n## Technical\n${entry}\nImportant prose.\n<!-- lists-end -->\n`,
+      `<!-- lists-start -->\n${entry}\n<!-- lists-end -->\n`,
+      `<!-- lists-start -->\n## Technical\n${entry} unrecognized metadata\n<!-- lists-end -->\n`,
+    ]
+    try {
+      for (const source of sources) {
+        for (const args of [
+          ['sort', '--write'],
+          ['fix', '--write'],
+          ['add', '--no-prompt', 'https://gitlab.com/example/new-list'],
+        ]) {
+          await fs.writeFile(file, source)
+          await assert.rejects(
+            run([...args, '--file', file]),
+            (error: { stderr: string }) => {
+              assert.match(error.stderr, /Expected|Unsupported list/)
+              return true
+            }
+          )
+          assert.equal(await fs.readFile(file, 'utf8'), source)
+        }
+      }
+    } finally {
+      await fs.rm(directory, { recursive: true, force: true })
+    }
   })
 })

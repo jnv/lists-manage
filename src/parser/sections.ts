@@ -45,6 +45,8 @@ export function parseSections(lines: string[]): Section[] {
 
     if (currentSection) {
       currentSection.lines.push(line)
+    } else if (line.trim()) {
+      throw new Error(`Expected an H2 or deeper list heading before: ${line}`)
     }
   }
   finishSection(currentSection)
