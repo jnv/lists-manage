@@ -3,6 +3,7 @@ import { promises as fs } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import { describe, it, type TestContext } from 'node:test'
+import { setImmediate } from 'node:timers/promises'
 import { loadListFile } from '../../listFile/index.ts'
 import { fixCommand } from '../fix.ts'
 
@@ -13,6 +14,15 @@ async function fixture(t: TestContext, sections: string[][]) {
     path.join(os.tmpdir(), 'lists-manage-fix-')
   )
   t.after(() => fs.rm(directory, { recursive: true, force: true }))
+  const previousRetries = process.env.LISTS_MANAGE_FIX_RETRIES
+  process.env.LISTS_MANAGE_FIX_RETRIES = '0'
+  t.after(() => {
+    if (previousRetries === undefined) {
+      delete process.env.LISTS_MANAGE_FIX_RETRIES
+    } else {
+      process.env.LISTS_MANAGE_FIX_RETRIES = previousRetries
+    }
+  })
   t.mock.method(console, 'log', () => {})
   t.mock.method(console, 'warn', () => {})
   const filename = path.join(directory, 'README.md')
@@ -69,19 +79,29 @@ describe('fix command', () => {
     const checked: string[] = []
     t.mock.method(globalThis, 'fetch', async (url: string) => {
       checked.push(url)
-      return url === repo('a') ? response(repo('missing'), 404) : response(url)
+      return url === repo('a')
+        ? new Response(null, {
+            status: 302,
+            headers: { location: repo('missing') },
+          })
+        : response(url, url === repo('missing') ? 404 : 200)
     })
 
     await fixCommand().parse(['--file', filename, '--write'])
 
-    assert.deepEqual(checked, ['a', 'b'].map(repo))
+    assert.deepEqual(checked, ['a', 'b', 'missing'].map(repo))
     assert.deepEqual(await urls(filename), [[repo('b')]])
   })
 
   it('updates successful redirects and preserves descriptions', async (t) => {
     const filename = await fixture(t, [['a', 'b']])
     t.mock.method(globalThis, 'fetch', async (url: string) =>
-      response(url === repo('a') ? repo('renamed') : url)
+      url === repo('a')
+        ? new Response(null, {
+            status: 301,
+            headers: { location: repo('renamed') },
+          })
+        : response(url)
     )
 
     await fixCommand().parse(['--file', filename, '--write'])
@@ -104,7 +124,10 @@ describe('fix command', () => {
       return response(url, 404)
     })
 
-    await fixCommand().parse(['--file', filename, '--write'])
+    await assert.rejects(
+      fixCommand().parse(['--file', filename, '--write']),
+      /1 repository check/
+    )
 
     assert.deepEqual(await urls(filename), [[repo('a')]])
   })
@@ -126,64 +149,125 @@ describe('fix command', () => {
     assert.match(output[0], /\[b\]/)
   })
 
-  it('awaits checkpoint writes before checking further items or writing again', async (t) => {
+  it('serializes snapshot checkpoint writes while checks continue', async (t) => {
     const names = Array.from({ length: 11 }, (_, index) => `repo-${index}`)
     const filename = await fixture(t, [names])
     const started = Promise.withResolvers<void>()
-    const release = Promise.withResolvers<void>()
+    const releaseWrite = Promise.withResolvers<void>()
+    const releaseLastCheck = Promise.withResolvers<void>()
+    const snapshots: string[] = []
     let checked = 0
-    let writes = 0
+    let writing = false
     t.mock.method(globalThis, 'fetch', async (url: string) => {
       checked++
-      return response(url)
+      if (url === repo('repo-10')) {
+        await releaseLastCheck.promise
+      }
+      return response(url, 404)
     })
     const writeFile = fs.writeFile
     t.mock.method(
       fs,
       'writeFile',
       async (...args: Parameters<typeof fs.writeFile>) => {
-        writes++
-        if (writes === 1) {
+        assert.equal(writing, false)
+        writing = true
+        snapshots.push(String(args[1]))
+        if (snapshots.length === 1) {
           started.resolve()
-          await release.promise
+          await releaseWrite.promise
         }
-        return writeFile(...args)
+        await writeFile(...args)
+        writing = false
       }
     )
-
     const running = fixCommand().parse(['--file', filename, '--write'])
     try {
       await started.promise
-      assert.equal(checked, 10)
-      assert.equal(writes, 1)
+      releaseLastCheck.resolve()
+      await setImmediate()
+      assert.equal(checked, 11)
+      assert.equal(snapshots.length, 1)
+      assert.match(snapshots[0], /repo-10/)
     } finally {
-      release.resolve()
+      releaseLastCheck.resolve()
+      releaseWrite.resolve()
       await running
     }
-    assert.equal(checked, 11)
-    assert.equal(writes, 2)
-    assert.deepEqual(await urls(filename), [[...names].sort().map(repo)])
+    assert.equal(snapshots.length, 2)
+    assert.doesNotMatch(snapshots[1], /repo-10/)
+    assert.deepEqual(await urls(filename), [[]])
+    assert.deepEqual(await fs.readdir(path.dirname(filename)), ['README.md'])
   })
 
-  it('propagates checkpoint write failures and leaves the original intact', async (t) => {
-    const names = Array.from({ length: 11 }, (_, index) => `repo-${index}`)
+  it('stops dispatch after checkpoint failure, propagates it, and leaves the file intact', async (t) => {
+    const names = Array.from({ length: 60 }, (_, index) => `repo-${index}`)
     const filename = await fixture(t, [names])
     const original = await fs.readFile(filename, 'utf8')
+    const failed = Promise.withResolvers<void>()
+    const release = Promise.withResolvers<void>()
     let checked = 0
     t.mock.method(globalThis, 'fetch', async (url: string) => {
-      checked++
-      return response(url)
+      if (++checked > 10) {
+        await release.promise
+      }
+      return response(url, 404)
     })
     t.mock.method(fs, 'writeFile', async () => {
+      failed.resolve()
       throw new Error('Disk full')
     })
-
-    await assert.rejects(
+    const running = assert.rejects(
       fixCommand().parse(['--file', filename, '--write']),
       /Disk full/
     )
-    assert.equal(checked, 10)
+    await failed.promise
+    // Let atomic-write cleanup and failure propagation complete before releasing in-flight requests.
+    for (let i = 0; i < 20; i++) {
+      await setImmediate()
+    }
+    const dispatched = checked
+    release.resolve()
+    await running
+    assert.equal(checked, dispatched)
+    assert.ok(checked < names.length)
     assert.equal(await fs.readFile(filename, 'utf8'), original)
     assert.deepEqual(await fs.readdir(path.dirname(filename)), ['README.md'])
+  })
+
+  it('retains unresolved destinations and failed repairs, summarizes on stderr, and still outputs successful repairs', async (t) => {
+    const filename = await fixture(t, [['a', 'b', 'c', 'd']])
+    const warnings: string[] = []
+    const output: string[] = []
+    t.mock.method(console, 'warn', (message: string) => warnings.push(message))
+    t.mock.method(console, 'log', (message: string) => output.push(message))
+    t.mock.method(globalThis, 'fetch', async (url: string) => {
+      if (url === repo('a')) {
+        return new Response(null, {
+          status: 301,
+          headers: { location: 'https://gitlab.com/example/error' },
+        })
+      }
+      if (url === repo('b')) {
+        return new Response(null, {
+          status: 301,
+          headers: { location: 'https://github.com/' },
+        })
+      }
+      return response(
+        url,
+        url === repo('c') ? 404 : url.endsWith('/error') ? 403 : 200
+      )
+    })
+    await assert.rejects(
+      fixCommand().parse(['--file', filename]),
+      /2 repository check/
+    )
+    assert.equal(output.length, 1)
+    assert.match(output[0], /\[a\]/)
+    assert.match(output[0], /\[b\]/)
+    assert.doesNotMatch(output[0], /\[c\]/)
+    assert.match(warnings.join('\n'), /Unresolved repository checks \(2\)/)
+    assert.doesNotMatch(output[0], /Unresolved|Failed to check/)
   })
 })

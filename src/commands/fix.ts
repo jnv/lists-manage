@@ -4,6 +4,7 @@ import { loadListFile, writeListFile } from '../listFile/index.ts'
 import { sortFile } from '../listFile/sort.ts'
 import { updateItem } from '../listItem.ts'
 import { checkRepo } from '../repo/index.ts'
+import { RequestScheduler } from '../repo/scheduler.ts'
 import { serializeFile } from '../serializer/index.ts'
 import type { ListFile } from '../types.ts'
 
@@ -16,7 +17,7 @@ function flushFile(
 ): Promise<void> | void {
   const sortedFile = sortFile(listFile)
   if (write) {
-    console.log(`Writing to file ${filename}`)
+    console.warn(`Writing to file ${filename}`)
     return writeListFile(filename, sortedFile)
   } else {
     console.log(serializeFile(sortedFile))
@@ -44,33 +45,76 @@ export function fixCommand() {
       }
 
       const listFile = await loadListFile(file)
-      let i = 0
-      for (const { items } of listFile.sections) {
-        for (let itemIdx = 0; itemIdx < items.length; itemIdx++) {
-          const item = items[itemIdx]
+      const scheduler = new RequestScheduler()
+      const work = listFile.sections.flatMap((section) =>
+        section.items.map((item) => ({ section, item }))
+      )
+      let completed = 0
+      let saveFailure: unknown
+      let saves = Promise.resolve()
+      const unresolved: string[] = []
+      function save() {
+        const snapshot = structuredClone(listFile)
+        saves = saves.then(async () => {
+          if (saveFailure) {
+            return
+          }
+          try {
+            await flushFile(snapshot, file, true)
+          } catch (error) {
+            saveFailure = error
+            scheduler.stop(error)
+          }
+        })
+      }
+      await Promise.all(
+        work.map(async ({ section, item }) => {
           try {
             d('Checking %s', item.url)
-            const checkResult = await checkRepo(item.url)
-            if (!checkResult.exists) {
-              console.warn(`Repo not found: ${item.url}`)
-              // The next item moves into this slot and still needs checking.
-              items.splice(itemIdx--, 1)
-            } else if (checkResult.redirect) {
-              console.warn(`Repo redirected: ${item.url} -> ${checkResult.url}`)
-              const newItem = updateItem(item, { url: checkResult.url })
-              items.splice(itemIdx, 1, newItem)
+            const result = await checkRepo(item.url, scheduler)
+            if (saveFailure) {
+              return
             }
-          } catch (e) {
-            console.warn(`Failed to check ${item.url}`)
-            console.warn(e)
+            // Identity stays stable even when adjacent checks finish out of order.
+            const index = section.items.indexOf(item)
+            if (!result.exists) {
+              console.warn(`Repo not found: ${item.url}`)
+              section.items.splice(index, 1)
+            } else if (result.redirect) {
+              const replacement = updateItem(item, { url: result.url })
+              section.items.splice(index, 1, replacement)
+              console.warn(`Repo redirected: ${item.url} -> ${result.url}`)
+            }
+          } catch (error) {
+            if (saveFailure) {
+              return
+            }
+            const reason =
+              error instanceof Error ? error.message : String(error)
+            unresolved.push(`${item.url}: ${reason}`)
+            console.warn(`Failed to check ${item.url}: ${reason}`)
           }
-          i++
-          if (write && i % 10 === 0) {
-            d('Flushing')
-            await flushFile(listFile, file, write)
+          completed++
+          if (write && completed % 10 === 0) {
+            save()
           }
-        }
+        })
+      )
+      if (write && !saveFailure) {
+        save()
       }
-      await flushFile(listFile, file, write)
+      await saves
+      if (saveFailure) {
+        throw saveFailure
+      }
+      if (!write) {
+        await flushFile(listFile, file, false)
+      }
+      if (unresolved.length) {
+        console.warn(
+          `Unresolved repository checks (${unresolved.length}):\n${unresolved.join('\n')}`
+        )
+        throw new Error(`${unresolved.length} repository check(s) unresolved`)
+      }
     })
 }
