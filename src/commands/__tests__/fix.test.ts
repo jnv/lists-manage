@@ -204,7 +204,7 @@ describe('fix command', () => {
     const names = Array.from({ length: 60 }, (_, index) => `repo-${index}`)
     const filename = await fixture(t, [names])
     const original = await fs.readFile(filename, 'utf8')
-    const failed = Promise.withResolvers<void>()
+    const cleaned = Promise.withResolvers<void>()
     const release = Promise.withResolvers<void>()
     let checked = 0
     t.mock.method(globalThis, 'fetch', async (url: string) => {
@@ -214,18 +214,22 @@ describe('fix command', () => {
       return response(url, 404)
     })
     t.mock.method(fs, 'writeFile', async () => {
-      failed.resolve()
       throw new Error('Disk full')
+    })
+    const remove = fs.rm
+    t.mock.method(fs, 'rm', async (...args: Parameters<typeof fs.rm>) => {
+      await remove(...args)
+      if (path.basename(String(args[0])).startsWith('.lists-manage-')) {
+        cleaned.resolve()
+      }
     })
     const running = assert.rejects(
       fixCommand().parse(['--file', filename, '--write']),
       /Disk full/
     )
-    await failed.promise
-    // Let atomic-write cleanup and failure propagation complete before releasing in-flight requests.
-    for (let i = 0; i < 20; i++) {
-      await setImmediate()
-    }
+    await cleaned.promise
+    // Allow the write rejection to reach the scheduler after atomic cleanup.
+    await setImmediate()
     const dispatched = checked
     release.resolve()
     await running

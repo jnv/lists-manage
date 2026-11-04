@@ -4,6 +4,10 @@ import { getRepoInfo } from './repoInfo.ts'
 import { isThrottled, RequestScheduler, SchedulingError } from './scheduler.ts'
 import type { RepoCheck, RepoDetail } from './types.ts'
 
+const transientStatuses = new Set([408, 500, 502, 503, 504])
+const redirectStatuses = new Set([301, 302, 303, 307, 308])
+const missingStatuses = new Set([404, 451])
+
 export { getRepoInfo }
 
 export async function fetchRepoDetails(repoUrl: string): Promise<RepoDetail> {
@@ -45,13 +49,13 @@ export async function checkRepo(
       continue
     }
     if (
-      [408, 500, 502, 503, 504].includes(response.status) &&
+      transientStatuses.has(response.status) &&
       retries++ < scheduler.options.retries
     ) {
       await timers.setTimeout(Math.min(8000, 250 * 2 ** retries))
       continue
     }
-    if ([301, 302, 303, 307, 308].includes(response.status)) {
+    if (redirectStatuses.has(response.status)) {
       if (redirects++ >= 10) {
         throw new Error('Redirect limit exceeded')
       }
@@ -66,7 +70,7 @@ export async function checkRepo(
       url = destination.href
       continue
     }
-    if (response.status === 404 || response.status === 451) {
+    if (missingStatuses.has(response.status)) {
       return { exists: false, url: repoUrl, redirect: false }
     }
     if (response.status < 200 || response.status >= 300) {
