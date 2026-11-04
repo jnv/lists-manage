@@ -64,6 +64,7 @@ OPTIONS
   -c, --commit       commit changes to git
   -f, --file=file    [default: README.md] markdown file to work with
   -h, --help         show CLI help
+      --note=note    optional note, e.g. "In Chinese"
   -p, --[no-]prompt  disable interactive prompt; enabled by default, disabled when output is being redirected
   -w, --[no-]write   modify file in place; enabled by default, prints file contents to stdout when disabled
 
@@ -71,7 +72,16 @@ EXAMPLES
   $ lists-manage add
   $ lists-manage add https://github.com/some-user/awesome-list
   $ lists-manage add --no-write https://github.com/some-user/awesome-list
+  $ lists-manage add --note "In Chinese and English" https://github.com/some-user/awesome-list
 ```
+
+Use `--note` to supply a free-text annotation in either interactive or
+non-interactive mode. Interactive mode asks for a note after the description;
+leave it empty to skip. When supplied, `--note` pre-fills this prompt and can
+be edited or cleared. The note is written in italics after the repository link,
+for example `[awesome-list](https://github.com/some-user/awesome-list) _In Chinese and English_`.
+Surrounding whitespace is trimmed; empty notes are omitted. Language is not
+detected automatically.
 
 _See code: [src/commands/add.ts](https://github.com/jnv/lists-manage/blob/v0.5.3/src/commands/add.ts)_
 
