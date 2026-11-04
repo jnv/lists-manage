@@ -42,9 +42,18 @@ export function exportCommand() {
         [file, config].map((input) => realpath(input))
       )
       const destination = path.resolve(output)
-      // Never overwrite an input when the caller selects an existing directory.
+      // Resolve both directory and file symlinks before checking existing outputs.
       for (const name of Object.keys(assets)) {
-        if (inputPaths.includes(path.join(destination, name))) {
+        let outputPath: string
+        try {
+          outputPath = await realpath(path.join(destination, name))
+        } catch (error) {
+          if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+            continue
+          }
+          throw error
+        }
+        if (inputPaths.includes(outputPath)) {
           throw new Error(`Output would overwrite an input: ${name}`)
         }
       }
