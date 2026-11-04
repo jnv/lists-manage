@@ -40,6 +40,29 @@ $ npx @jnv/lists-manage add -c
 
 See [Commands](#commands) below for additional options and features.
 
+### Choosing a section
+
+List valid section names in document order, one per line:
+
+```sh
+lists-manage sections
+lists-manage sections --file MY_LISTS_FILE.md
+```
+
+Use an exact, case-sensitive heading name to select a section when adding:
+
+```sh
+lists-manage add --no-prompt --section 'Non-technical' https://github.com/some-user/some-list
+```
+
+`-s` is short for `--section`. Names with spaces or shell metacharacters should
+be quoted. Nested sections use their own heading names. Unknown names and
+duplicate heading names fail before repository lookup or file changes.
+With prompting enabled, the named section is the initial selection and can be
+changed in the prompt. Without `--section`, automatic section selection is
+unchanged. Both commands default to `README.md` and accept `--file` (`-f`).
+The `sections` command fails if the file contains no list sections.
+
 # Commands
 
 <!-- prettier-ignore -->
@@ -47,6 +70,7 @@ See [Commands](#commands) below for additional options and features.
 * [`lists-manage add [URL]`](#lists-manage-add-url)
 * [`lists-manage fix`](#lists-manage-fix)
 * [`lists-manage help [COMMAND]`](#lists-manage-help-command)
+* [`lists-manage sections`](#lists-manage-sections)
 * [`lists-manage sort`](#lists-manage-sort)
 
 ## `lists-manage add [URL]`
@@ -65,6 +89,7 @@ OPTIONS
   -f, --file=file    [default: README.md] markdown file to work with
   -h, --help         show CLI help
   -p, --[no-]prompt  disable interactive prompt; enabled by default, disabled when output is being redirected
+  -s, --section=name  exact section name; use "lists-manage sections" to list valid names
   -w, --[no-]write   modify file in place; enabled by default, prints file contents to stdout when disabled
 
 EXAMPLES
@@ -111,6 +136,22 @@ OPTIONS
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.3/src/commands/help.ts)_
+
+## `lists-manage sections`
+
+List section names in document order, one per line.
+
+```text
+USAGE
+  $ lists-manage sections
+
+OPTIONS
+  -f, --file=file  [default: README.md] Markdown file to work with
+  -h, --help       show CLI help
+```
+
+Only headings inside the `<!-- lists-start -->` / `<!-- lists-end -->` markers
+are listed, including nested and empty sections.
 
 ## `lists-manage sort`
 
