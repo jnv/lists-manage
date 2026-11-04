@@ -19,6 +19,11 @@ export function addCommand() {
     .option('-f, --file <file:string>', 'markdown file to work with', {
       default: 'README.md',
     })
+    .option('--note <note:string>', 'optional note, e.g. "In Chinese"')
+    .option(
+      '-s, --section <name:string>',
+      'exact section name; use "lists-manage sections" to list valid names'
+    )
     .option(
       '-w, --write, --no-write',
       'modify file in place; enabled by default, prints file contents to stdout when disabled',
@@ -48,6 +53,7 @@ export function addCommand() {
       const write = options.write as unknown as boolean
       const promptEnabled = options.prompt as unknown as boolean
       const commit = options.commit as unknown as boolean
+      const initialNote = options.note?.trim() ?? ''
 
       if (!file) {
         console.error('Missing file')
@@ -63,13 +69,7 @@ export function addCommand() {
         repoUrl = await repoPrompt()
       }
 
-      const repoDetails = await fetchRepoDetails(repoUrl)
       const listFile = await loadListFile(file)
-
-      if (urlExistsInFile(listFile, repoDetails.url)) {
-        console.error('URL is already present in file, exiting.')
-        process.exit(1)
-      }
 
       const sections = listFile.sections.map(({ name }, value) => ({
         name,
@@ -82,13 +82,33 @@ export function addCommand() {
         process.exit(1)
       }
 
+      let selectedSection: number | undefined
+      if (options.section !== undefined) {
+        const matches = sections.filter(({ name }) => name === options.section)
+        if (matches.length !== 1) {
+          console.error(
+            `${matches.length ? 'Ambiguous' : 'Unknown'} section ${JSON.stringify(options.section)}. Run lists-manage sections --file ${JSON.stringify(file)} to list valid names.`
+          )
+          process.exit(1)
+        }
+        selectedSection = matches[0].value
+      }
+
+      const repoDetails = await fetchRepoDetails(repoUrl)
+      if (urlExistsInFile(listFile, repoDetails.url)) {
+        console.error('URL is already present in file, exiting.')
+        process.exit(1)
+      }
+
       repoDetails.desc = normalizeDesc(repoDetails.desc)
-      const initialSection = suggestSection(listFile.sections)(repoDetails)
+      const initialSection =
+        selectedSection ?? suggestSection(listFile.sections)(repoDetails)
       const response = promptEnabled
-        ? await addPrompt(repoDetails, sections, initialSection)
+        ? await addPrompt(repoDetails, sections, initialSection, initialNote)
         : {
             section: initialSection,
             desc: repoDetails.desc,
+            note: initialNote,
             homepage: !!repoDetails.homepage,
           }
 
@@ -96,6 +116,10 @@ export function addCommand() {
         name: repoDetails.name,
         url: repoDetails.url,
         desc: response.desc.trim(),
+      }
+      const note = response.note.trim()
+      if (note) {
+        listItem.note = note
       }
       if (response.homepage) {
         listItem.extras = [repoDetails.homepage]

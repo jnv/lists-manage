@@ -3,6 +3,7 @@ import { Command } from '@cliffy/command'
 import { addCommand } from './commands/add.ts'
 import { exportCommand } from './commands/export.ts'
 import { fixCommand } from './commands/fix.ts'
+import { sectionsCommand } from './commands/sections.ts'
 import { sortCommand } from './commands/sort.ts'
 
 const { version } = JSON.parse(
@@ -14,6 +15,7 @@ export const cli = new Command()
   .version(version)
   .description('Manage Markdown-based curated lists')
   .command('add', addCommand())
+  .command('sections', sectionsCommand())
   .command('fix', fixCommand())
   .command('sort', sortCommand())
   .command('export', exportCommand())
