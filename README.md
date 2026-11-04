@@ -1,13 +1,11 @@
-@jnv/lists-manage
-===============
-
+# @jnv/lists-manage
 
 [![Version](https://img.shields.io/npm/v/@jnv/lists-manage)](https://npmjs.org/package/@jnv/lists-manage)
 [![License](https://img.shields.io/github/license/jnv/lists-manage)](LICENSE)
 
 CLI program to manage [lists] project.
 
-# Usage
+## Usage
 
 You must have [Node.js](https://nodejs.org/) and npm installed.
 
@@ -27,7 +25,7 @@ $ npx @jnv/lists-manage add -c
 
 See [Commands](#commands) below for additional options and features.
 
-# Commands
+## Commands
 
 <!-- commands:start -->
 
