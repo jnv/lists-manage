@@ -18,6 +18,7 @@
     "hosted-git-info": "^10.1.1",
     "marked": "^18.1.2",
     "mustache": "^4.2.0",
+    "p-queue": "^10.0.0",
     "sanitize-html": "^2.18.1",
     "simple-git": "^4.0.2"
   },
