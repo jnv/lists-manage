@@ -3,21 +3,18 @@ import type { ListFile, ListItem, Section } from '../types.ts'
 
 type ReadonlyListItems = readonly ListItem[]
 
-function stripChars(str: string): string {
-  return str.replace(/[^a-z0-9]/i, '')
-}
-function strcmp(str1: string, str2: string): number {
-  return stripChars(str1).localeCompare(stripChars(str2), 'en', {
-    sensitivity: 'base',
-    usage: 'sort',
-  })
-}
+const collator = new Intl.Collator('en', {
+  sensitivity: 'base',
+  usage: 'sort',
+  ignorePunctuation: true,
+})
+
 function comparator(a: ListItem, b: ListItem): number {
-  const nameCmp = strcmp(a.name, b.name)
+  const nameCmp = collator.compare(a.name, b.name)
   if (nameCmp !== 0 || !a.author || !b.author) {
     return nameCmp
   }
-  return strcmp(a.author, b.author)
+  return collator.compare(a.author, b.author)
 }
 
 function extractAuthor({ url }: ListItem): string {

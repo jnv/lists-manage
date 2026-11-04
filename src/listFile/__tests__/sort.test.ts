@@ -74,7 +74,46 @@ describe('.sortItems', () => {
     assert.deepEqual(sortItems(input), expected)
   })
 
+  it('ignores repeated punctuation throughout names', () => {
+    const names = ['ab--c', 'ab__b', 'aba']
+    const items = names.map((name) => ({
+      name,
+      url: `https://github.com/example/${name}`,
+    }))
+
+    assert.deepEqual(
+      sortItems(items).map(({ name }) => name),
+      ['aba', 'ab__b', 'ab--c']
+    )
+  })
+
+  it('retains accented letters in locale-aware comparisons', () => {
+    const names = ['côte', 'czar', 'cafe', 'café']
+    const items = names.map((name) => ({
+      name,
+      url: `https://github.com/example/${name}`,
+    }))
+
+    assert.deepEqual(
+      sortItems(items).map(({ name }) => name),
+      ['cafe', 'café', 'côte', 'czar']
+    )
+  })
+
   describe('for duplicate names', () => {
+    it('ignores repeated punctuation when comparing authors', () => {
+      const items = ['ab--c', 'aba'].map((author) => ({
+        name: 'recipes',
+        author,
+        url: `https://github.com/${author}/recipes`,
+      }))
+
+      assert.deepEqual(
+        sortItems(items).map(({ author }) => author),
+        ['aba', 'ab--c']
+      )
+    })
+
     it('adds author and sorts by it', () => {
       const input = Object.freeze([
         { name: 'recipes', url: 'https://github.com/csclug/recipes' },
