@@ -19,8 +19,7 @@
     "marked": "^18.1.2",
     "mustache": "^4.2.0",
     "sanitize-html": "^2.18.1",
-    "simple-git": "^4.0.2",
-    "tslib": "^2"
+    "simple-git": "^4.0.2"
   },
   "bundleDependencies": [
     "@cliffy/command",
