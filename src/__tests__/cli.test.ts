@@ -98,6 +98,49 @@ describe('CLI: sort', () => {
 })
 
 describe('CLI: add (non-interactive)', () => {
+  it('rejects --commit with --no-write without committing existing edits', async (t) => {
+    const directory = await fs.mkdtemp(
+      path.join(os.tmpdir(), 'lists-manage-commit-')
+    )
+    t.after(() => fs.rm(directory, { recursive: true, force: true }))
+    const git = (...args: string[]) =>
+      execFile('git', args, { cwd: directory, timeout: 15_000 })
+    const filename = path.join(directory, 'README.md')
+    await fs.copyFile(FIXTURE_PATH, filename)
+    await git('init')
+    await git('config', 'user.name', 'CLI test')
+    await git('config', 'user.email', 'cli-test@example.invalid')
+    await git('add', 'README.md')
+    await git('commit', '-m', 'Initial list')
+    const { stdout: originalHead } = await git('rev-parse', 'HEAD')
+    const contents = `${await fs.readFile(filename, 'utf8')}Unrelated edit\n`
+    await fs.writeFile(filename, contents)
+    const { stdout: originalDiff } = await git('diff')
+
+    for (const args of [
+      ['--no-prompt', 'https://gitlab.com/inkscape/inkscape'],
+      ['--prompt'],
+    ]) {
+      await assert.rejects(
+        () =>
+          execFile('node', [BIN, 'add', '--no-write', '--commit', ...args], {
+            cwd: directory,
+            timeout: 15_000,
+          }),
+        (error: { code: number; stdout: string; stderr: string }) => {
+          assert.equal(error.code, 1)
+          assert.equal(error.stdout, '')
+          assert.match(error.stderr, /--commit requires writing/)
+          return true
+        }
+      )
+      assert.equal(await fs.readFile(filename, 'utf8'), contents)
+      assert.equal((await git('rev-parse', 'HEAD')).stdout, originalHead)
+      assert.equal((await git('diff')).stdout, originalDiff)
+      assert.equal((await git('diff', '--cached')).stdout, '')
+    }
+  })
+
   it('adds to the named section instead of the suggested section', async () => {
     const { stdout, stderr } = await run([
       'add',

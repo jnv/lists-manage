@@ -55,6 +55,12 @@ export function addCommand() {
       const commit = options.commit as unknown as boolean
       const initialNote = options.note?.trim() ?? ''
 
+      if (commit && !write) {
+        throw new Error(
+          '--commit requires writing; remove --no-write or --commit'
+        )
+      }
+
       if (!file) {
         console.error('Missing file')
         process.exit(1)
