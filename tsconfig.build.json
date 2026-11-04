@@ -1,7 +1,9 @@
 {
   "extends": "./tsconfig",
+  "include": ["src"],
   "exclude": ["**/*.test.ts"],
   "compilerOptions": {
+    "rootDir": "src",
     "noEmit": false,
     "declaration": true,
     "importHelpers": true
