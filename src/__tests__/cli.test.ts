@@ -50,6 +50,7 @@ describe('CLI: help', () => {
     assert.match(stdout, /--prompt/)
     assert.match(stdout, /--commit/)
     assert.match(stdout, /--section/)
+    assert.match(stdout, /--note/)
   })
 
   it('shows fix help', async () => {
@@ -153,6 +154,24 @@ describe('CLI: add (non-interactive)', () => {
       )
       assert.equal(await fs.readFile(filename, 'utf8'), contents)
     }
+  })
+
+  it('adds a trimmed language note in italics', async () => {
+    const { stdout } = await run([
+      'add',
+      '--no-prompt',
+      '--no-write',
+      '--note',
+      '  In Chinese and English  ',
+      '-f',
+      FIXTURE_PATH,
+      'https://gitlab.com/inkscape/inkscape',
+    ])
+
+    assert.match(
+      stdout,
+      /\* \[inkscape\]\(https:\/\/gitlab\.com\/inkscape\/inkscape\) _In Chinese and English_\n/
+    )
   })
 
   it('adds a non-GitHub repo and outputs to stdout', async () => {

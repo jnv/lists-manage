@@ -5,6 +5,7 @@ export type SectionsChoice = { name: string; value: number }
 
 type AddPromptResults = {
   desc: string
+  note: string
   section: number
   homepage: boolean
 }
@@ -16,7 +17,8 @@ export async function repoPrompt(): Promise<string> {
 export async function addPrompt(
   repoDetail: RepoDetail,
   sections: SectionsChoice[],
-  initialSection: number
+  initialSection: number,
+  initialNote = ''
 ): Promise<AddPromptResults> {
   const section = await Select.prompt({
     message: 'Select a list section:',
@@ -30,6 +32,12 @@ export async function addPrompt(
     default: repoDetail.desc,
   })
 
+  const note = await Input.prompt({
+    message:
+      'Enter list note (optional, e.g. "In Chinese"; leave empty to skip):',
+    default: initialNote,
+  })
+
   let homepage = false
   if (repoDetail.homepage) {
     homepage = await Confirm.prompt({
@@ -38,5 +46,5 @@ export async function addPrompt(
     })
   }
 
-  return { section, desc, homepage }
+  return { section, desc, note, homepage }
 }

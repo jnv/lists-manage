@@ -19,6 +19,7 @@ export function addCommand() {
     .option('-f, --file <file:string>', 'markdown file to work with', {
       default: 'README.md',
     })
+    .option('--note <note:string>', 'optional note, e.g. "In Chinese"')
     .option(
       '-s, --section <name:string>',
       'exact section name; use "lists-manage sections" to list valid names'
@@ -52,6 +53,7 @@ export function addCommand() {
       const write = options.write as unknown as boolean
       const promptEnabled = options.prompt as unknown as boolean
       const commit = options.commit as unknown as boolean
+      const initialNote = options.note?.trim() ?? ''
 
       if (!file) {
         console.error('Missing file')
@@ -102,10 +104,11 @@ export function addCommand() {
       const initialSection =
         selectedSection ?? suggestSection(listFile.sections)(repoDetails)
       const response = promptEnabled
-        ? await addPrompt(repoDetails, sections, initialSection)
+        ? await addPrompt(repoDetails, sections, initialSection, initialNote)
         : {
             section: initialSection,
             desc: repoDetails.desc,
+            note: initialNote,
             homepage: !!repoDetails.homepage,
           }
 
@@ -113,6 +116,10 @@ export function addCommand() {
         name: repoDetails.name,
         url: repoDetails.url,
         desc: response.desc.trim(),
+      }
+      const note = response.note.trim()
+      if (note) {
+        listItem.note = note
       }
       if (response.homepage) {
         listItem.extras = [repoDetails.homepage]
