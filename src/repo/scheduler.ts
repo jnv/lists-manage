@@ -77,11 +77,10 @@ export function retryDeadline(
   for (const name of ['x-ratelimit-reset', 'ratelimit-reset']) {
     const raw = headers.get(name)
     if (raw !== null && /^\d+(\.\d+)?$/.test(raw.trim())) {
-      // X-RateLimit-Reset is an epoch; RateLimit-Reset is a delta in seconds.
+      const seconds = Number(raw)
+      // shortcut: delays >= 1e9 seconds look like epochs; revisit for multi-decade waits.
       const value =
-        name === 'x-ratelimit-reset'
-          ? Number(raw) * 1000
-          : now + Number(raw) * 1000
+        seconds >= 1_000_000_000 ? seconds * 1000 : now + seconds * 1000
       if (validDeadline(value)) {
         deadlines.push(value)
       }

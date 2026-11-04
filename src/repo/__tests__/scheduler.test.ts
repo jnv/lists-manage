@@ -123,6 +123,31 @@ describe('request scheduling', () => {
     })
   }
 
+  for (const header of ['x-ratelimit-reset', 'ratelimit-reset']) {
+    it(`resumes at an epoch ${header} deadline alongside Retry-After`, async (t) => {
+      const now = Date.parse('2026-11-04T12:00:00Z')
+      t.mock.timers.enable({ apis: ['Date', 'setTimeout'], now })
+      let calls = 0
+      t.mock.method(globalThis, 'fetch', async () =>
+        ++calls === 1
+          ? response(429, {
+              'retry-after': '60',
+              [header]: String(now / 1000 + 60),
+            })
+          : response()
+      )
+      const check = checkRepo(url('gitlab.com'), scheduler({ retries: 0 }))
+      await tick()
+      t.mock.timers.tick(59_999)
+      await tick()
+      assert.equal(calls, 1)
+      t.mock.timers.tick(1)
+      await tick()
+      await check
+      assert.equal(calls, 2)
+    })
+  }
+
   it('does not shorten an existing cooldown when a later response asks for less time', async (t) => {
     t.mock.timers.enable({ apis: ['Date', 'setTimeout'], now: 1000 })
     const queue = scheduler({ concurrency: 2, perHost: 2 })
@@ -256,6 +281,19 @@ describe('request scheduling', () => {
       assert.throws(() => checkOptions({ LISTS_MANAGE_FIX_CONCURRENCY: value }))
     }
     const now = Date.parse('2026-01-01T00:00:00Z')
+    for (const header of ['x-ratelimit-reset', 'ratelimit-reset']) {
+      for (const [seconds, deadline] of [
+        [5, now + 5000],
+        [999_999_999, now + 999_999_999_000],
+        [1_000_000_000, now],
+        [now / 1000 + 60, now + 60_000],
+      ]) {
+        assert.equal(
+          retryDeadline(new Headers({ [header]: String(seconds) }), now),
+          deadline
+        )
+      }
+    }
     assert.equal(
       retryDeadline(
         new Headers({
