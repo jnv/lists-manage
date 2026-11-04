@@ -1,3 +1,4 @@
+import timers from 'node:timers/promises'
 import { fetchRemoteRepo } from './remote/github.ts'
 import { getRepoInfo } from './repoInfo.ts'
 import { isThrottled, RequestScheduler, SchedulingError } from './scheduler.ts'
@@ -37,9 +38,7 @@ export async function checkRepo(
       if (retries++ >= scheduler.options.retries) {
         throw error
       }
-      await new Promise((resolve) =>
-        setTimeout(resolve, Math.min(8000, 250 * 2 ** retries))
-      )
+      await timers.setTimeout(Math.min(8000, 250 * 2 ** retries))
       continue
     }
     if (isThrottled(response)) {
@@ -49,9 +48,7 @@ export async function checkRepo(
       [408, 500, 502, 503, 504].includes(response.status) &&
       retries++ < scheduler.options.retries
     ) {
-      await new Promise((resolve) =>
-        setTimeout(resolve, Math.min(8000, 250 * 2 ** retries))
-      )
+      await timers.setTimeout(Math.min(8000, 250 * 2 ** retries))
       continue
     }
     if ([301, 302, 303, 307, 308].includes(response.status)) {
