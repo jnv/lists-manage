@@ -3,7 +3,6 @@
   "exclude": ["**/*.test.ts"],
   "compilerOptions": {
     "noEmit": false,
-    "declaration": true,
-    "importHelpers": true
+    "declaration": true
   }
 }
