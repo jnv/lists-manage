@@ -1,10 +1,13 @@
 import { readFile, writeFile } from 'node:fs/promises'
+import type { Command } from '@cliffy/command'
 
 // Document redirected output consistently, including TTY-dependent defaults.
 Object.defineProperty(process.stdout, 'isTTY', { value: false })
 const { cli } = await import('../src/index.ts')
 
-function commandHelp(command) {
+function commandHelp(
+  command: Pick<Command, 'getHelp' | 'getPath' | 'getCommands'>
+): string {
   const help = command
     .getHelp({ colors: false, long: true, width: 120 })
     .split('\n')

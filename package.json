@@ -38,7 +38,7 @@
     "typescript": "^7.0.2"
   },
   "scripts": {
-    "readme": "node scripts/update-readme.mjs",
+    "readme": "node scripts/update-readme.ts",
     "check": "biome check .",
     "check:fix": "biome check --write .",
     "typecheck": "tsc --noEmit",
