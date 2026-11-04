@@ -7,14 +7,6 @@
 
 CLI program to manage [lists] project.
 
-
-<!-- toc -->
-* [Usage](#usage)
-* [Commands](#commands)
-* [Publishing](#publishing)
-<!-- tocstop -->
-
-
 # Usage
 
 You must have [Node.js](https://nodejs.org/) and npm installed.
