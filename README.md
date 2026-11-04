@@ -1,82 +1,64 @@
-# @jnv/lists-manage
+@jnv/lists-manage
+===============
+
 
 [![Version](https://img.shields.io/npm/v/@jnv/lists-manage)](https://npmjs.org/package/@jnv/lists-manage)
 [![License](https://img.shields.io/github/license/jnv/lists-manage)](LICENSE)
 
-CLI for managing Markdown-based curated lists, built with [Cliffy](https://cliffy.io/).
-Originally created for [jnv/lists](https://github.com/jnv/lists), it can add
-repositories, fix removed or redirected links, sort entries, and export an
-offline catalog as a static website or JSON.
+CLI program to manage [lists] project.
 
-- [Usage](#usage)
-- [Markdown format](#markdown-format)
-- [Commands](#commands)
-- [Static catalog export](#static-catalog-export)
-- [Development](#development)
-- [Publishing](#publishing)
-- [License](#license)
 
-## Usage
+<!-- toc -->
+* [Usage](#usage)
+* [Commands](#commands)
+* [Publishing](#publishing)
+<!-- tocstop -->
 
-Use a current Node.js LTS release (24 or newer) and npm. From your cloned list
-repository, run:
+
+# Usage
+
+You must have [Node.js](https://nodejs.org/) and npm installed.
+
+Then inside the cloned repository of [lists] project (where the `README.md` file is located) run:
+
+```sh-session
+$ npx @jnv/lists-manage add
+```
+
+This will run this package and prompt you about the list you are about to add.
+
+Optionally run with `-c` flag to autocommit the addition with proper commit message:
+
+```sh-session
+$ npx @jnv/lists-manage add -c
+```
+
+See [Commands](#commands) below for additional options and features.
+
+### Choosing a section
+
+List valid section names in document order, one per line:
 
 ```sh
-npx @jnv/lists-manage add
+lists-manage sections
+lists-manage sections --file MY_LISTS_FILE.md
 ```
 
-This prompts for a repository URL and lets you choose a section and edit its
-description. The entry is written to `README.md` by default. To supply a URL
-and commit the addition:
+Use an exact, case-sensitive heading name to select a section when adding:
 
 ```sh
-npx @jnv/lists-manage add https://github.com/some-user/awesome-list --commit
+lists-manage add --no-prompt --section 'Non-technical' https://github.com/some-user/some-list
 ```
 
-For scripts, pass a URL and `--no-prompt`. Use `--no-write` to preview the
-updated Markdown on stdout. Interactive prompting is disabled when stdout is
-redirected. GitHub metadata requests use `GITHUB_TOKEN` when it is set.
+`-s` is short for `--section`. Names with spaces or shell metacharacters should
+be quoted. Nested sections use their own heading names. Unknown names and
+duplicate heading names fail before repository lookup or file changes.
+With prompting enabled, the named section is the initial selection and can be
+changed in the prompt. Without `--section`, automatic section selection is
+unchanged. Both commands default to `README.md` and accept `--file` (`-f`).
+The `sections` command fails if the file contains no list sections.
 
-You can also install the CLI globally:
-
-```sh
-npm install --global @jnv/lists-manage
-lists-manage --help
-```
-
-Sort or repair a list in place with:
-
-```sh
-lists-manage sort --write
-lists-manage fix --write
-```
-
-Both commands print the resulting Markdown by default; `--write` saves it.
-All commands accept `--file` to select another Markdown file. Use
-`lists-manage <command> --help` for command-specific help.
-
-## Markdown format
-
-Commands operate on entries between `<!-- lists-start -->` and
-`<!-- lists-end -->` markers. Headings define sections; text outside the
-markers is preserved. For example:
-
-```markdown
-# My curated lists
-
-<!-- lists-start -->
-
-## Programming
-
-- [awesome-list](https://github.com/some-user/awesome-list) — A curated list
-
-<!-- lists-end -->
-```
-
-## Commands
-
-Generated from Cliffy's help output. Defaults below reflect redirected stdout;
-`add` enables prompting in an interactive terminal. Package versions are omitted.
+# Commands
 
 <!-- commands:start -->
 
@@ -96,10 +78,11 @@ Options:
 
 Commands:
 
-  add     [url]  - Add list URL to the Markdown file
-  fix            - Fix removed and redirected links
-  sort           - Just sort the items in file
-  export         - Generate an offline JSON catalog and progressively enhanced static page
+  add       [url]  - Add list URL to the Markdown file
+  sections         - List section names in document order, one per line
+  fix              - Fix removed and redirected links
+  sort             - Just sort the items in file
+  export           - Generate an offline JSON catalog and progressively enhanced static page
 ```
 
 ### `lists-manage add`
@@ -115,6 +98,9 @@ Options:
 
   -h, --help                         - Show this help.
   -f, --file                 <file>  - markdown file to work with                                (Default: "README.md")
+  --note                     <note>  - optional note, e.g. "In Chinese"
+  -s, --section              <name>  - exact section name; use "lists-manage sections" to list
+                                       valid names
   -w, --write, --no-write            - modify file in place; enabled by default, prints file     (Default: true)
                                        contents to stdout when disabled
   -p, --prompt, --no-prompt          - disable interactive prompt; enabled by default, disabled  (Default: false)
@@ -127,6 +113,26 @@ Examples:
   add interactive lists-manage add
   add url         lists-manage add https://github.com/some-user/awesome-list
   add no-write    lists-manage add --no-write https://github.com/some-user/awesome-list
+```
+
+### `lists-manage sections`
+
+```text
+Usage:   lists-manage sections
+
+Description:
+
+  List section names in document order, one per line
+
+Options:
+
+  -h, --help          - Show this help.
+  -f, --file  <file>  - Markdown file to work with  (Default: "README.md")
+
+Examples:
+
+  list sections             lists-manage sections
+  list custom file sections lists-manage sections -f MY_LISTS_FILE.md
 ```
 
 ### `lists-manage fix`
@@ -190,6 +196,94 @@ Options:
 ```
 
 <!-- commands:end -->
+
+## Publishing
+
+Use **Actions → Release → Run workflow**, select `main`, and choose a
+`patch`, `minor`, or `major` version bump. For example, from `0.6.1`, these produce
+`0.6.2`, `0.7.0`, or `1.0.0` respectively.
+
+The [release workflow](.github/workflows/publish.yml) updates both package
+manifests, creates a version commit, and runs linting, typechecking, and tests.
+It records the required `build` status on that tested commit, then pushes the
+commit to `main` and creates its `vX.Y.Z` tag atomically. A temporary release
+branch makes the commit available for status checks and is removed afterward.
+If `main` advances incompatibly during preparation, the push fails rather than
+overwriting other commits.
+
+A second **Release** run starts automatically on the tag. It validates the
+versions, repeats checks and tests, packs the package, and smoke-tests a clean
+installation. It then creates a draft GitHub release with generated release
+notes and the tested `.tgz`, publishes that same tarball to npm with provenance,
+and publishes the GitHub release. GitHub generates the notes from merged pull
+requests and contributors since the previous release; you can edit them later.
+
+The publishing phase runs from the release tag so provenance identifies the
+version commit. It uses an explicit workflow dispatch because tags created by
+`GITHUB_TOKEN` do not trigger push workflows. Both phases stay in `publish.yml`,
+so the npm trusted-publisher workflow filename remains the same.
+
+Cliffy and its transitive dependencies are bundled in the tarball because they
+come from JSR. Consumers do not need this repository's `.npmrc` or a custom
+registry configuration to install the CLI.
+
+### One-time setup
+
+1. Create a GitHub environment named `npm` under this repository's
+   **Settings → Environments**. Restrict deployment to selected tags matching
+   `v*`. Protect `main` and restrict who can create, update, or delete release
+   tags using repository rulesets.
+2. In the npm settings for `@jnv/lists-manage`, add a GitHub Actions
+   [trusted publisher](https://docs.npmjs.com/trusted-publishers/) with:
+   - Owner: `jnv`
+   - Repository: `lists-manage`
+   - Workflow filename: `publish.yml`
+   - Environment: `npm`
+   - Allowed action: enable direct publishing with `npm publish`.
+3. Complete the first publish within two days of adding the trusted publisher;
+   otherwise, recreate the expired configuration. After verifying trusted
+   publishing works, select **Require two-factor authentication and disallow
+   tokens** in npm's publishing-access settings, and revoke unused publishing
+   tokens. No npm token or GitHub personal access token is needed by this workflow.
+
+### Repository permissions
+
+The preparation job uses `contents: write` for the version commit and tag,
+`statuses: write` to record the checks actually run against that commit, and
+`actions: write` to start the publishing phase. The publishing job uses
+`contents: write` for the GitHub release and `id-token: write` for npm OIDC.
+No additional secret is needed. The current `main` protection requires a
+`build` status; stricter rules such as mandatory PRs or signed commits would
+require adapting the preparation flow.
+
+### Monitor or retry a release
+
+Monitor both runs under **Actions → Release** and wait for publishing to finish
+before starting another release. If preparation fails before
+pushing to `main`, fix the cause and start again. If the version commit and tag
+already exist, retry publishing from that tag rather than requesting another
+version bump:
+
+```sh
+gh workflow run publish.yml --ref v0.6.2 -f bump=patch
+```
+
+The bump input is ignored when running on a tag. A manually pushed `vX.Y.Z`
+tag also starts publishing. Tags must point to commits on `main`, and the tag,
+`package.json`, and `package-lock.json` versions must match. Only stable
+releases are supported.
+
+If npm publishing fails, the GitHub release remains a draft; retry publishing
+after resolving the cause. If npm publishing succeeded but publishing the
+GitHub release failed, publish the existing draft from the Releases page.
+npm versions cannot be overwritten, and published GitHub releases are not
+modified by this workflow. Do not move a release tag to replace a package.
+
+## License
+
+MIT
+
+[lists]: https://github.com/jnv/lists
 
 ## Static catalog export
 
@@ -281,116 +375,3 @@ with its MIT license notice. Keep the upstream CSS intact and put local rules
 under `Catalog layout and overrides` at the bottom of `style.css`. This file
 is excluded from automatic formatting and linting to preserve the vendored
 source. The stylesheet is copied into the generated site; no CDN is required.
-
-## Development
-
-```sh
-npm ci
-npm run build
-npm run check
-npm run typecheck
-npm test
-```
-
-Run the built CLI with `node bin/run --help`. `npm test` rebuilds the package
-before running the tests.
-
-After changing command descriptions, options, or examples, regenerate the
-command reference:
-
-```sh
-npm run readme
-```
-
-The script imports the CLI from source, walks its registered commands with
-`getCommands()`, and renders `getHelp()` into fenced text blocks. It only
-replaces the section between the `commands:start` and `commands:end` comments;
-edit the rest of this README normally. No build is needed. Output uses a fixed
-width, no colors, and noninteractive defaults so regeneration is repeatable.
-Commit the updated README alongside command changes.
-
-## Publishing
-
-Use **Actions → Release → Run workflow**, select `main`, and choose a
-`patch`, `minor`, or `major` version bump. For example, from `0.6.1`, these produce
-`0.6.2`, `0.7.0`, or `1.0.0` respectively.
-
-The [release workflow](.github/workflows/publish.yml) updates both package
-manifests, creates a version commit, and runs linting, typechecking, and tests.
-It records the required `build` status on that tested commit, then pushes the
-commit to `main` and creates its `vX.Y.Z` tag atomically. A temporary release
-branch makes the commit available for status checks and is removed afterward.
-If `main` advances incompatibly during preparation, the push fails rather than
-overwriting other commits.
-
-A second **Release** run starts automatically on the tag. It validates the
-versions, repeats checks and tests, packs the package, and smoke-tests a clean
-installation. It then creates a draft GitHub release with generated release
-notes and the tested `.tgz`, publishes that same tarball to npm with provenance,
-and publishes the GitHub release. GitHub generates the notes from merged pull
-requests and contributors since the previous release; you can edit them later.
-
-The publishing phase runs from the release tag so provenance identifies the
-version commit. It uses an explicit workflow dispatch because tags created by
-`GITHUB_TOKEN` do not trigger push workflows. Both phases stay in `publish.yml`,
-so the npm trusted-publisher workflow filename remains the same.
-
-Cliffy and its transitive dependencies are bundled in the tarball because they
-come from JSR. Consumers do not need this repository's `.npmrc` or a custom
-registry configuration to install the CLI.
-
-### One-time setup
-
-1. Create a GitHub environment named `npm` under this repository's
-   **Settings → Environments**. Restrict deployment to selected tags matching
-   `v*`. Protect `main` and restrict who can create, update, or delete release
-   tags using repository rulesets.
-2. In the npm settings for `@jnv/lists-manage`, add a GitHub Actions
-   [trusted publisher](https://docs.npmjs.com/trusted-publishers/) with:
-   - Owner: `jnv`
-   - Repository: `lists-manage`
-   - Workflow filename: `publish.yml`
-   - Environment: `npm`
-   - Allowed action: enable direct publishing with `npm publish`.
-3. Complete the first publish within two days of adding the trusted publisher;
-   otherwise, recreate the expired configuration. After verifying trusted
-   publishing works, select **Require two-factor authentication and disallow
-   tokens** in npm's publishing-access settings, and revoke unused publishing
-   tokens. No npm token or GitHub personal access token is needed by this workflow.
-
-### Repository permissions
-
-The preparation job uses `contents: write` for the version commit and tag,
-`statuses: write` to record the checks actually run against that commit, and
-`actions: write` to start the publishing phase. The publishing job uses
-`contents: write` for the GitHub release and `id-token: write` for npm OIDC.
-No additional secret is needed. The current `main` protection requires a
-`build` status; stricter rules such as mandatory PRs or signed commits would
-require adapting the preparation flow.
-
-### Monitor or retry a release
-
-Monitor both runs under **Actions → Release** and wait for publishing to finish
-before starting another release. If preparation fails before
-pushing to `main`, fix the cause and start again. If the version commit and tag
-already exist, retry publishing from that tag rather than requesting another
-version bump:
-
-```sh
-gh workflow run publish.yml --ref v0.6.2 -f bump=patch
-```
-
-The bump input is ignored when running on a tag. A manually pushed `vX.Y.Z`
-tag also starts publishing. Tags must point to commits on `main`, and the tag,
-`package.json`, and `package-lock.json` versions must match. Only stable
-releases are supported.
-
-If npm publishing fails, the GitHub release remains a draft; retry publishing
-after resolving the cause. If npm publishing succeeded but publishing the
-GitHub release failed, publish the existing draft from the Releases page.
-npm versions cannot be overwritten, and published GitHub releases are not
-modified by this workflow. Do not move a release tag to replace a package.
-
-## License
-
-[MIT](LICENSE)
