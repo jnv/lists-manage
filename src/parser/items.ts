@@ -4,7 +4,7 @@ type LineRest = Pick<ListItem, 'desc' | 'note' | 'author'>
 
 const PATTERN_ITEM_LINE = /^[-*]\s+\[([^\]]+)\]\((\S*)\)(.*)$/
 const PATTERN_ITEM_REST =
-  /([_*]?([^_*]+)[_*])?\s*(by @?(\S+))?(\s*[-–—]\s*(.*))?$/i
+  /^(?:([_*])(.+?)\1)?\s*(by @?(\S+))?(\s*[-–—]\s*(.*))?$/i
 const PATTERN_SUBITEM = /^\s+[-*]\s*(.*)$/
 
 function parseLineRest(rest: string): LineRest {
@@ -17,7 +17,7 @@ function parseLineRest(rest: string): LineRest {
       author,
     }
   } else {
-    return {}
+    throw new Error(`Unsupported list item metadata: ${rest.trim()}`)
   }
 }
 
@@ -44,9 +44,18 @@ export function parseItems(lines: string[]): ListItem[] {
     const subitemMatch = PATTERN_SUBITEM.exec(line)
     if (subitemMatch) {
       const lastItem = items[items.length - 1]
+      if (!lastItem) {
+        throw new Error(
+          `Expected a list item before supplementary content: ${line}`
+        )
+      }
       const { extras = [] } = lastItem
       extras.push(subitemMatch[1])
       lastItem.extras = extras
+    } else if (line.trim()) {
+      throw new Error(
+        `Unsupported list content; move it outside the list markers: ${line}`
+      )
     }
 
     return items

@@ -25,6 +25,14 @@ $ npx @jnv/lists-manage add -c
 
 See [Commands](#commands) below for additional options and features.
 
+The source needs exactly one `<!-- lists-start -->` / `<!-- lists-end -->` pair
+in that order. Inside the markers, use H2 or deeper section headings, `*` or
+`-` Markdown link entries, and optional indented `*` or `-` supplementary
+items. Entry metadata supports an italic note, `by @author`, and a description
+introduced by `-`, `–`, or `—`, in that order. Blank lines are allowed.
+Unsupported content fails parsing before editing; put comments and prose
+outside the markers so maintenance commands preserve them.
+
 ## Commands
 
 <!-- commands:start -->
