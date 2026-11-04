@@ -1,0 +1,81 @@
+# Publishing
+
+Use **Actions → Release → Run workflow**, select `main`, and choose a
+`patch`, `minor`, or `major` version bump. For example, from `0.6.1`, these produce
+`0.6.2`, `0.7.0`, or `1.0.0` respectively.
+
+The [release workflow](../.github/workflows/publish.yml) updates both package
+manifests, creates a version commit, and runs linting, typechecking, and tests.
+It records the required `build` status on that tested commit, then pushes the
+commit to `main` and creates its `vX.Y.Z` tag atomically. A temporary release
+branch makes the commit available for status checks and is removed afterward.
+If `main` advances incompatibly during preparation, the push fails rather than
+overwriting other commits.
+
+A second **Release** run starts automatically on the tag. It validates the
+versions, repeats checks and tests, packs the package, and smoke-tests a clean
+installation. It then creates a draft GitHub release with generated release
+notes and the tested `.tgz`, publishes that same tarball to npm with provenance,
+and publishes the GitHub release. GitHub generates the notes from merged pull
+requests and contributors since the previous release; you can edit them later.
+
+The publishing phase runs from the release tag so provenance identifies the
+version commit. It uses an explicit workflow dispatch because tags created by
+`GITHUB_TOKEN` do not trigger push workflows. Both phases stay in `publish.yml`,
+so the npm trusted-publisher workflow filename remains the same.
+
+Cliffy and its transitive dependencies are bundled in the tarball because they
+come from JSR. Consumers do not need this repository's `.npmrc` or a custom
+registry configuration to install the CLI.
+
+## One-time setup
+
+1. Create a GitHub environment named `npm` under this repository's
+   **Settings → Environments**. Restrict deployment to selected tags matching
+   `v*`. Protect `main` and restrict who can create, update, or delete release
+   tags using repository rulesets.
+2. In the npm settings for `@jnv/lists-manage`, add a GitHub Actions
+   [trusted publisher](https://docs.npmjs.com/trusted-publishers/) with:
+   - Owner: `jnv`
+   - Repository: `lists-manage`
+   - Workflow filename: `publish.yml`
+   - Environment: `npm`
+   - Allowed action: enable direct publishing with `npm publish`.
+3. Complete the first publish within two days of adding the trusted publisher;
+   otherwise, recreate the expired configuration. After verifying trusted
+   publishing works, select **Require two-factor authentication and disallow
+   tokens** in npm's publishing-access settings, and revoke unused publishing
+   tokens. No npm token or GitHub personal access token is needed by this workflow.
+
+## Repository permissions
+
+The preparation job uses `contents: write` for the version commit and tag,
+`statuses: write` to record the checks actually run against that commit, and
+`actions: write` to start the publishing phase. The publishing job uses
+`contents: write` for the GitHub release and `id-token: write` for npm OIDC.
+No additional secret is needed. The current `main` protection requires a
+`build` status; stricter rules such as mandatory PRs or signed commits would
+require adapting the preparation flow.
+
+## Monitor or retry a release
+
+Monitor both runs under **Actions → Release** and wait for publishing to finish
+before starting another release. If preparation fails before
+pushing to `main`, fix the cause and start again. If the version commit and tag
+already exist, retry publishing from that tag rather than requesting another
+version bump:
+
+```sh
+gh workflow run publish.yml --ref v0.6.2 -f bump=patch
+```
+
+The bump input is ignored when running on a tag. A manually pushed `vX.Y.Z`
+tag also starts publishing. Tags must point to commits on `main`, and the tag,
+`package.json`, and `package-lock.json` versions must match. Only stable
+releases are supported.
+
+If npm publishing fails, the GitHub release remains a draft; retry publishing
+after resolving the cause. If npm publishing succeeded but publishing the
+GitHub release failed, publish the existing draft from the Releases page.
+npm versions cannot be overwritten, and published GitHub releases are not
+modified by this workflow. Do not move a release tag to replace a package.
